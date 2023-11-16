@@ -3,6 +3,8 @@ package com.ssafy.enjoytrip;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,13 +58,13 @@ public class MemberController {
 			Member loginMember = service.login(member);
 			if(loginMember != null) {
 				String accessToken = jwtUtil.createAccessToken(loginMember.getUserId());
-				String refreshToken = jwtUtil.createRefreshToken(loginMember.getUserId());
+//				String refreshToken = jwtUtil.createRefreshToken(loginMember.getUserId());
 				
 //				발급받은 refresh token을 DB에 저장.
 //				service.saveRefreshToken(loginMember.getUserId(), refreshToken);
 //				JSON으로 token 전달.
 				resultMap.put("access-token", accessToken);
-				resultMap.put("refresh-token", refreshToken);
+//				resultMap.put("refresh-token", refreshToken);
 				status = HttpStatus.CREATED;
 			} else {
 				resultMap.put("message", "아이디 또는 패스워드를 확인해주세요.");
@@ -71,6 +73,26 @@ public class MemberController {
 		} catch (Exception e) {
 			resultMap.put("message", e.getMessage());
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
+	}
+	
+	@GetMapping("/info/{userId}")
+	public ResponseEntity<Map<String, Object>> getInfo(@PathVariable("userId") String userId, HttpServletRequest request){
+		Map<String, Object> resultMap = new HashMap<>();
+		HttpStatus status = HttpStatus.ACCEPTED;
+		if (jwtUtil.checkToken(request.getHeader("Authorization"))) {
+			try {
+//				로그인 사용자 정보.
+				Member member = service.selectByUserId(userId);
+				resultMap.put("userInfo", member);
+				status = HttpStatus.OK;
+			} catch (Exception e) {
+				resultMap.put("message", e.getMessage());
+				status = HttpStatus.INTERNAL_SERVER_ERROR;
+			}
+		} else {
+			status = HttpStatus.UNAUTHORIZED;
 		}
 		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}

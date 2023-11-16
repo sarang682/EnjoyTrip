@@ -1,5 +1,8 @@
 package com.ssafy.enjoytrip;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.enjoytrip.model.Member;
 import com.ssafy.enjoytrip.model.service.MemberService;
+import com.ssafy.enjoytrip.util.JWTUtil;
 
 @RestController
 @RequestMapping("/members")
@@ -21,6 +25,9 @@ public class MemberController {
 	
 	@Autowired
 	MemberService service;
+	
+	@Autowired
+	JWTUtil jwtUtil;
 	
 	@PostMapping("")
 	public ResponseEntity<?> insertMember(@RequestBody Member member) throws Exception{
@@ -41,16 +48,31 @@ public class MemberController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<?> login(@RequestBody Member member) throws Exception{
+	public ResponseEntity<Map<String, Object>> login(
+			@RequestBody Member member) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		HttpStatus status= HttpStatus.ACCEPTED;
 		try {
-			if (service.login(member)) {
-				return new ResponseEntity<String>("로그인 성공", HttpStatus.OK);
+			Member loginMember = service.login(member);
+			if(loginMember != null) {
+				String accessToken = jwtUtil.createAccessToken(loginMember.getUserId());
+				String refreshToken = jwtUtil.createRefreshToken(loginMember.getUserId());
+				
+//				발급받은 refresh token을 DB에 저장.
+//				service.saveRefreshToken(loginMember.getUserId(), refreshToken);
+//				JSON으로 token 전달.
+				resultMap.put("access-token", accessToken);
+				resultMap.put("refresh-token", refreshToken);
+				status = HttpStatus.CREATED;
+			} else {
+				resultMap.put("message", "아이디 또는 패스워드를 확인해주세요.");
+				status = HttpStatus.UNAUTHORIZED;
 			}
-			
-			return new ResponseEntity<String>("로그인 실패", HttpStatus.BAD_REQUEST);
 		} catch (Exception e) {
-			return exceptionHandling(e);
+			resultMap.put("message", e.getMessage());
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
+		return new ResponseEntity<Map<String, Object>>(resultMap, status);
 	}
 	
 	@GetMapping("/id-check/{user-id}")

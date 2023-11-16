@@ -25,11 +25,11 @@ public class MemberService {
 		return memberDao.selectByUserId(userId);
 	}
 	
-	public boolean login(Member member) throws Exception {
+	public Member login(Member member) throws Exception {
 		Member m = selectByUserId(member.getUserId());
 		if(m==null || !m.getUserPassword().equals(member.getUserPassword()))
-			return false;
-		return true;
+			return null;
+		return m;
 	}
 	
 	public boolean idCheck(String userId) throws Exception {

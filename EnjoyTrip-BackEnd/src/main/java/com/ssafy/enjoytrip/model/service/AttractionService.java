@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.enjoytrip.model.AttractionDescription;
 import com.ssafy.enjoytrip.model.AttractionInfo;
+import com.ssafy.enjoytrip.model.ContentType;
 import com.ssafy.enjoytrip.model.Gugun;
 import com.ssafy.enjoytrip.model.Sido;
 import com.ssafy.enjoytrip.model.dao.AttractionDao;
@@ -31,6 +32,10 @@ public class AttractionService {
 	
 	public Gugun selectByGugunCode(int sidoCode, int gugunCode) throws Exception {
 		return attractionDao.selectByGugunCode(sidoCode, gugunCode);
+	}
+	
+	public List<ContentType> listContentType() throws Exception {
+		return attractionDao.listContentType();
 	}
 	
 	public List<AttractionInfo> listAttractionInfo(int sidoCode, int gugunCode) throws Exception {

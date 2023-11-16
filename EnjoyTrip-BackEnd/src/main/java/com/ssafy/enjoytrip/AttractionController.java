@@ -15,6 +15,7 @@ import com.ssafy.enjoytrip.model.Gugun;
 import com.ssafy.enjoytrip.model.Sido;
 import com.ssafy.enjoytrip.model.AttractionDescription;
 import com.ssafy.enjoytrip.model.AttractionInfo;
+import com.ssafy.enjoytrip.model.ContentType;
 import com.ssafy.enjoytrip.model.service.AttractionService;
 
 @RestController
@@ -40,6 +41,15 @@ public class AttractionController {
 				return new ResponseEntity<String>("존재하지 않는 시도코드입니다.", HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<List<Gugun>>(service.listGugun(sidoCode), HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	@GetMapping("/content-type")
+	public ResponseEntity<?> listContentType() throws Exception{
+		try {
+			return new ResponseEntity<List<ContentType>>(service.listContentType(), HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

@@ -15,6 +15,11 @@
         <result column="sido_code" property="sidoCode"/>
     </resultMap>
     
+    <resultMap type="contentType" id="contentTypeResult">
+        <result column="content_type_id" property="contentTypeId"/>
+        <result column="content_type_name" property="contentTypeName"/>
+    </resultMap>
+    
     <resultMap type="attractionInfo" id="attractionInfoResult">
         <result column="content_id" property="contentId"/>
         <result column="content_type_id" property="contentTypeId"/>
@@ -67,6 +72,12 @@
 			 select * 
 			 from gugun
 			 where sido_code = #{sidoCode} and gugun_code = #{gugunCode}
+		]]>
+	</select>
+	
+	<select id="listContentType" resultMap="contentTypeResult">
+		<![CDATA[
+			select * from content_type
 		]]>
 	</select>
 	

@@ -10,6 +10,10 @@ function listGugun(param, success, fail) {
   local.get(`/attractions/gugun`, { params: param }).then(success).catch(fail);
 }
 
+function listContentType(success, fail) {
+    local.get(`attractions/contenType`).then(success).catch(fail);
+}
+
 function listAttractionInfo(param, success, fail) {
   local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
 }

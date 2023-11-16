@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.model.dao.AttractionDao">
+	
+	<resultMap type="sido" id="sidoResult">
+        <result column="sido_code" property="sidoCode"/>
+        <result column="sido_name" property="sidoName"/>
+    </resultMap>
+    
+    <resultMap type="gugun" id="gugunResult">
+        <result column="gugun_code" property="gugunCode"/>
+        <result column="gugun_name" property="gugunName"/>
+        <result column="sido_code" property="sidoCode"/>
+    </resultMap>
+    
+    <resultMap type="attractionInfo" id="attractionInfoResult">
+        <result column="content_id" property="contentId"/>
+        <result column="content_type_id" property="contentTypeId"/>
+        <result column="title" property="title"/>
+        <result column="addr1" property="addr1"/>
+        <result column="addr2" property="addr2"/>
+        <result column="zipcode" property="zipcode"/>
+		<result column="tel" property="tel"/>
+		<result column="first_image" property="firstImage"/>
+		<result column="first_image2" property="firstImage2"/>
+        <result column="readcount" property="readcount"/>
+        <result column="sido_code" property="sidoCode"/>
+        <result column="gugun_code" property="gugunCode"/>
+        <result column="latitude" property="latitude"/>
+        <result column="longitude" property="longitude"/>
+        <result column="mlevel" property="mlevel"/>
+    </resultMap>
+    
+    <resultMap type="attractionDescription" id="attractionDescriptionResult">
+        <result column="content_id" property="contentId"/>
+        <result column="homepage" property="homepage"/>
+        <result column="overview" property="overview"/>
+        <result column="telname" property="telname"/>
+    </resultMap>
+    
+	<select id="listSido" resultMap="sidoResult">
+		<![CDATA[
+			select * from sido
+		]]>
+	</select>
+	
+	<select id="selectBySidoCode" resultMap="sidoResult" parameterType="int">
+		<![CDATA[
+			 select * 
+			 from sido
+			 where sido_code = #{sidoCode}
+		]]>
+	</select>
+	
+	<select id="listGugun" parameterType="int" resultMap="gugunResult">
+		<![CDATA[
+			select *
+			from gugun
+			where sido_code = #{sidoCode}
+		]]>
+	</select>
+	
+	<select id="selectByGugunCode" resultMap="gugunResult" parameterType="int">
+		<![CDATA[
+			 select * 
+			 from gugun
+			 where sido_code = #{sidoCode} and gugun_code = #{gugunCode}
+		]]>
+	</select>
+	
+	<select id="listAttractionInfo" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * FROM attraction_info where sido_code=#{sidoCode} and gugun_code=#{gugunCode}
+		]]>
+	</select>
+	
+	<select id="attractionInfo" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * FROM attraction_info where content_id=#{contentId}
+		]]>
+	</select>
+	
+	<select id="attractionDescription" resultMap="attractionDescriptionResult" parameterType="int">
+		<![CDATA[
+			SELECT * FROM attraction_description where content_id=#{contentId}
+		]]>
+	</select>
+</mapper>

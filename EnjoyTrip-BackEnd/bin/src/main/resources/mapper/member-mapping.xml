@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.enjoytrip.model.dao.MemberDao">
+	<insert id="insert" parameterType="member">
+		<![CDATA[
+			INSERT INTO members(user_id,user_name,user_password,email_id,email_domain)
+			VALUES(#{user_id}, #{user_name}, #{user_password}, #{email_id}, #{email_domain})
+		]]>
+	</insert>
+	
+	<select id="selectByUserId" resultType="member" parameterType="String">
+		<![CDATA[
+			 SELECT * 
+			 FROM members
+			 WHERE user_id=#{user_id}
+		]]>
+	</select>
+	
+	<update id="updatePassword" parameterType="member">
+		<![CDATA[
+			update members
+			set user_password = #{user_password}
+			where user_id = #{user_id}
+		]]>
+	</update>
+	
+	<update id="updateEmail" parameterType="member">
+		<![CDATA[
+			update members
+			set email_id = #{email_id}, email_domain = #{email_domain}
+			where user_id = #{user_id}
+		]]>
+	</update>
+</mapper>

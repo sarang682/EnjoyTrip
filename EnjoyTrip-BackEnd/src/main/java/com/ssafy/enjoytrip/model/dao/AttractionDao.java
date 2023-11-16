@@ -19,6 +19,7 @@ public interface AttractionDao {
 	
 	public Sido selectBySidoCode(int sidoCode);
 	public Gugun selectByGugunCode(int sidoCode, int gugunCode);
+	public ContentType selectByContentTypeId(int contentTypeId);
 	
 	public List<AttractionInfo> listAttractionInfo(int sidoCode, int gugunCode) throws Exception;
 	public AttractionInfo attractionInfo(int contentId) throws Exception;

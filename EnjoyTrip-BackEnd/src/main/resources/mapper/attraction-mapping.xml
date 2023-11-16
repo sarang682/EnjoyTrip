@@ -81,6 +81,14 @@
 		]]>
 	</select>
 	
+	<select id="selectByContentTypeId" resultMap="contentTypeResult" parameterType="int">
+		<![CDATA[
+			 select * 
+			 from content_type
+			 where content_type_id = #{contentTypeId}
+		]]>
+	</select>
+	
 	<select id="listAttractionInfo" resultMap="attractionInfoResult" parameterType="int">
 		<![CDATA[
 			SELECT * FROM attraction_info where sido_code=#{sidoCode} and gugun_code=#{gugunCode}

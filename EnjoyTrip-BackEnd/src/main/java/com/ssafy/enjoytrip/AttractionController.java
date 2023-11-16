@@ -56,13 +56,19 @@ public class AttractionController {
 	}
 
 	@GetMapping("/info")
-	public ResponseEntity<?> listAttractionInfo(@RequestParam("sido-code") int sidoCode, @RequestParam("gugun-code") int gugunCode) throws Exception{
+	public ResponseEntity<?> listAttractionInfo(
+			@RequestParam("sido-code") int sidoCode, 
+			@RequestParam("gugun-code") int gugunCode, 
+			@RequestParam("content-type-id") int contentTypeId) throws Exception{
 		try {
 			if (service.selectBySidoCode(sidoCode) == null) {
 				return new ResponseEntity<String>("존재하지 않는 시도코드입니다.", HttpStatus.BAD_REQUEST);
 			}
 			if (service.selectByGugunCode(sidoCode, gugunCode) == null) {
 				return new ResponseEntity<String>("해당 시도에 존재하지 않는 구군코드입니다.", HttpStatus.BAD_REQUEST);
+			}
+			if (service.selectByContentTypeId(contentTypeId) == null) {
+				return new ResponseEntity<String>("존재하지 않는 관광지 유형입니다.", HttpStatus.BAD_REQUEST);
 			}
 			return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfo(sidoCode, gugunCode), HttpStatus.OK);
 		} catch (Exception e) {

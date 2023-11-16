@@ -38,6 +38,10 @@ public class AttractionService {
 		return attractionDao.listContentType();
 	}
 	
+	public ContentType selectByContentTypeId(int contentTypeId) throws Exception {
+		return attractionDao.selectByContentTypeId(contentTypeId);
+	}
+	
 	public List<AttractionInfo> listAttractionInfo(int sidoCode, int gugunCode) throws Exception {
 		return attractionDao.listAttractionInfo(sidoCode, gugunCode);
 	}

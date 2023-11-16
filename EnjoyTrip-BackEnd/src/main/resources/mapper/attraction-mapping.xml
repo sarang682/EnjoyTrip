@@ -45,12 +45,14 @@
         <result column="telname" property="telname"/>
     </resultMap>
     
+    <!-- 시도 리스트  -->
 	<select id="listSido" resultMap="sidoResult">
 		<![CDATA[
 			select * from sido
 		]]>
 	</select>
 	
+	<!-- 시도  -->
 	<select id="selectBySidoCode" resultMap="sidoResult" parameterType="int">
 		<![CDATA[
 			 select * 
@@ -59,6 +61,7 @@
 		]]>
 	</select>
 	
+	<!-- 구군 리스트  -->
 	<select id="listGugun" parameterType="int" resultMap="gugunResult">
 		<![CDATA[
 			select *
@@ -67,6 +70,7 @@
 		]]>
 	</select>
 	
+	<!-- 구군  -->
 	<select id="selectByGugunCode" resultMap="gugunResult" parameterType="int">
 		<![CDATA[
 			 select * 
@@ -75,12 +79,14 @@
 		]]>
 	</select>
 	
+	<!-- 관광지 유형 리스트  -->
 	<select id="listContentType" resultMap="contentTypeResult">
 		<![CDATA[
 			select * from content_type
 		]]>
 	</select>
 	
+	<!-- 관광지 유형  -->
 	<select id="selectByContentTypeId" resultMap="contentTypeResult" parameterType="int">
 		<![CDATA[
 			 select * 
@@ -89,18 +95,67 @@
 		]]>
 	</select>
 	
-	<select id="listAttractionInfo" resultMap="attractionInfoResult" parameterType="int">
+	<!-- 전체 검색  -->
+	<select id="listAttractionInfo" resultMap="attractionInfoResult">
 		<![CDATA[
-			SELECT * FROM attraction_info where sido_code=#{sidoCode} and gugun_code=#{gugunCode}
+			SELECT * 
+			FROM attraction_info 
 		]]>
 	</select>
 	
+	<!-- 시도 코드로 검색  -->
+	<select id="listAttractionInfoBySido" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * 
+			FROM attraction_info 
+			WHERE sido_code=#{sidoCode}
+		]]>
+	</select>
+	
+	<!-- 시도 코드 + 구군 코드로 검색  -->
+	<select id="listAttractionInfoByGugun" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * 
+			FROM attraction_info 
+			WHERE sido_code=#{sidoCode} and gugun_code=#{gugunCode}
+		]]>
+	</select>
+	
+	<!-- 관광지 유형으로 검색  -->
+	<select id="listAttractionInfoByContentType" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * 
+			FROM attraction_info 
+			WHERE content_type_id=#{contentTypeId}
+		]]>
+	</select>
+	
+	<!-- 시도 + 관광지 유형으로 검색  -->
+	<select id="listAttractionInfoBySidoAndContentType" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * 
+			FROM attraction_info 
+			WHERE sido_code=#{sidoCode} and content_type_id=#{contentTypeId}
+		]]>
+	</select>
+	
+	<!-- 시도 + 구군 + 관광지 유형으로 검색  -->
+	<select id="listAttractionInfoByGugunAndContentType" resultMap="attractionInfoResult" parameterType="int">
+		<![CDATA[
+			SELECT * 
+			FROM attraction_info 
+			WHERE sido_code=#{sidoCode} and gugun_code=#{gugunCode} and content_type_id=#{contentTypeId}
+		]]>
+	</select>
+	
+	<!-- 관광지 정보 -->
 	<select id="attractionInfo" resultMap="attractionInfoResult" parameterType="int">
 		<![CDATA[
 			SELECT * FROM attraction_info where content_id=#{contentId}
 		]]>
 	</select>
 	
+	<!-- 관광지 설명  -->
 	<select id="attractionDescription" resultMap="attractionDescriptionResult" parameterType="int">
 		<![CDATA[
 			SELECT * FROM attraction_description where content_id=#{contentId}

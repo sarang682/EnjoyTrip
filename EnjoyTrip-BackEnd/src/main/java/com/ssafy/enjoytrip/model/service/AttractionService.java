@@ -42,8 +42,28 @@ public class AttractionService {
 		return attractionDao.selectByContentTypeId(contentTypeId);
 	}
 	
-	public List<AttractionInfo> listAttractionInfo(int sidoCode, int gugunCode) throws Exception {
-		return attractionDao.listAttractionInfo(sidoCode, gugunCode);
+	public List<AttractionInfo> listAttractionInfo() throws Exception {
+		return attractionDao.listAttractionInfo();
+	}
+	
+	public List<AttractionInfo> listAttractionInfoBySido(int sidoCode) throws Exception {
+		return attractionDao.listAttractionInfoBySido(sidoCode);
+	}
+
+	public List<AttractionInfo> listAttractionInfoByGugun(int sidoCode, int gugunCode) throws Exception {
+		return attractionDao.listAttractionInfoByGugun(sidoCode, gugunCode);
+	}
+	
+	public List<AttractionInfo> listAttractionInfoByContentType(int contentTypeId) throws Exception {
+		return attractionDao.listAttractionInfoByContentType(contentTypeId);
+	}
+	
+	public List<AttractionInfo> listAttractionInfoBySidoAndContentType(int sidoCode, int contentTypeId) throws Exception {
+		return attractionDao.listAttractionInfoBySidoAndContentType(sidoCode, contentTypeId);
+	}
+	
+	public List<AttractionInfo> listAttractionInfoByGugunAndContentType(int sidoCode, int gugunCode, int contentTypeId) throws Exception {
+		return attractionDao.listAttractionInfoByGugunAndContentType(sidoCode, gugunCode, contentTypeId);
 	}
 	
 	public AttractionInfo attractionInfo(int contentId) throws Exception {

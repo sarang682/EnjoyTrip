@@ -1,38 +1,36 @@
-import { openApiAxios } from "@/util/http-commons";
-const { VITE_OPEN_API_SERVICE_KEY } = import.meta.env;
-const openApi = openApiAxios();
+import { localAxios } from "@/util/http-commons";
 
-let param = {
-    serviceKey: VITE_OPEN_API_SERVICE_KEY,
-    MobileOS: "ETC",
-    MobileApp: "AppTest",
-    _type: "json",
-}
+const local = localAxios();
 
 function listSido(success, fail) {
-    param.numOfRows = 20;
-    param.pageNo = 1;
-    openApi.get(`/areaCode1`, { params: param }).then(success).catch(fail);
+  local.get(`/attractions/sido`).then(success).catch(fail);
 }
 
-function listAttraction(areaCode, contentTypeId, word, success, fail) {
-    param.numOfRows = 100;
-    param.pageNo = 1;
-    console.log(areaCode);
-    console.log(contentTypeId);
-    if (parseInt(areaCode)) param.areaCode = areaCode;
-    if (parseInt(contentTypeId)) param.contentTypeId = contentTypeId;
+function listGugun(param, success, fail) {
+  local.get(`/attractions/gugun`, { params: param }).then(success).catch(fail);
+}
 
-    if (word) {
-        param.keyword = word;
-        openApi.get(`/searchKeyword1`, { params: param }).then(success).catch(fail);
-    }
-    else {
-        openApi.get(`/areaBasedList1`, { params: param }).then(success).catch(fail);
-    }
+function listContentType(success, fail) {
+    local.get(`attractions/content-type`).then(success).catch(fail);
+}
+
+function listAttractionInfo(param, success, fail) {
+  local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
+}
+
+function attractionInfo(contentId, success, fail) {
+  local.put(`/attractions/info/${contentId}`).then(success).catch(fail);
+}
+
+function attractionDescription(contentId, success, fail) {
+  local.delete(`/description/description/${contentId}`).then(success).catch(fail);
 }
 
 export {
     listSido,
-    listAttraction,
-}
+    listGugun,
+    listContentType,
+    listAttractionInfo,
+    attractionInfo,
+    attractionDescription,
+};

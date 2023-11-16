@@ -15,6 +15,7 @@ import com.ssafy.enjoytrip.model.Gugun;
 import com.ssafy.enjoytrip.model.Sido;
 import com.ssafy.enjoytrip.model.AttractionDescription;
 import com.ssafy.enjoytrip.model.AttractionInfo;
+import com.ssafy.enjoytrip.model.ContentType;
 import com.ssafy.enjoytrip.model.service.AttractionService;
 
 @RestController
@@ -37,24 +38,69 @@ public class AttractionController {
 	public ResponseEntity<?> listGugun(@RequestParam("sido-code") int sidoCode) throws Exception{
 		try {
 			if (service.selectBySidoCode(sidoCode) == null) {
-				return new ResponseEntity<String>("존재하지 않는 시도코드입니다.", HttpStatus.BAD_REQUEST);
+				return notFound("시도코드");
 			}
 			return new ResponseEntity<List<Gugun>>(service.listGugun(sidoCode), HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
 	}
+	
+	@GetMapping("/content-type")
+	public ResponseEntity<?> listContentType() throws Exception{
+		try {
+			return new ResponseEntity<List<ContentType>>(service.listContentType(), HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
 	@GetMapping("/info")
-	public ResponseEntity<?> listAttractionInfo(@RequestParam("sido-code") int sidoCode, @RequestParam("gugun-code") int gugunCode) throws Exception{
+	public ResponseEntity<?> listAttractionInfo(
+			@RequestParam(value="sido-code", required=false) Integer sidoCode, 
+			@RequestParam(value="gugun-code", required=false) Integer gugunCode, 
+			@RequestParam(value="content-type-id", required=false) Integer contentTypeId) throws Exception{
 		try {
-			if (service.selectBySidoCode(sidoCode) == null) {
-				return new ResponseEntity<String>("존재하지 않는 시도코드입니다.", HttpStatus.BAD_REQUEST);
+			// 예외 처리
+			if (sidoCode != null && service.selectBySidoCode(sidoCode) == null) {
+				return notFound("시도코드");
 			}
-			if (service.selectByGugunCode(sidoCode, gugunCode) == null) {
-				return new ResponseEntity<String>("해당 시도에 존재하지 않는 구군코드입니다.", HttpStatus.BAD_REQUEST);
+			
+			if (gugunCode != null && (sidoCode == null || service.selectByGugunCode(sidoCode, gugunCode) == null)) {
+				return notFound("구군코드");
 			}
-			return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfo(sidoCode, gugunCode), HttpStatus.OK);
+				
+			if (contentTypeId != null && service.selectByContentTypeId(contentTypeId) == null) {
+				return notFound("관광지 유형");
+			}
+			
+			// 전체
+			if (sidoCode == null && gugunCode == null && contentTypeId == null) {
+				return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfo(), HttpStatus.OK);
+			}
+			
+			// 시도
+			if (gugunCode == null && contentTypeId == null) {
+				return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfoBySido(sidoCode), HttpStatus.OK);
+			}
+			
+			// 관광지 유형
+			if (sidoCode == null && gugunCode == null) {
+				return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfoByContentType(contentTypeId), HttpStatus.OK);
+			}
+			
+			// 시도 + 구군
+			if (contentTypeId == null) {
+				return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfoByGugun(sidoCode, gugunCode), HttpStatus.OK);
+			}
+						
+			// 시도 + 관광지 유형
+			if (gugunCode == null) {
+				return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfoBySidoAndContentType(sidoCode, contentTypeId), HttpStatus.OK);
+			}
+			
+			// 시도 + 구군 + 관광지 유형
+			return new ResponseEntity<List<AttractionInfo>>(service.listAttractionInfoByGugunAndContentType(sidoCode, gugunCode, contentTypeId), HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}
@@ -66,7 +112,7 @@ public class AttractionController {
 			AttractionInfo attractionInfo = service.attractionInfo(contentId);
 
 			if (attractionInfo == null) {
-				return new ResponseEntity<String>("존재하지 않는 관광지입니다.", HttpStatus.BAD_REQUEST);
+				return notFound("관광지");
 			}
 			
 			return new ResponseEntity<AttractionInfo>(attractionInfo, HttpStatus.OK);
@@ -81,7 +127,7 @@ public class AttractionController {
 			AttractionDescription attractionDescription = service.attractionDescription(contentId);
 
 			if (attractionDescription == null) {
-				return new ResponseEntity<String>("존재하지 않는 관광지입니다.", HttpStatus.BAD_REQUEST);
+				return notFound("관광지");
 			}
 			
 			return new ResponseEntity<AttractionDescription>(attractionDescription, HttpStatus.OK);
@@ -93,5 +139,10 @@ public class AttractionController {
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();
 		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+
+	
+	private ResponseEntity<?> notFound(String string) {
+		return new ResponseEntity<String>("존재하지 않는 " + string + "입니다.", HttpStatus.BAD_REQUEST);
 	}
 }

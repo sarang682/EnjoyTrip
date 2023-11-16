@@ -11,7 +11,7 @@ function listGugun(param, success, fail) {
 }
 
 function listContentType(success, fail) {
-    local.get(`attractions/contenType`).then(success).catch(fail);
+    local.get(`attractions/content-type`).then(success).catch(fail);
 }
 
 function listAttractionInfo(param, success, fail) {
@@ -29,6 +29,7 @@ function attractionDescription(contentId, success, fail) {
 export {
     listSido,
     listGugun,
+    listContentType,
     listAttractionInfo,
     attractionInfo,
     attractionDescription,

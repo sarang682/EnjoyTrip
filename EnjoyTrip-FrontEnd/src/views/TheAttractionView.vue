@@ -1,13 +1,14 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { listSido, listAttraction } from "@/api/attraction";
+import { listSido, listGugun, listContentType, listAttractionInfo, attractionInfo, attractionDescription } from "@/api/attraction";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
+import KakaoMap from "@/components/attraction/KakaoMap.vue";
 
 import VSelect from "@/components/common/VSelect.vue";
-import VKakaoMap from "@/components/common/VKakaoMap.vue";
 
 onMounted(() => {
     getSidoList();
+    getContentTypeList();
 });
 
 const attractions = ref([]);
@@ -15,59 +16,40 @@ const selectAttraction = ref({});
 
 const sidos = ref([
     {
-        text: "검색할 지역 선택",
+        text: "검색할 시도 선택",
         value: "",
     },
 ]);
 
-const contentTypes = [
+const guguns = ref([
+    {
+        text: "검색할 구군 선택",
+        value: "",
+    },
+]);
+
+var contentTypes = ref([
     {
         text: "관광지 유형",
         value: "",
     },
-    {
-        text: "관광지",
-        value: "12",
-    },
-    {
-        text: "문화시설",
-        value: "14",
-    },
-    {
-        text: "축제공연행사",
-        value: "15",
-    },
-    {
-        text: "여행코스",
-        value: "25",
-    },
-    {
-        text: "레포츠",
-        value: "28",
-    },
-    {
-        text: "숙박",
-        value: "32",
-    },
-    {
-        text: "쇼핑",
-        value: "38",
-    },
-    {
-        text: "음식점",
-        value: "39",
-    },
-]
+]);
 
 const param = ref({
-    areaCode: "",
+    sidoCode: "",
+    gugunCode: "",
     contentTypeId: "",
-    word: "",
 });
 
-const changeAreaCode = (val) => {
-    param.value.areaCode = val;
+const changeSidoCode = (val) => {
+    param.value.sidoCode = val;
+    guguns.value.length = 1;
+    getGugunList(val);
 };
+
+const changeGugunCode = (val) => {
+    param.value.gugunCode = val;
+}
 
 const changeContentTypeId = (val) => {
     param.value.contentTypeId = val;
@@ -76,7 +58,12 @@ const changeContentTypeId = (val) => {
 const getSidoList = () => {
     listSido(
         ({ data }) => {
-            makeOption(data);
+            data.forEach((sido) => {
+                sidos.value.push({
+                    text: sido.sidoName,
+                    value: sido.sidoCode
+                });
+            })
         },
         (error) => {
             console.log(error);
@@ -84,23 +71,50 @@ const getSidoList = () => {
     );
 };
 
-function makeOption(data) {
-    let areas = data.response.body.items.item;
-    areas.forEach((area) => {
-        sidos.value.push({
-            text: area.name, 
-            value: area.code
-        }); 
-    })
-}
+const getGugunList = (sidoCode) => {
+    listGugun(
+        {
+            "sido-code": sidoCode
+        },
+        ({ data }) => {
+            data.forEach((gugun) => {
+                guguns.value.push({
+                    text: gugun.gugunName,
+                    value: gugun.gugunCode
+                });
+            })
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+const getContentTypeList = () => {
+    listContentType(
+        ({ data }) => {
+            data.forEach((contentType) => {
+                contentTypes.value.push({
+                    text: contentType.contentTypeName,
+                    value: contentType.contentTypeId
+                });
+            })
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
 
 const getAttractionList = () => {
-    listAttraction(
-        param.value.areaCode,
-        param.value.contentTypeId,
-        param.value.word,
+    listAttractionInfo(
+        {
+            "sido-code": param.value.sidoCode,
+            "gugun-code": param.value.gugunCode,
+            "content-type-id": param.value.contentTypeId
+        },
         ({ data }) => {
-            attractions.value = data.response.body.items.item;
+            attractions.value = data;
         },
         (error) => {
             console.log(error);
@@ -125,16 +139,17 @@ const viewAttraction = (attraction) => {
                 </div>
                 <!-- 관광지 검색 start -->
                 <form class="d-flex my-3" onsubmit="return false;" role="search">
-                    <VSelect class="me-2" :selectOption="sidos" @onKeySelect="changeAreaCode" />
+                    <VSelect class="me-2" :selectOption="sidos" @onKeySelect="changeSidoCode" />
+                    <VSelect class="me-2" :selectOption="guguns" @onKeySelect="changeGugunCode" />
                     <VSelect class="me-2" :selectOption="contentTypes" @onKeySelect="changeContentTypeId" />
-                    <input id="search-keyword" class="form-control form-control-sm me-2" type="search" 
-                        placeholder="검색어" aria-label="검색어" v-model="param.word" />
+                    <!-- <input id="search-keyword" class="form-control form-control-sm me-2" type="search" placeholder="검색어"
+                        aria-label="검색어" v-model="param.word" /> -->
                     <button id="btn-search" class="btn btn-outline-success" type="button"
                         @click="getAttractionList">검색</button>
                 </form>
                 <!-- kakao map start -->
                 <!-- <div id="map" class="mt-3" style="width: 100%; height: 400px"></div> -->
-                <VKakaoMap :attractions="attractions" :selectAttraction="selectAttraction"/>
+                <KakaoMap :attractions="attractions" :selectAttraction="selectAttraction" />
                 <!-- kakao map end -->
                 <div class="row">
                     <table class="table table-striped">
@@ -148,12 +163,8 @@ const viewAttraction = (attraction) => {
                             </tr>
                         </thead>
                         <tbody id="trip-list">
-                            <AttractionListItem 
-                                v-for="attraction in attractions"
-                                :key="attraction.contentid"
-                                :attraction="attraction"
-                                @click="viewAttraction(attraction)"
-                                />
+                            <AttractionListItem v-for="attraction in attractions" :key="attraction.contentId"
+                                :attraction="attraction" @click="viewAttraction(attraction)" />
                         </tbody>
                     </table>
                 </div>
@@ -165,5 +176,4 @@ const viewAttraction = (attraction) => {
 </template>
 
 <style scoped>
-
 </style>

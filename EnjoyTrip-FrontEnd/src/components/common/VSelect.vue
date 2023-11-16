@@ -6,7 +6,6 @@ const emit = defineEmits(["onKeySelect"]);
 const key = ref("");
 
 const onSelect = () => {
-  console.log(key.value + "선택!!!");
   emit("onKeySelect", key.value);
 };
 </script>
@@ -17,7 +16,7 @@ const onSelect = () => {
       v-for="option in selectOption"
       :key="option.value"
       :value="option.value"
-      :disabled="option.value === '' ? true : false"
+      :selected="option.value === '' ? true : false"
     >
       {{ option.text }}
     </option>

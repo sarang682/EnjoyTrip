@@ -1,4 +1,16 @@
-<script setup></script>
+<script setup>
+import { useMenuStore } from "@/stores/menu";
+import { storeToRefs } from "pinia";
+
+const menuStore = useMenuStore();
+const { menuList } = storeToRefs(menuStore);
+const { changeMenuState } = menuStore;
+
+const logout = () => {
+  console.log("로그아웃!!!!");
+  changeMenuState();
+};
+</script>
 
 <template>
   <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
@@ -29,9 +41,6 @@
           <li class="nav-item">
             <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
           </li>
-          <!-- <li class="nav-item">
-            <router-link :to="{ name: 'estations' }" class="nav-link">전기차충전소</router-link>
-          </li> -->
         </ul>
         <!-- <form class="d-flex" role="search">
           <input
@@ -42,6 +51,29 @@
           />
           <button class="btn btn-outline-success" type="button">search</button>
         </form> -->
+        <ul
+          class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll"
+          style="--bs-scroll-height: 100px"
+        >
+          <template v-for="menu in menuList" :key="menu.routeName">
+            <template v-if="menu.show">
+              <template v-if="menu.routeName === 'user-logout'">
+                <li class="nav-item">
+                  <router-link to="/" @click.prevent="logout" class="nav-link">{{
+                    menu.name
+                  }}</router-link>
+                </li>
+              </template>
+              <template v-else>
+                <li class="nav-item">
+                  <router-link :to="{ name: menu.routeName }" class="nav-link">{{
+                    menu.name
+                  }}</router-link>
+                </li>
+              </template>
+            </template>
+          </template>
+        </ul>
       </div>
     </div>
   </nav>

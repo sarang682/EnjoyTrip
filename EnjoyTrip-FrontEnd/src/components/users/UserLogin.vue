@@ -15,7 +15,7 @@ const { changeMenuState } = useMenuStore();
 
 const loginUser = ref({
   userId: "",
-  userPwd: "",
+  userPassword: "",
 });
 
 const login = async () => {
@@ -61,7 +61,7 @@ const login = async () => {
             <input
               type="password"
               class="form-control"
-              v-model="loginUser.userPwd"
+              v-model="loginUser.userPassword"
               @keyup.enter="login"
               placeholder="비밀번호..."
             />

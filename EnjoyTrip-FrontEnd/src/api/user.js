@@ -4,13 +4,13 @@ const local = localAxios();
 
 async function userConfirm(param, success, fail) {
   console.log("param", param);
-  await local.post(`/user/login`, param).then(success).catch(fail);
+  await local.post(`/members/login`, param).then(success).catch(fail);
   console.log("userConfirm ok");
 }
 
 async function findById(userid, success, fail) {
   local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
-  await local.get(`/user/info/${userid}`).then(success).catch(fail);
+  await local.get(`/members/info/${userid}`).then(success).catch(fail);
 }
 
 async function tokenRegeneration(user, success, fail) {
@@ -22,4 +22,11 @@ async function logout(userid, success, fail) {
   await local.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout };
+async function idCheck(userid, success, fail) {
+  await local.get(`/members/id-check/${userid}`).then(success).catch(fail);
+}
+
+function join(user, success, fail) {
+  local.post(`/members`, JSON.stringify(user)).then(success).catch(fail);
+}
+export { userConfirm, findById, tokenRegeneration, logout, idCheck, join};

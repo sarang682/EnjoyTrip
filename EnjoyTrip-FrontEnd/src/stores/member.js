@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout } from "@/api/user";
+import { userConfirm, findById, tokenRegeneration, logout, idCheck } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -13,6 +13,22 @@ export const useMemberStore = defineStore("memberStore", () => {
   const isLoginError = ref(false);
   const userInfo = ref(null);
   const isValidToken = ref(false);
+  const isValidId = ref(true);
+
+  const id_check = async (userId) => {
+  await idCheck(
+      userId,
+      (response) => {
+        if (response.status == httpStatusCode.OK) {
+          isValidId.value = response.data;
+        }
+      },
+      (error) => {
+        console.error(error);
+      }
+    )
+}
+
 
   const userLogin = async (loginUser) => {
     await userConfirm(
@@ -24,14 +40,14 @@ export const useMemberStore = defineStore("memberStore", () => {
           let { data } = response;
           // console.log("data", data);
           let accessToken = data["access-token"];
-          let refreshToken = data["refresh-token"];
+          // let refreshToken = data["refresh-token"];
           console.log("accessToken", accessToken);
-          console.log("refreshToken", refreshToken);
+          // console.log("refreshToken", refreshToken);
           isLogin.value = true;
           isLoginError.value = false;
           isValidToken.value = true;
           sessionStorage.setItem("accessToken", accessToken);
-          sessionStorage.setItem("refreshToken", refreshToken);
+          // sessionStorage.setItem("refreshToken", refreshToken);
           console.log("sessiontStorage에 담았다", isLogin.value);
         } else {
           console.log("로그인 실패했다");
@@ -136,6 +152,8 @@ export const useMemberStore = defineStore("memberStore", () => {
     isLoginError,
     userInfo,
     isValidToken,
+    isValidId,
+    id_check,
     userLogin,
     getUserInfo,
     tokenRegenerate,

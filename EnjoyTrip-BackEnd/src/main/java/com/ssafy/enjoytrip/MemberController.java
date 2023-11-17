@@ -104,10 +104,10 @@ public class MemberController {
 	public ResponseEntity<?> idCheck(@PathVariable("user-id") String userId) throws Exception{
 		try {
 			if (service.idCheck(userId)) {
-				return new ResponseEntity<String>("중복된 아이디 입니다.", HttpStatus.OK);
+				return new ResponseEntity<Boolean>(false, HttpStatus.OK);
 			}
 			
-			return new ResponseEntity<String>("사용 가능한 아이디 입니다.", HttpStatus.OK);
+			return new ResponseEntity<Boolean>(true, HttpStatus.OK);
 		} catch (Exception e) {
 			return exceptionHandling(e);
 		}

@@ -22,4 +22,11 @@ async function logout(userid, success, fail) {
   await local.get(`/user/logout/${userid}`).then(success).catch(fail);
 }
 
-export { userConfirm, findById, tokenRegeneration, logout };
+async function idCheck(userid, success, fail) {
+  await local.get(`/members/id-check/${userid}`).then(success).catch(fail);
+}
+
+function join(user, success, fail) {
+  local.post(`/members`, JSON.stringify(user)).then(success).catch(fail);
+}
+export { userConfirm, findById, tokenRegeneration, logout, idCheck, join};

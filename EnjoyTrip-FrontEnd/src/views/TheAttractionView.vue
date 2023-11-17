@@ -1,9 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { listSido, listGugun, listContentType, listAttractionInfo } from "@/api/attraction";
+
+import AttractionDetail from "@/components/attraction/AttractionDetail.vue";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
 import KakaoMap from "@/components/attraction/KakaoMap.vue";
-
 import VSelect from "@/components/common/VSelect.vue";
 
 onMounted(() => {
@@ -122,8 +123,18 @@ const getAttractionList = () => {
     );
 };
 
-const viewAttraction = (attraction) => {
-    selectAttraction.value = attraction;
+// const viewAttraction = (attraction) => {
+//     selectAttraction.value = attraction;
+// }
+
+const openModal = ref(false);
+const contentId = ref("");
+
+const showDescription = (data) => {
+    console.log(data);
+    openModal.value = true;
+    contentId.value = data;
+    console.log(contentId.value);
 }
 </script>
 
@@ -153,13 +164,17 @@ const viewAttraction = (attraction) => {
                             v-for="attraction in attractions" 
                             :key="attraction.contentId"
                             :attraction="attraction" 
-                            @click="viewAttraction(attraction)" 
+                            @show-description="showDescription"
                             cols="12" md="4" sm="4" />
                     </v-row>
                 </v-container>
             </div>
         </div>
         <!-- 중앙 content end -->
+    </div>
+
+    <div v-if="openModal" @close-modal="openModal = false">
+        <AttractionDetail :contentId="contentId" class="white-bg" />
     </div>
 </template>
 

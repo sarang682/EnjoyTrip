@@ -19,11 +19,11 @@ function listAttractionInfo(param, success, fail) {
 }
 
 function attractionInfo(contentId, success, fail) {
-  local.put(`/attractions/info/${contentId}`).then(success).catch(fail);
+  local.get(`/attractions/info/${contentId}`).then(success).catch(fail);
 }
 
 function attractionDescription(contentId, success, fail) {
-  local.delete(`/description/description/${contentId}`).then(success).catch(fail);
+  local.get(`/attractions/description/${contentId}`).then(success).catch(fail);
 }
 
 export {

@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <router-link :to="{ name: 'main' }" class="navbar-brand">
         <img src="@/assets/ssafy_logo.png" class="rounded mx-auto d-block" alt="..." />

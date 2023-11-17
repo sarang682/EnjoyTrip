@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { listSido, listGugun, listContentType, listAttractionInfo, attractionInfo, attractionDescription } from "@/api/attraction";
+import { listSido, listGugun, listContentType, listAttractionInfo } from "@/api/attraction";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
 import KakaoMap from "@/components/attraction/KakaoMap.vue";
 
@@ -142,33 +142,21 @@ const viewAttraction = (attraction) => {
                     <VSelect class="me-2" :selectOption="sidos" @onKeySelect="changeSidoCode" />
                     <VSelect class="me-2" :selectOption="guguns" @onKeySelect="changeGugunCode" />
                     <VSelect class="me-2" :selectOption="contentTypes" @onKeySelect="changeContentTypeId" />
-                    <!-- <input id="search-keyword" class="form-control form-control-sm me-2" type="search" placeholder="검색어"
-                        aria-label="검색어" v-model="param.word" /> -->
-                    <button id="btn-search" class="btn btn-outline-success" type="button"
-                        @click="getAttractionList">검색</button>
+                    <v-btn id="btn-search" color="blue-grey" type="button" @click="getAttractionList">검색</v-btn>
                 </form>
                 <!-- kakao map start -->
-                <!-- <div id="map" class="mt-3" style="width: 100%; height: 400px"></div> -->
                 <KakaoMap :attractions="attractions" :selectAttraction="selectAttraction" />
                 <!-- kakao map end -->
-                <div class="row">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr v-if="attractions.length !== 0">
-                                <th>대표이미지</th>
-                                <th>관광지명</th>
-                                <th>주소</th>
-                                <th>위도</th>
-                                <th>경도</th>
-                            </tr>
-                        </thead>
-                        <tbody id="trip-list">
-                            <AttractionListItem v-for="attraction in attractions" :key="attraction.contentId"
-                                :attraction="attraction" @click="viewAttraction(attraction)" />
-                        </tbody>
-                    </table>
-                </div>
-                <!-- 관광지 검색 end -->
+                <v-container id="trip-list">
+                    <v-row align="center" justify="center">
+                        <AttractionListItem 
+                            v-for="attraction in attractions" 
+                            :key="attraction.contentId"
+                            :attraction="attraction" 
+                            @click="viewAttraction(attraction)" 
+                            cols="12" md="4" sm="4" />
+                    </v-row>
+                </v-container>
             </div>
         </div>
         <!-- 중앙 content end -->

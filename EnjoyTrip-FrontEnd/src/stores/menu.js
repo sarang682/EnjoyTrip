@@ -16,4 +16,6 @@ export const useMenuStore = defineStore("menuStore", () => {
     menuList,
     changeMenuState,
   };
-});
+},
+{persist: { storage: localStorage}}
+);

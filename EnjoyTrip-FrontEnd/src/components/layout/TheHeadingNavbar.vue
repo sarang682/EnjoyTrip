@@ -8,6 +8,7 @@ const { changeMenuState } = menuStore;
 
 const logout = () => {
   console.log("로그아웃!!!!");
+  sessionStorage.removeItem("accessToken");
   changeMenuState();
 };
 </script>

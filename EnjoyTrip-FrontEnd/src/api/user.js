@@ -4,13 +4,13 @@ const local = localAxios();
 
 async function userConfirm(param, success, fail) {
   console.log("param", param);
-  await local.post(`/user/login`, param).then(success).catch(fail);
+  await local.post(`/members/login`, param).then(success).catch(fail);
   console.log("userConfirm ok");
 }
 
 async function findById(userid, success, fail) {
   local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
-  await local.get(`/user/info/${userid}`).then(success).catch(fail);
+  await local.get(`/members/info/${userid}`).then(success).catch(fail);
 }
 
 async function tokenRegeneration(user, success, fail) {

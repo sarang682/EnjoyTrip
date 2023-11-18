@@ -140,41 +140,39 @@ const showDescription = (data) => {
 
 
 <template>
+    <AttractionDetail 
+        v-if="openModal" 
+        @close-modal="openModal = false" 
+        class="modal-body"
+        :contentId="contentId" />
     <div class="container">
-        <div style="height: 70px"></div>
         <div class="row">
-            <!-- 중앙 center content end -->
             <div class="col-md-9 mx-auto">
                 <div class="alert mt-3 text-center fw-bold border-bottom" role="alert">
                     전국 관광지 정보
                 </div>
-                <!-- 관광지 검색 start -->
+                <!-- 관광지 검색 -->
                 <form class="d-flex my-3" onsubmit="return false;" role="search">
                     <VSelect class="me-2" :selectOption="sidos" @onKeySelect="changeSidoCode" />
                     <VSelect class="me-2" :selectOption="guguns" @onKeySelect="changeGugunCode" />
                     <VSelect class="me-2" :selectOption="contentTypes" @onKeySelect="changeContentTypeId" />
                     <v-btn id="btn-search" color="blue-grey" type="button" @click="getAttractionList">검색</v-btn>
                 </form>
-                <!-- kakao map start -->
+                <!-- kakao map -->
                 <KakaoMap :attractions="attractions" :selectAttraction="selectAttraction" />
-                <!-- kakao map end -->
+                <!-- 관광지 리스트 -->
                 <v-container id="trip-list">
-                    <v-row align="center" justify="center">
+                    <v-row>
                         <AttractionListItem 
+                            cols="12" md="4" sm="4"
                             v-for="attraction in attractions" 
                             :key="attraction.contentId"
                             :attraction="attraction" 
-                            @show-description="showDescription"
-                            cols="12" md="4" sm="4" />
+                            @show-description="showDescription" />
                     </v-row>
                 </v-container>
             </div>
         </div>
-        <!-- 중앙 content end -->
-    </div>
-
-    <div v-if="openModal" @close-modal="openModal = false">
-        <AttractionDetail :contentId="contentId" class="white-bg" />
     </div>
 </template>
 

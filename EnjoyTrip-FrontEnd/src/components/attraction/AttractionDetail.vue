@@ -29,7 +29,7 @@ const getAttractionDescription = (contentId) => {
         <p>{{ description.homepage }}</p>
         <p>{{ description.overview }}</p>
         <p>{{ description.telname }}</p>
-        <button @click="$emit('close-modal')">닫기</button>
+        <v-btn color="blue-grey" type="button" @click="$emit('close-modal')">닫기</v-btn>
     </div>
 </div>
 </template>
@@ -40,30 +40,17 @@ const getAttractionDescription = (contentId) => {
 	height: 100%;
 	background: rgba(0, 0, 0, 0.6);
 	position: fixed;
+	z-index: 1000;
 }
 
 .white-bg {
-	width: 90%;
+	width: 50%;
 	margin: 80px auto;
 	background: white;
-	border-radius: 5px;
-	padding: 20px 0;
-}
-
-.close {
-	cursor: pointer;
-	border: none;
-	background: #6667AB;
-	color: white;
-	font-weight: bold;
-	border-radius: 5px;
-	padding: 5px 15px;
-}
-
-.close:hover {
-	color:white;
-	font-weight: bold;
-	transform: scale(1.1);
-	transition: all 0.5s;
+	border-style : solid;
+	border-color: black;
+	border-radius: 10px;
+	border-width: 2px;
+	padding: 20px;
 }
 </style>

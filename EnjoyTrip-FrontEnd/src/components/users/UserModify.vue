@@ -1,9 +1,14 @@
 <script setup>
 import { defineProps, ref } from 'vue';
+import { update } from '@/api/user';
+import { useRouter } from "vue-router";
 
 defineProps({
     userid: String,
 })
+
+const pwCheck = ref("");
+const router = useRouter();
 
 const ModifyUser = ref({
     userId : "",
@@ -13,8 +18,25 @@ const ModifyUser = ref({
     emailDomain : ""
 })
 
-const modify = () => {
-
+const modify = (id) => {
+    if (ModifyUser.value.userName == "" || ModifyUser.value.userPassword == "" || ModifyUser.value.emailDomain == ""|| ModifyUser.value.emailId == "") {
+    window.confirm("빈칸없이 입력하세요")
+  } else if (ModifyUser.value.userPassword != pwCheck.value) {
+    window.confirm("비밀번호를 확인해주세요")
+  } else {
+    ModifyUser.value.userId=id;
+    console.log(ModifyUser.value);
+    update(
+        ModifyUser.value,
+        (response) => {
+            if(response.status == 200) {
+                alert("수정이 완료되었습니다.");
+                router.push("/user/mypage");
+            }
+        },
+        (error) => console.log(error)
+    );
+  }
 }
 
 </script>
@@ -60,7 +82,7 @@ const modify = () => {
             </div>
           </div>
           <div class="col-auto text-center">
-            <button type="button" class="btn btn-outline-primary mb-3" @click="modify">수정</button>
+            <button type="button" class="btn btn-outline-primary mb-3" @click="modify(userid)">수정</button>
             <button type="button" class="btn btn-outline-success ms-1 mb-3">초기화</button>
           </div>
         </form>

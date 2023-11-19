@@ -149,6 +149,24 @@ public class MemberController {
 		}
 	}
 	
+	@PutMapping("")
+	public ResponseEntity<?> updateUser(@RequestBody Member member) throws Exception {
+		try {
+			int result = service.update(member);
+			
+			if (result > 0) {
+				return new ResponseEntity<String>("회원 수정 성공", HttpStatus.OK);
+			}
+			if (result < 0) {
+				return new ResponseEntity<String>("해당 아이디가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+			}
+			
+			return new ResponseEntity<String>("Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
 	@DeleteMapping("{user-id}")
 	public ResponseEntity<?> deleteUser(@PathVariable("user-id") String userId) throws Exception {
 		try {

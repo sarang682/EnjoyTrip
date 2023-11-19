@@ -3,6 +3,15 @@ import TheMainView from "../views/TheMainView.vue";
 import TheAttractionView from "@/views/TheAttractionView.vue";
 // import TheBoardView from "../views/TheBoardView.vue";
 
+const requireAuth = () => (to,from,next) => {
+  if(sessionStorage.getItem("accessToken")==null) { // 토큰이 없다
+    alert("로그인이 필요합니다.");
+    next('/user/login');
+  }else { // 토큰이 있다
+    return next();
+  }
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -35,16 +44,20 @@ const router = createRouter({
           path: "view/:articleno",
           name: "article-view",
           component: () => import("@/components/board/BoardDetail.vue"),
+          beforeEnter: requireAuth()
         },
         {
           path: "write",
           name: "article-write",
           component: () => import("@/components/board/BoardWrite.vue"),
+          beforeEnter: requireAuth()
         },
         {
           path: "modify/:articleno",
           name: "article-modify",
           component: () => import("@/components/board/BoardModify.vue"),
+          beforeEnter: requireAuth(),
+          props: true
         },
       ],
     },
@@ -67,15 +80,16 @@ const router = createRouter({
           path: "mypage",
           name: "user-mypage",
           component: () => import("@/components/users/UserMyPage.vue"),
+          beforeEnter: requireAuth(),
         },
-        // {
-        //   path: "modify/:userid",
-        //   name: "user-modify",
-        //   component: () => import("@/components/users/UserModify.vue"),
-        // },
+        {
+          path: "/modify/:userid",
+          name: "user-modify",
+          component: () => import("@/components/users/UserModify.vue"),
+          props: true
+        },
       ],
     }
   ],
 });
-
 export default router;

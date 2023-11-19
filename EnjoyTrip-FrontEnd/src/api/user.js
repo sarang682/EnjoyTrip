@@ -29,4 +29,8 @@ async function idCheck(userid, success, fail) {
 function join(user, success, fail) {
   local.post(`/members`, JSON.stringify(user)).then(success).catch(fail);
 }
-export { userConfirm, findById, tokenRegeneration, logout, idCheck, join};
+
+function update(user, success, fail) {
+  local.put(`/members`, JSON.stringify(user)).then(success).catch(fail);
+}
+export { userConfirm, findById, tokenRegeneration, logout, idCheck, join, update};

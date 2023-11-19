@@ -12,4 +12,5 @@ public interface MemberDao {
 	public int updatePassword(Member member) throws Exception;
 	public int updateEmail(Member member) throws Exception;
 	public int delete(String userId) throws Exception;
+	public int update(Member member)throws Exception;
 }

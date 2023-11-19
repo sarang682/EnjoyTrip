@@ -1,4 +1,37 @@
-<script setup></script>
+<script setup>
+import { onMounted, ref } from 'vue';
+import {useMemberStore} from "@/stores/member";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+
+const memberStore = useMemberStore();
+const {getUserInfo} = memberStore;
+const {userInfo} = storeToRefs(memberStore);
+
+const user=ref({})
+const router = useRouter();
+
+onMounted(()=> {
+  const token=sessionStorage.getItem("accessToken");
+  getUser(token);
+})
+
+const getUser= async (token) => {
+  await getUserInfo(token);
+  user.value=userInfo.value;
+  // console.log("getUser : "+user.value.userId);
+}
+
+const modify = function () {
+  router.push({
+    name: 'user-modify',
+    params: {
+      userid: user.value.userId
+    }
+  });
+};
+
+</script>
 
 <template>
   <div class="container">
@@ -21,20 +54,20 @@
             <div class="col-md-8">
               <div class="card-body text-start">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item">SSAFY</li>
-                  <li class="list-group-item">김싸피</li>
-                  <li class="list-group-item">ssafy@ssafy.com</li>
+                  <li class="list-group-item">{{user.userId}}</li>
+                  <li class="list-group-item">{{user.userName}}</li>
+                  <li class="list-group-item">{{user.emailId}}@{{user.emailDomain}}</li>
                 </ul>
               </div>
             </div>
           </div>
         </div>
         <div>
-          <button type="button" class="btn btn-outline-secondary mt-2">수정</button>
+          <button type="button" class="btn btn-outline-secondary mt-2"
+            @click="modify">수정</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-
 <style scoped></style>

@@ -56,7 +56,8 @@ const router = createRouter({
           path: "modify/:articleno",
           name: "article-modify",
           component: () => import("@/components/board/BoardModify.vue"),
-          beforeEnter: requireAuth()
+          beforeEnter: requireAuth(),
+          props: true
         },
       ],
     },
@@ -79,6 +80,7 @@ const router = createRouter({
           path: "mypage",
           name: "user-mypage",
           component: () => import("@/components/users/UserMyPage.vue"),
+          beforeEnter: requireAuth(),
         },
         // {
         //   path: "modify/:userid",

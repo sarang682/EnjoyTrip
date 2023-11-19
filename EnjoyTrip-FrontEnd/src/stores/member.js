@@ -62,15 +62,15 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
-  const getUserInfo = (token) => {
+  const getUserInfo = async (token) => {
     let decodeToken = jwtDecode(token);
     console.log("2. decodeToken", decodeToken);
-    findById(
+    await findById(
       decodeToken.userId,
       (response) => {
         if (response.status === httpStatusCode.OK) {
           userInfo.value = response.data.userInfo;
-          console.log("3. getUserInfo data >> ", response.data);
+          return userInfo;
         } else {
           console.log("유저 정보 없음!!!!");
         }

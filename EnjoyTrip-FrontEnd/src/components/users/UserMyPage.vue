@@ -1,13 +1,15 @@
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import {useMemberStore} from "@/stores/member";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 const memberStore = useMemberStore();
 const {getUserInfo} = memberStore;
 const {userInfo} = storeToRefs(memberStore);
 
 const user=ref({})
+const router = useRouter();
 
 onMounted(()=> {
   const token=sessionStorage.getItem("accessToken");
@@ -19,6 +21,15 @@ const getUser= async (token) => {
   user.value=userInfo.value;
   // console.log("getUser : "+user.value.userId);
 }
+
+const modify = function () {
+  router.push({
+    name: 'user-modify',
+    params: {
+      userid: user.value.userId
+    }
+  });
+};
 
 </script>
 
@@ -52,7 +63,8 @@ const getUser= async (token) => {
           </div>
         </div>
         <div>
-          <button type="button" class="btn btn-outline-secondary mt-2">수정</button>
+          <button type="button" class="btn btn-outline-secondary mt-2"
+            @click="modify">수정</button>
         </div>
       </div>
     </div>

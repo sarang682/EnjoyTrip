@@ -82,11 +82,12 @@ const router = createRouter({
           component: () => import("@/components/users/UserMyPage.vue"),
           beforeEnter: requireAuth(),
         },
-        // {
-        //   path: "modify/:userid",
-        //   name: "user-modify",
-        //   component: () => import("@/components/users/UserModify.vue"),
-        // },
+        {
+          path: "/modify/:userid",
+          name: "user-modify",
+          component: () => import("@/components/users/UserModify.vue"),
+          props: true
+        },
       ],
     }
   ],

@@ -44,6 +44,17 @@
 		]]>
 	</update>
 	
+	<update id="update" parameterType="member">
+		<![CDATA[
+			update members set 
+			user_name = #{userName}, 
+			user_password = #{userPassword}, 
+			email_id = #{emailId}, 
+			email_domain = #{emailDomain}
+			where user_id = #{userId}
+		]]>
+	</update>
+	
 	<delete id="delete" parameterType="string">
 		<![CDATA[
 			delete

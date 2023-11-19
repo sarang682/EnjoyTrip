@@ -62,4 +62,12 @@ public class MemberService {
 		}
 		return memberDao.delete(userId);
 	}
+
+	@Transactional
+	public int update(Member member) throws Exception {
+		if (selectByUserId(member.getUserId()) == null) {
+			return -1;
+		}
+		return memberDao.update(member);
+	}
 }

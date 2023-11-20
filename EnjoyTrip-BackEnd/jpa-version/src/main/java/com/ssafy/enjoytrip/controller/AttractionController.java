@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
+import com.ssafy.enjoytrip.dto.attraction.GetTypeResponse;
 import com.ssafy.enjoytrip.dto.attraction.GetGugunResponse;
 import com.ssafy.enjoytrip.dto.attraction.GetSidoResponse;
 import com.ssafy.enjoytrip.service.AttractionService;
@@ -27,6 +28,11 @@ public class AttractionController {
     @GetMapping("/gugun")
     public BaseResponse<List<GetGugunResponse>> getGugunList(@RequestParam("sido-code") int sidoCode) {
         return new BaseResponse<>(service.getGugunList(sidoCode));
+    }
+
+    @GetMapping("/content-type")
+    public BaseResponse<List<GetTypeResponse>> getTypeList() {
+        return new BaseResponse<>(service.getTypeList());
     }
 
 }

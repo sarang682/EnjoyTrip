@@ -34,6 +34,9 @@ public enum ExceptionStatus implements ResponseStatus {
     MEMBER_NOT_FOUND(5002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 회원입니다."),
     PASSWORD_NO_MATCH(5003, HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다."),
 
+    DUPLICATE_ID(5001, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 아이디입니다."),
+
+
     // 6000: ATTRACTION
     INVALID_ATTRACTION_VALUE(6000, HttpStatus.BAD_REQUEST.value(), "관광지 정보 요청에서 잘못된 값이 존재합니다."),
     SIDO_NOT_FOUND(6001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 시도코드입니다."),

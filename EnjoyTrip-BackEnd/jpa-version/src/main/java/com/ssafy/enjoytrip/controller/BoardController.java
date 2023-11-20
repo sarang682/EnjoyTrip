@@ -1,14 +1,13 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
-import com.ssafy.enjoytrip.domain.Article;
+import com.ssafy.enjoytrip.dto.board.ArticleDto;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
 import com.ssafy.enjoytrip.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,4 +22,10 @@ public class BoardController {
         service.post(request.getMemberId(),request.getTitle(),request.getContent());
         return new BaseResponse<>(null);
     }
+
+    @GetMapping("articles")
+    public BaseResponse<Page<ArticleDto>> listArticle(Pageable pageable) {
+        return new BaseResponse<>(service.listArticle(pageable));
+    }
+
 }

@@ -30,17 +30,17 @@ public class Member extends BaseTimeEntity {
     @Column(name = "email_domain")
     private String emailDomain;
 
-    @OneToMany(mappedBy = "member")
-    private List<Article> articles = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Comment> comments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Bookmark> bookmarks = new ArrayList<>();
-
-    @OneToMany(mappedBy = "member")
-    private List<Hotplace> hotplaces = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Article> articles = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Comment> comments = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Bookmark> bookmarks = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "member")
+//    private List<Hotplace> hotplaces = new ArrayList<>();
 
     @Builder
     public Member(String id, String password, String name, String emailId, String emailDomain) {

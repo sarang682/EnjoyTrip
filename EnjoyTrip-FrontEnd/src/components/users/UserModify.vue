@@ -1,14 +1,40 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, onMounted } from 'vue';
 import { update } from '@/api/user';
 import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useMemberStore } from "@/stores/member";
 
 defineProps({
     userid: String,
 })
 
+
+const memberStore = useMemberStore();
+const {getUserInfo} = memberStore;
+const {userInfo} = storeToRefs(memberStore);
+
 const pwCheck = ref("");
 const router = useRouter();
+
+const domainList = [
+  {
+    text: "싸피",
+    value: "ssafy.com"
+  },
+  {
+    text: "구글",
+    value: "gmail.com"
+  },
+  {
+    text: "네이버",
+    value: "naver.com"
+  },
+  {
+    text: "카카오",
+    value: "kakao.com"
+  }
+]
 
 const ModifyUser = ref({
     userId : "",
@@ -17,6 +43,17 @@ const ModifyUser = ref({
     emailId : "",
     emailDomain : ""
 })
+
+onMounted(() => {
+  const token=sessionStorage.getItem("accessToken");
+  getUser(token);
+})
+
+const getUser= async (token) => {
+  await getUserInfo(token);
+  ModifyUser.value = userInfo.value;
+  ModifyUser.value.userPassword = "";
+}
 
 const modify = (id) => {
     if (ModifyUser.value.userName == "" || ModifyUser.value.userPassword == "" || ModifyUser.value.emailDomain == ""|| ModifyUser.value.emailId == "") {
@@ -61,7 +98,7 @@ const modify = (id) => {
           </div>
           <div class="mb-3">
             <label for="userpwd" class="form-label">비밀번호 : </label>
-            <input type="text" class="form-control" placeholder="비밀번호..." v-model="ModifyUser.userPassword" />
+            <input type="password" class="form-control" placeholder="비밀번호..." v-model="ModifyUser.userPassword" />
           </div>
           <div class="mb-3">
             <label for="pwdcheck" class="form-label">비밀번호확인 : </label>
@@ -74,10 +111,7 @@ const modify = (id) => {
               <span class="input-group-text">@</span>
               <select class="form-select" aria-label="이메일 도메인 선택" v-model="ModifyUser.emailDomain">
                 <option selected>선택</option>
-                <option value="ssafy.com">싸피</option>
-                <option value="google.com">구글</option>
-                <option value="naver.com">네이버</option>
-                <option value="kakao.com">카카오</option>
+                <option v-for="domain in domainList" :value="domain.value">{{ domain.text }}</option>
               </select>
             </div>
           </div>

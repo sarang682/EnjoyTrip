@@ -59,7 +59,7 @@ const changeContentTypeId = (val) => {
 const getSidoList = () => {
     listSido(
         ({ data }) => {
-            data.forEach((sido) => {
+            data.result.forEach((sido) => {
                 sidos.value.push({
                     text: sido.sidoName,
                     value: sido.sidoCode
@@ -78,7 +78,7 @@ const getGugunList = (sidoCode) => {
             "sido-code": sidoCode
         },
         ({ data }) => {
-            data.forEach((gugun) => {
+            data.result.forEach((gugun) => {
                 guguns.value.push({
                     text: gugun.gugunName,
                     value: gugun.gugunCode
@@ -94,7 +94,7 @@ const getGugunList = (sidoCode) => {
 const getContentTypeList = () => {
     listContentType(
         ({ data }) => {
-            data.forEach((contentType) => {
+            data.result.forEach((contentType) => {
                 contentTypes.value.push({
                     text: contentType.contentTypeName,
                     value: contentType.contentTypeId
@@ -115,7 +115,7 @@ const getAttractionList = () => {
             "content-type-id": param.value.contentTypeId
         },
         ({ data }) => {
-            attractions.value = data;
+            attractions.value = data.result;
         },
         (error) => {
             console.log(error);
@@ -131,10 +131,9 @@ const openModal = ref(false);
 const contentId = ref("");
 
 const showDescription = (data) => {
-    console.log(data);
     openModal.value = true;
     contentId.value = data;
-    console.log(contentId.value);
+
 }
 </script>
 

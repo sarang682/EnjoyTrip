@@ -48,13 +48,12 @@ public class MemberService {
         return jwtUtil.createAccessToken(member.getId());
     }
 
-    public Member userInfo(String token, String memberId) {
-        if(jwtUtil.checkToken(token)) { // 토큰이 유효함
-            return memberRepository.findById(memberId)
-                    .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
-        }else { // 토큰이 유효X
-            throw new MemberException(ExceptionStatus.EXPIRED_TOKEN);
-        }
+    public Member getMember(String token) {
+        if(!jwtUtil.checkToken(token)) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
+        String memberId=jwtUtil.getUserId(token);
+        if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
 
     @Transactional

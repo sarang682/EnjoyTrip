@@ -28,10 +28,9 @@ public class MemberController {
         return new BaseResponse<>(service.login(request.getMemberId(),request.getPassword()));
     }
 
-    @GetMapping("/info/{memberId}")
-    public BaseResponse<Member> userInfo(@PathVariable String memberId, HttpServletRequest request) {
-        String token=request.getHeader("Authorization");
-        return new BaseResponse<>(service.userInfo(token, memberId));
+    @GetMapping("/info")
+    public BaseResponse<Member> getMember(@RequestHeader("Authorization") String token) {
+        return new BaseResponse<>(service.getMember(token));
     }
 
     @PutMapping("/{memberId}")

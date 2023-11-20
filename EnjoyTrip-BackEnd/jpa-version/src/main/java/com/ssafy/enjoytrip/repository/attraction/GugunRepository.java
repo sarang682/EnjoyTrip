@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.repository;
+package com.ssafy.enjoytrip.repository.attraction;
 
 import com.ssafy.enjoytrip.domain.Gugun;
 import org.springframework.data.jpa.repository.JpaRepository;

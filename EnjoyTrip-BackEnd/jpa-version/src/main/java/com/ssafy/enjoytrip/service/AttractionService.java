@@ -1,12 +1,15 @@
 package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.AttractionException;
+import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Gugun;
 import com.ssafy.enjoytrip.domain.Sido;
+import com.ssafy.enjoytrip.dto.attraction.GetTypeResponse;
 import com.ssafy.enjoytrip.dto.attraction.GetGugunResponse;
 import com.ssafy.enjoytrip.dto.attraction.GetSidoResponse;
-import com.ssafy.enjoytrip.repository.GugunRepository;
-import com.ssafy.enjoytrip.repository.SidoRepository;
+import com.ssafy.enjoytrip.repository.attraction.TypeRepository;
+import com.ssafy.enjoytrip.repository.attraction.GugunRepository;
+import com.ssafy.enjoytrip.repository.attraction.SidoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,7 @@ public class AttractionService {
 
     private final SidoRepository sidoRepository;
     private final GugunRepository gugunRepository;
+    private final TypeRepository typeRepository;
 
     public List<GetSidoResponse> getSidoList() {
         List<Sido> sidos = sidoRepository.findAll();
@@ -42,6 +46,17 @@ public class AttractionService {
         List<GetGugunResponse> result = new ArrayList<>();
         for (Gugun gugun: guguns) {
             result.add(new GetGugunResponse(gugun));
+        }
+
+        return result;
+    }
+
+    public List<GetTypeResponse> getTypeList() {
+        List<AttractionType> types = typeRepository.findAll();
+
+        List<GetTypeResponse> result = new ArrayList<>();
+        for (AttractionType type: types) {
+            result.add(new GetTypeResponse(type));
         }
 
         return result;

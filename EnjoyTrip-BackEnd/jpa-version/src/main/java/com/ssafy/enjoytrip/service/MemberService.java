@@ -64,4 +64,12 @@ public class MemberService {
                 .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
         return memberRepository.updateMember(memberId,name,password,emailId,emailDomain);
     }
+
+    @Transactional
+    public void delete(String memberId) {
+        // 삭제할 회원이 존재하는지 검사
+        Member member= memberRepository.findById(memberId)
+                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        memberRepository.delete(member);
+    }
 }

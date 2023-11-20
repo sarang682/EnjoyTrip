@@ -38,4 +38,10 @@ public class MemberController {
     public BaseResponse<Integer> modify(@PathVariable String memberId, @RequestBody UpdateRequest request) {
         return new BaseResponse<>(service.modify(memberId, request.getName(), request.getPassword(), request.getEmailId(), request.getEmailDomain()));
     }
+
+    @DeleteMapping("/{memberId}")
+    public BaseResponse<Integer> delete(@PathVariable String memberId) {
+        service.delete(memberId);
+        return new BaseResponse<>(null);
+    }
 }

@@ -49,7 +49,12 @@ export const useMemberStore = defineStore("memberStore", () => {
           sessionStorage.setItem("accessToken", accessToken);
           // sessionStorage.setItem("refreshToken", refreshToken);
           console.log("sessiontStorage에 담았다", isLogin.value);
-        } else {
+        } else if (response.status == httpStatusCode.UNAUTHORIZED) {
+          console.log("아이디 비밀번호 틀림");
+          isLogin.value = false;
+          isLoginError.value = false;
+          isValidToken.value = false;
+        } else{
           console.log("로그인 실패했다");
           isLogin.value = false;
           isLoginError.value = true;

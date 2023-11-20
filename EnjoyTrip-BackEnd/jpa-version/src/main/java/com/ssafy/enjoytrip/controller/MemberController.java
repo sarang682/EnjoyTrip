@@ -4,12 +4,11 @@ import com.ssafy.enjoytrip.common.response.BaseResponse;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.LoginRequest;
+import com.ssafy.enjoytrip.dto.member.UpdateRequest;
 import com.ssafy.enjoytrip.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,5 +32,10 @@ public class MemberController {
     public BaseResponse<Member> userInfo(@PathVariable String memberId, HttpServletRequest request) {
         String token=request.getHeader("Authorization");
         return new BaseResponse<>(service.userInfo(token, memberId));
+    }
+
+    @PutMapping("/{memberId}")
+    public BaseResponse<Integer> modify(@PathVariable String memberId, @RequestBody UpdateRequest request) {
+        return new BaseResponse<>(service.modify(memberId, request.getName(), request.getPassword(), request.getEmailId(), request.getEmailDomain()));
     }
 }

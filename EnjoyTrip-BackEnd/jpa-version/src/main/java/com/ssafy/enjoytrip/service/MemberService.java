@@ -56,4 +56,12 @@ public class MemberService {
             throw new MemberException(ExceptionStatus.EXPIRED_TOKEN);
         }
     }
+
+    @Transactional
+    public int modify(String memberId, String name, String password, String emailId, String emailDomain) {
+        // 수정할 회원이 존재하는지 검사
+        Member member= memberRepository.findById(memberId)
+                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        return memberRepository.updateMember(memberId,name,password,emailId,emailDomain);
+    }
 }

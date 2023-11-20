@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.service;
 
+import com.ssafy.enjoytrip.common.exception.BoardException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.Article;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,8 +34,17 @@ public class ArticleService {
         return articleRepository.findAll(pageable).map(ArticleDto::fromEntity);
     }
 
+    public ArticleDto getArticle(int id) {
+        return ArticleDto.fromEntity(getArticleOrException(id));
+    }
+
     private Member getMemberOrException(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(()-> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+    }
+
+    private Article getArticleOrException(int id) {
+        return articleRepository.findById(id)
+                .orElseThrow(()->new BoardException(ExceptionStatus.ARTICLE_NOT_FOUND));
     }
 }

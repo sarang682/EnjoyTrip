@@ -28,4 +28,9 @@ public class BoardController {
         return new BaseResponse<>(service.listArticle(pageable));
     }
 
+    @GetMapping("/articles/{article-no}")
+    public BaseResponse<ArticleDto> getArticle(@PathVariable("article-no") int articleId) {
+        return new BaseResponse<>(service.getArticle(articleId));
+    }
+
 }

@@ -13,13 +13,13 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Gugun {
 
-    @EmbeddedId
-    private GugunId gugunId;
-
     @MapsId("sidoCode")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sido_code", referencedColumnName = "sido_code")
     private Sido sido;
+
+    @EmbeddedId
+    private GugunId gugunId;
 
     @Column(name = "gugun_name")
     private String name;

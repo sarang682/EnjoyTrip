@@ -11,7 +11,7 @@ public class AttractionDescription {
 
     @Id
     @Column(name = "attraction_id")
-    private String id;
+    private int id;
 
     @OneToOne
     @MapsId
@@ -21,10 +21,10 @@ public class AttractionDescription {
     @Column
     private String homepage;
 
-    @Column
+    @Column(length = 10000)
     private String overview;
 
     @Column
-    private int telname;
+    private String telname;
 
 }

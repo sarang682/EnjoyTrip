@@ -2,10 +2,8 @@ import { localAxios } from "@/util/http-commons";
 
 const local = localAxios();
 
-async function userConfirm(param, success, fail) {
-  console.log("param", param);
-  await local.post(`/members/login`, param).then(success).catch(fail);
-  console.log("userConfirm ok");
+async function userConfirm(user, success, fail) {
+  await local.post(`/members/login`, JSON.stringify(user)).then(success).catch(fail);
 }
 
 async function findById(userid, success, fail) {

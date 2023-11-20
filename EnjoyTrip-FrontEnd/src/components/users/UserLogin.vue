@@ -24,12 +24,15 @@ const login = async () => {
   let token = sessionStorage.getItem("accessToken");
   console.log("111. ", token);
   console.log("isLogin: ", isLogin);
-  if (isLogin) {
-    console.log("로그인 성공아닌가???");
+  if (isLogin.value) {
+    console.log("로그인 성공");
     getUserInfo(token);
     changeMenuState();
+    router.push("/");
+  } else {
+    console.log("로그인 실패");
+    alert("아이디 또는 비밀번호를 확인하세요")
   }
-  router.push("/");
 };
 </script>
 

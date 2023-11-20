@@ -32,9 +32,11 @@ public enum ExceptionStatus implements ResponseStatus {
     INVALID_MEMBER_VALUE(5000, HttpStatus.BAD_REQUEST.value(), "회원가입 요청에서 잘못된 값이 존재합니다."),
     DUPLICATE_EMAIL(5001, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 이메일입니다."),
     MEMBER_NOT_FOUND(5002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 회원입니다."),
-    PASSWORD_NO_MATCH(5003, HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다.");
+    PASSWORD_NO_MATCH(5003, HttpStatus.BAD_REQUEST.value(), "비밀번호가 일치하지 않습니다."),
 
     // 6000: ATTRACTION
+    SIDO_NOT_FOUND(6001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 시도코드입니다."),
+    GUGUN_NOT_FOUND(6002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 구군코드입니다.");
 
     // 7000: BOARD
 

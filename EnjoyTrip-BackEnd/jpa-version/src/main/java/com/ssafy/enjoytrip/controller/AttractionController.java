@@ -1,15 +1,10 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
-import com.ssafy.enjoytrip.dto.attraction.GetTypeResponse;
-import com.ssafy.enjoytrip.dto.attraction.GetGugunResponse;
-import com.ssafy.enjoytrip.dto.attraction.GetSidoResponse;
+import com.ssafy.enjoytrip.dto.attraction.*;
 import com.ssafy.enjoytrip.service.AttractionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -33,6 +28,19 @@ public class AttractionController {
     @GetMapping("/content-type")
     public BaseResponse<List<GetTypeResponse>> getTypeList() {
         return new BaseResponse<>(service.getTypeList());
+    }
+
+    @GetMapping("/info")
+    public BaseResponse<List<GetInfoResponse>> getInfoList(
+            @RequestParam(value="sido-code", required=false) Integer sidoCode,
+            @RequestParam(value="gugun-code", required=false) Integer gugunCode,
+            @RequestParam(value="content-type-id", required=false) Integer contentTypeId) {
+        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, contentTypeId));
+    }
+
+    @GetMapping("/description/{content-id}")
+    public BaseResponse<GetDescriptionResponse> getDescription(@PathVariable("content-id") int contentId) {
+        return new BaseResponse<>(service.findDescriptionById(contentId));
     }
 
 }

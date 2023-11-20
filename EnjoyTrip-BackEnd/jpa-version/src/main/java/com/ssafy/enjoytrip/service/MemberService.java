@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.service;
 import com.ssafy.enjoytrip.Util.JWTUtil;
 import com.ssafy.enjoytrip.common.exception.BadRequestException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
+import com.ssafy.enjoytrip.common.exception.UnAuthorizedException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
@@ -45,5 +46,14 @@ public class MemberService {
         }
         // 토큰생성
         return jwtUtil.createAccessToken(member.getId());
+    }
+
+    public Member userInfo(String token, String memberId) {
+        if(jwtUtil.checkToken(token)) { // 토큰이 유효함
+            return memberRepository.findById(memberId)
+                    .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        }else { // 토큰이 유효X
+            throw new MemberException(ExceptionStatus.EXPIRED_TOKEN);
+        }
     }
 }

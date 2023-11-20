@@ -5,6 +5,7 @@ import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.LoginRequest;
 import com.ssafy.enjoytrip.service.MemberService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,8 +30,8 @@ public class MemberController {
     }
 
     @GetMapping("/info/{memberId}")
-    public BaseResponse<Optional<Member>> getUserInfo(@PathVariable String memberId) {
-//        return new BaseResponse<>(service.getUerInfo(memberId));
-        return null;
+    public BaseResponse<Member> userInfo(@PathVariable String memberId, HttpServletRequest request) {
+        String token=request.getHeader("Authorization");
+        return new BaseResponse<>(service.userInfo(token, memberId));
     }
 }

@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetDescriptionResponse {
 
-    private int contentId;
+    private int attractionId;
     private String homepage;
     private String overview;
     private String telname;
 
     public GetDescriptionResponse(AttractionDescription description) {
-        contentId = description.getId();
+        attractionId = description.getId();
         homepage = description.getHomepage();
         overview = description.getOverview();
         telname = description.getTelname();

@@ -1,17 +1,17 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { attractionDescription } from "@/api/attraction";
-const props = defineProps({ contentId: String })
+const props = defineProps({ attractionId: String })
 
 onMounted(() => {
-    console.log(props.contentId);
-    getAttractionDescription(props.contentId);
+    console.log(props.attractionId);
+    getAttractionDescription(props.attractionId);
 });
 
 const description = ref({});
-const getAttractionDescription = (contentId) => {
+const getAttractionDescription = (attractionId) => {
     attractionDescription(
-        contentId,
+        attractionId,
         ({ data }) => {
             description.value = data.result;
         },

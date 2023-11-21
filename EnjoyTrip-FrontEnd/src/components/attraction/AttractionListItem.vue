@@ -5,7 +5,7 @@ const props = defineProps({ attraction: Object });
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
-    emit("show-description", props.attraction.contentId)
+    emit("show-description", props.attraction.attractionId)
 }
 
 const telephone = computed(() => {

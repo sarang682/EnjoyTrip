@@ -31,4 +31,5 @@ public class BookmarkController {
         return new BaseResponse<>(service.getBookmark(token));
     }
 
+
 }

@@ -55,7 +55,6 @@ public class BookmarkService {
         return new PostBookmarkResponse(bookmark);
     }
 
-
     public GetBookmarkResponse getBookmark(String token) {
         // 멤버
         Member member = getMemberByToken(token);

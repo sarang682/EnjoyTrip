@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { detailArticle, deleteArticle } from "@/api/board";
+import { detailArticle, deleteArticle, listComments } from "@/api/board";
+import CommentListItem from "@/components/board/item/CommentListItem.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -9,16 +10,16 @@ const router = useRouter();
 // const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
 
+const comments = ref([]);
 const article = ref({});
 const member = ref({});
 
 onMounted(() => {
   getArticle();
+  getComments();
 });
 
 const getArticle = () => {
-  // const { articleno } = route.params;
-  console.log(articleno + "번글 얻으러 가자!!!");
   detailArticle(
     articleno,
     (response) => {
@@ -30,6 +31,16 @@ const getArticle = () => {
     }
   );
 };
+
+const getComments = () => {
+  listComments(
+    articleno,
+    (response) => {
+      comments.value = response.data['result'];
+    },
+    (error) => console.log(error)
+  );
+}
 
 function moveList() {
   router.push({ name: "article-list" });
@@ -99,6 +110,21 @@ function onDeleteArticle() {
         </div>
       </div>
     </div>
+
+
+    <!-------------------------------- 댓글 시작 ----------------------------------------->
+    <table class="table table-hover">
+          <tbody>
+            <CommentListItem
+              v-for="comment in comments"
+              :key="comment.id"
+              :comment="comment"
+            ></CommentListItem>
+          </tbody>
+        </table>
+
+
+
   </div>
 </template>
 

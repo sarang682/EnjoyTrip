@@ -28,6 +28,10 @@ function deleteArticle(articleno, success, fail) {
   local.delete(`/board/articles/${articleno}`).then(success).catch(fail);
 }
 
+function listComments(articleno, success, fail) {
+  local.get(`/board/${articleno}/comments`).then(success).catch(fail);
+}
+
 export {
   listArticle,
   detailArticle,
@@ -35,4 +39,5 @@ export {
   // getModifyArticle,
   modifyArticle,
   deleteArticle,
+  listComments,
 };

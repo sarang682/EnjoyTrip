@@ -17,5 +17,5 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @Query("update Member m " +
             "set m.name=:name, m.password=:password, m.emailId=:emailId, m.emailDomain=:emailDomain " +
             "where m.id=:id")
-    int updateMember(String id, String name, String password, String emailId, String emailDomain);
+    int updateMember(@Param("id") String id, @Param("name")String name, @Param("password")String password, @Param("emailId")String emailId, @Param("emailDomain")String emailDomain);
 }

@@ -9,8 +9,9 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
-@Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTimeEntity {
@@ -23,4 +24,10 @@ public class BaseTimeEntity {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    public String getCreatedAt() {
+        return createdAt.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+    }
+    public String getUpdatedAt() {
+        return createdAt.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT));
+    }
 }

@@ -3,33 +3,50 @@ import { onMounted, ref } from 'vue';
 import {useMemberStore} from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { deleteUser } from '@/api/user';
+import { useMenuStore } from "@/stores/menu";
+
 
 const memberStore = useMemberStore();
 const {getUserInfo} = memberStore;
-const {userInfo} = storeToRefs(memberStore);
+const { userInfo } = storeToRefs(memberStore);
+const { changeMenuState } = useMenuStore();
 
 const user=ref({})
 const router = useRouter();
 
 onMounted(()=> {
-  const token=sessionStorage.getItem("accessToken");
-  getUser(token);
+  getUser();
 })
 
-const getUser= async (token) => {
-  await getUserInfo(token);
+const getUser= async () => {
+  await getUserInfo();
   user.value=userInfo.value;
-  // console.log("getUser : "+user.value.userId);
 }
 
-const modify = function () {
-  router.push({
-    name: 'user-modify',
-    params: {
-      userid: user.value.userId
-    }
-  });
+const modify = () => {
+  router.push({name:"user-modify"});
 };
+
+const deleteMember = () => {
+  if (confirm("정말 탈퇴하시겠습니까?")) {
+    deleteUser(
+      user.value.id,
+      (response) => {
+        if (response.status == 200) {
+          changeMenuState();
+          sessionStorage.removeItem("accessToken");
+          router.push("/");
+        }
+      },
+      (error) => {
+        console.log(user.value.id);
+        console.log(error);
+      }
+    ) 
+  }
+};
+
 
 </script>
 
@@ -54,8 +71,8 @@ const modify = function () {
             <div class="col-md-8">
               <div class="card-body text-start">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item">{{user.userId}}</li>
-                  <li class="list-group-item">{{user.userName}}</li>
+                  <li class="list-group-item">{{user.id}}</li>
+                  <li class="list-group-item">{{user.name}}</li>
                   <li class="list-group-item">{{user.emailId}}@{{user.emailDomain}}</li>
                 </ul>
               </div>
@@ -65,9 +82,15 @@ const modify = function () {
         <div>
           <button type="button" class="btn btn-outline-secondary mt-2"
             @click="modify">수정</button>
+          <button type="button" class="btn btn-outline-secondary mt-2"
+            @click="deleteMember">탈퇴</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+button {
+  margin-left: 10px;
+}
+</style>

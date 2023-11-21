@@ -1,13 +1,10 @@
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { update } from '@/api/user';
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMemberStore } from "@/stores/member";
 
-defineProps({
-    userid: String,
-})
 
 
 const memberStore = useMemberStore();
@@ -15,6 +12,7 @@ const {getUserInfo} = memberStore;
 const {userInfo} = storeToRefs(memberStore);
 
 const pwCheck = ref("");
+const memberId = ref("");
 const router = useRouter();
 
 const domainList = [
@@ -37,35 +35,35 @@ const domainList = [
 ]
 
 const ModifyUser = ref({
-    userId : "",
-    userName : "",
-    userPassword : "",
+    id : "",
+    name : "",
+    password : "",
     emailId : "",
     emailDomain : ""
 })
 
 onMounted(() => {
-  const token=sessionStorage.getItem("accessToken");
-  getUser(token);
+  getUser();
 })
 
-const getUser= async (token) => {
-  await getUserInfo(token);
+const getUser= async () => {
+  await getUserInfo();
   ModifyUser.value = userInfo.value;
-  ModifyUser.value.userPassword = "";
+  ModifyUser.value.password = "";
+  memberId.value = ModifyUser.value.id;
 }
 
-const modify = (id) => {
-    if (ModifyUser.value.userName == "" || ModifyUser.value.userPassword == "" || ModifyUser.value.emailDomain == ""|| ModifyUser.value.emailId == "") {
+const modify = () => {
+    if (ModifyUser.value.name == "" || ModifyUser.value.password == "" || ModifyUser.value.emailDomain == ""|| ModifyUser.value.emailId == "") {
     window.confirm("빈칸없이 입력하세요")
-  } else if (ModifyUser.value.userPassword != pwCheck.value) {
+  } else if (ModifyUser.value.password != pwCheck.value) {
     window.confirm("비밀번호를 확인해주세요")
-  } else {
-    ModifyUser.value.userId=id;
-    console.log(ModifyUser.value);
-    update(
-        ModifyUser.value,
+    } else {
+      update(
+        memberId.value, ModifyUser.value ,
         (response) => {
+        console.log("@@@@@@@@@@@@")
+        console.log(memberId.value)
             if(response.status == 200) {
                 alert("수정이 완료되었습니다.");
                 router.push("/user/mypage");
@@ -89,16 +87,16 @@ const modify = (id) => {
         <form>
             <div class="mb-3">
             <label for="userid" class="form-label">아이디 : </label>
-            <input type="text" class="form-control" v-bind:value="userid" readonly/>
+            <input type="text" class="form-control" v-bind:value="memberId" readonly/>
           </div>
           <div class="mb-3">
             <label for="username" class="form-label">이름 : </label>
             <input type="text" class="form-control" placeholder="이름..."
-              v-model="ModifyUser.userName"/>
+              v-model="ModifyUser.name"/>
           </div>
           <div class="mb-3">
             <label for="userpwd" class="form-label">비밀번호 : </label>
-            <input type="password" class="form-control" placeholder="비밀번호..." v-model="ModifyUser.userPassword" />
+            <input type="password" class="form-control" placeholder="비밀번호..." v-model="ModifyUser.password" />
           </div>
           <div class="mb-3">
             <label for="pwdcheck" class="form-label">비밀번호확인 : </label>
@@ -116,7 +114,7 @@ const modify = (id) => {
             </div>
           </div>
           <div class="col-auto text-center">
-            <button type="button" class="btn btn-outline-primary mb-3" @click="modify(userid)">수정</button>
+            <button type="button" class="btn btn-outline-primary mb-3" @click="modify">수정</button>
             <button type="button" class="btn btn-outline-success ms-1 mb-3">초기화</button>
           </div>
         </form>

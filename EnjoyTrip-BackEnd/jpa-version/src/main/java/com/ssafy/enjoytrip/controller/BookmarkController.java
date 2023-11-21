@@ -1,10 +1,9 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
-import com.ssafy.enjoytrip.dto.bookmark.DeleteBookmarkResponse;
+import com.ssafy.enjoytrip.dto.bookmark.BookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkRequest;
-import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkResponse;
 import com.ssafy.enjoytrip.service.BookmarkService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class BookmarkController {
     private final BookmarkService service;
 
     @PostMapping("")
-    public BaseResponse<PostBookmarkResponse> postBookmark(
+    public BaseResponse<BookmarkResponse> postBookmark(
             @RequestBody PostBookmarkRequest request,
             @RequestHeader("Authorization") String token) {
         return new BaseResponse<>(service.postBookmark(token, request));
@@ -33,7 +32,7 @@ public class BookmarkController {
     }
 
     @DeleteMapping("{bookmark-id}")
-    public BaseResponse<DeleteBookmarkResponse> deleteBookmark(
+    public BaseResponse<BookmarkResponse> deleteBookmark(
             @RequestHeader("Authorization") String token,
             @PathVariable(value = "bookmark-id") int bookmarkId) {
         return new BaseResponse<>(service.deleteBookmark(token, bookmarkId));

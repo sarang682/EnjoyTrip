@@ -11,9 +11,9 @@ import java.util.List;
 public class GetBookmarkResponse {
 
     String memberId;
-    List<BookmarkResponse> bookmarkList;
+    List<BookmarkDto> bookmarkList;
 
-    public GetBookmarkResponse(String memberId, List<BookmarkResponse> bookmarkList) {
+    public GetBookmarkResponse(String memberId, List<BookmarkDto> bookmarkList) {
         this.memberId = memberId;
         this.bookmarkList = bookmarkList;
     }

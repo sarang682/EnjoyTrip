@@ -8,7 +8,6 @@ import com.ssafy.enjoytrip.common.exception.DatabaseException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionInfo;
-import com.ssafy.enjoytrip.domain.Bookmark;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
 import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
@@ -29,7 +28,7 @@ public class BookmarkService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public PostBookmarkResponse postBookmark(String token, PostBookmarkRequest request) {
+    public BookmarkResponse postBookmark(String token, PostBookmarkRequest request) {
         // 멤버
         Member member = getMemberByToken(token);
 
@@ -42,14 +41,14 @@ public class BookmarkService {
         }
 
         // 즐겨찾기 생성
-        Bookmark bookmark = request.toEntity(member, attractionInfo);
+        com.ssafy.enjoytrip.domain.Bookmark bookmark = request.toEntity(member, attractionInfo);
 
         // 즐겨찾기 추가
         if (bookmarkRepository.save(bookmark) == null) {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 
-        return new PostBookmarkResponse(bookmark);
+        return new BookmarkResponse(bookmark);
     }
 
     public GetBookmarkResponse getBookmark(String token) {
@@ -57,25 +56,25 @@ public class BookmarkService {
         Member member = getMemberByToken(token);
 
         // 즐겨찾기
-        List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+        List<com.ssafy.enjoytrip.domain.Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
 
-        List<BookmarkResponse> res = new ArrayList<>();
-        for (Bookmark bookmark: bookmarks) {
-            res.add(new BookmarkResponse(bookmark));
+        List<BookmarkDto> res = new ArrayList<>();
+        for (com.ssafy.enjoytrip.domain.Bookmark bookmark: bookmarks) {
+            res.add(new BookmarkDto(bookmark));
         }
 
         return new GetBookmarkResponse(member.getId(), res);
     }
 
     @Transactional
-    public DeleteBookmarkResponse deleteBookmark(String token, int bookmarkId) {
+    public BookmarkResponse deleteBookmark(String token, int bookmarkId) {
         // 멤버 유효성 검사
         if (!existsMemberByToken(token)) {
             throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
         }
 
         // 즐겨찾기
-        Bookmark bookmark = findBookmarkById(bookmarkId);
+        com.ssafy.enjoytrip.domain.Bookmark bookmark = findBookmarkById(bookmarkId);
 
         // 삭제
         try {
@@ -84,7 +83,7 @@ public class BookmarkService {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 
-        return new DeleteBookmarkResponse(bookmark);
+        return new BookmarkResponse(bookmark);
     }
 
     private Member getMemberByToken(String token) {
@@ -126,7 +125,7 @@ public class BookmarkService {
         return false;
     }
 
-    private Bookmark findBookmarkById(int bookmarkId) {
+    private com.ssafy.enjoytrip.domain.Bookmark findBookmarkById(int bookmarkId) {
         return bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new BookmarkException(ExceptionStatus.BOOKMARK_NOT_FOUND));
     }

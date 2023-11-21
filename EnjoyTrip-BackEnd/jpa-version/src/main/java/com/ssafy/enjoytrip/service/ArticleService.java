@@ -32,7 +32,8 @@ public class ArticleService {
 
     // *** 게시글 ***
     @Transactional
-    public void post(String memberId, String title, String content) {
+    public void post(String title, String content, String token) {
+        String memberId = jwtUtil.getUserId(token);
         Member member=getMemberOrException(memberId);
         articleRepository.save(new Article(title,content,member));
     }
@@ -48,16 +49,22 @@ public class ArticleService {
     }
 
     @Transactional
-    public void modifyArticle(Integer articleId, String title, String content) {
+    public void modifyArticle(Integer articleId, String title, String content, String token) {
+        String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
+        if(memberId != article.getMember().getId())
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         article.setTitle(title);
         article.setContent(content);
         articleRepository.saveAndFlush(article);
     }
 
     @Transactional
-    public void deleteArticle(Integer articleId) {
+    public void deleteArticle(Integer articleId,String token) {
+        String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
+        if(memberId!=article.getMember().getId())
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         commentRepository.deleteAllByArticle(article);
         articleRepository.delete(article);
     }

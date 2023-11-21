@@ -53,7 +53,7 @@ export const useMemberStore = defineStore("memberStore", () => {
       (response) => {
         if (response.status == httpStatusCode.OK) {
           userInfo.value = response.data['result'];
-          return userInfo;
+          return userInfo.value;
         }
       },
       (error) => {

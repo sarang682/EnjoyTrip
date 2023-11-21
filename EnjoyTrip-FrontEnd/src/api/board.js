@@ -11,7 +11,7 @@ function detailArticle(articleno, success, fail) {
 }
 
 function registArticle(article, success, fail) {
-  console.log("boardjs article", article);
+  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
   local.post(`/board/articles`, JSON.stringify(article)).then(success).catch(fail);
 }
 
@@ -20,6 +20,7 @@ function registArticle(article, success, fail) {
 // }
 
 function modifyArticle(article, success, fail) {
+  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
   local.put(`/board/articles`, JSON.stringify(article)).then(success).catch(fail);
 }
 

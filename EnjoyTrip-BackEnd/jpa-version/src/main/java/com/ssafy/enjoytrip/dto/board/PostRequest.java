@@ -10,8 +10,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostRequest {
-
-    private String memberId;
     private String title;
     private String content;
 }

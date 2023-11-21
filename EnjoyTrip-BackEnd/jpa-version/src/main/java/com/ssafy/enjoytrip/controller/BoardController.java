@@ -22,9 +22,8 @@ public class BoardController {
 
     // ** 게시글 ***
     @PostMapping("articles")
-    public BaseResponse<?> post(@RequestBody PostRequest request) {
-
-        service.post(request.getMemberId(),request.getTitle(),request.getContent());
+    public BaseResponse<?> post(@RequestBody PostRequest request, @RequestHeader("Authorization") String token) {
+        service.post(request.getTitle(),request.getContent(), token);
         return new BaseResponse<>(null);
     }
 
@@ -39,14 +38,14 @@ public class BoardController {
     }
 
     @PutMapping("/articles")
-    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request) {
-        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent());
+    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request, @RequestHeader("Authorization") String token) {
+        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent(), token);
         return new BaseResponse<>(null);
     }
 
     @DeleteMapping("/articles/{article-no}")
-    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId) {
-        service.deleteArticle(articleId);
+    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId, @RequestHeader("Authorization") String token) {
+        service.deleteArticle(articleId, token);
         return new BaseResponse<>(null);
     }
 

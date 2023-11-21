@@ -2,100 +2,80 @@
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { registArticle, detailArticle, modifyArticle } from "@/api/board";
+import { getMember } from "@/api/user";
 
 const router = useRouter();
 const route = useRoute();
 
 const props = defineProps({ type: String });
 
-const isUseId = ref(false);
-
-const article = ref({
-  // articleNo: 0,
-  subject: "",
-  content: "",
-  userId: "",
-  // userName: "",
-  // hit: 0,
-  // registerTime: "",
-});
+const article = ref({});
+const member = ref({});
 
 if (props.type === "modify") {
   let { articleno } = route.params;
-  console.log(articleno + "번글 얻어와서 수정할거야");
   detailArticle(
     articleno,
-    ({ data }) => {
-      article.value = data;
-      isUseId.value = true;
+    (response) => {
+      article.value = response.data['result'];
+      member.value = response.data['result'].member;
     },
     (error) => {
       console.log(error);
     }
   );
-  isUseId.value = true;
+} else {
+  getMember(
+    (response) => {
+      member.value=response.data['result'];
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
 }
 
-const subjectErrMsg = ref("");
-const contentErrMsg = ref("");
-watch(
-  () => article.value.subject,
-  (value) => {
-    let len = value.length;
-    if (len == 0 || len > 30) {
-      subjectErrMsg.value = "제목을 확인해 주세요!!!";
-    } else subjectErrMsg.value = "";
-  },
-  { immediate: true }
-);
-watch(
-  () => article.value.content,
-  (value) => {
-    let len = value.length;
-    if (len == 0 || len > 500) {
-      contentErrMsg.value = "내용을 확인해 주세요!!!";
-    } else contentErrMsg.value = "";
-  },
-  { immediate: true }
-);
 
 function onSubmit() {
-  // event.preventDefault();
-
-  if (subjectErrMsg.value) {
-    alert(subjectErrMsg.value);
-  } else if (contentErrMsg.value) {
-    alert(contentErrMsg.value);
+  if (article.value.title=="" || article.value.content=="") {
+    alert("내용을 확인해주세요");
   } else {
     props.type === "regist" ? writeArticle() : updateArticle();
   }
 }
 
 function writeArticle() {
-  console.log("글등록하자!!", article.value);
+  const param={
+    title: article.value.title,
+    content: article.value.content
+  }
   registArticle(
-    article.value,
+    param,
     (response) => {
       let msg = "글등록 처리시 문제 발생했습니다.";
-      if (response.status == 201) msg = "글등록이 완료되었습니다.";
+      if (response.status == 200) msg = "글등록이 완료되었습니다.";
       alert(msg);
       moveList();
     },
-    (error) => console.log(error)
+    (error) => alert("허용되지 않은 접근입니다.")
   );
 }
 
 function updateArticle() {
-  console.log(article.value.articleNo + "번글 수정하자!!", article.value);
+  const param = {
+    articleId: article.value.id,
+    title: article.value.title,
+    content: article.value.content
+  }
   modifyArticle(
-    article.value,
+    param,
     (response) => {
       let msg = "글수정 처리시 문제 발생했습니다.";
       if (response.status == 200) msg = "글정보 수정이 완료되었습니다.";
       alert(msg);
       moveList();
     },
-    (error) => console.log(error)
+    (error) => alert("허용되지 않은 접근입니다.")
   );
 }
 
@@ -107,18 +87,18 @@ function moveList() {
 <template>
   <form @submit.prevent="onSubmit">
     <div class="mb-3">
-      <label for="userid" class="form-label">작성자 ID : </label>
+      <label for="userid" class="form-label">작성자 : </label>
       <input
         type="text"
         class="form-control"
-        v-model="article.userId"
-        :disabled="isUseId"
+        v-model="member.name"
+        :disabled="true"
         placeholder="작성자ID..."
       />
     </div>
     <div class="mb-3">
       <label for="subject" class="form-label">제목 : </label>
-      <input type="text" class="form-control" v-model="article.subject" placeholder="제목..." />
+      <input type="text" class="form-control" v-model="article.title" placeholder="제목..." />
     </div>
     <div class="mb-3">
       <label for="content" class="form-label">내용 : </label>

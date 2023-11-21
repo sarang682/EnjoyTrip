@@ -10,6 +10,7 @@ const router = useRouter();
 const { articleno } = route.params;
 
 const article = ref({});
+const member = ref({});
 
 onMounted(() => {
   getArticle();
@@ -22,6 +23,7 @@ const getArticle = () => {
     articleno,
     (response) => {
       article.value = response.data['result'];
+      member.value = response.data['result'].member;
     },
     (error) => {
       console.log(error);
@@ -38,15 +40,13 @@ function moveModify() {
 }
 
 function onDeleteArticle() {
-  // const { articleno } = route.params;
-  console.log(articleno + "번글 삭제하러 가자!!!");
   deleteArticle(
     articleno,
     (response) => {
       if (response.status == 200) moveList();
     },
     (error) => {
-      console.log(error);
+      alert("허용되지 않은 접근입니다.");
     }
   );
 }
@@ -72,7 +72,7 @@ function onDeleteArticle() {
                 src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
               />
               <p>
-                <span class="fw-bold">{{article.member.name}}</span> <br />
+                <span class="fw-bold">{{ member.name }}</span> <br />
                 <span class="text-secondary fw-light">
                   {{ article.createdAt }}1 조회 : {{ article.hit }}
                 </span>

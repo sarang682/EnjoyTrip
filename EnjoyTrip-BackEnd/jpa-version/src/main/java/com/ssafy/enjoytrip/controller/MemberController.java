@@ -9,6 +9,7 @@ import com.ssafy.enjoytrip.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE} , maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/members")

@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.repository;
+package com.ssafy.enjoytrip.repository.board;
 
 import com.ssafy.enjoytrip.domain.Article;
 import com.ssafy.enjoytrip.domain.Comment;

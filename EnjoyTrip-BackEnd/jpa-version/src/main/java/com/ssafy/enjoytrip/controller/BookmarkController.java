@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
+import com.ssafy.enjoytrip.dto.bookmark.DeleteBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkRequest;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkResponse;
@@ -31,5 +32,11 @@ public class BookmarkController {
         return new BaseResponse<>(service.getBookmark(token));
     }
 
+    @DeleteMapping("{bookmark-id}")
+    public BaseResponse<DeleteBookmarkResponse> deleteBookmark(
+            @RequestHeader("Authorization") String token,
+            @PathVariable(value = "bookmark-id") int bookmarkId) {
+        return new BaseResponse<>(service.deleteBookmark(token, bookmarkId));
+    }
 
 }

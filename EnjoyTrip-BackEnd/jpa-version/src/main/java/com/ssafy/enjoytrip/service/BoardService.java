@@ -10,8 +10,8 @@ import com.ssafy.enjoytrip.domain.Comment;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.board.ArticleDto;
 import com.ssafy.enjoytrip.dto.board.CommentDto;
-import com.ssafy.enjoytrip.repository.ArticleRepository;
-import com.ssafy.enjoytrip.repository.CommentRepository;
+import com.ssafy.enjoytrip.repository.board.ArticleRepository;
+import com.ssafy.enjoytrip.repository.board.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ArticleService {
+public class BoardService {
 
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;

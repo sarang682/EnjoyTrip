@@ -5,7 +5,7 @@ import com.ssafy.enjoytrip.dto.board.ArticleDto;
 import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.dto.board.ModifyArticleRequest;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
-import com.ssafy.enjoytrip.service.ArticleService;
+import com.ssafy.enjoytrip.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/board")
 public class BoardController {
 
-    private final ArticleService service;
+    private final BoardService service;
 
     // ** 게시글 ***
     @PostMapping("articles")

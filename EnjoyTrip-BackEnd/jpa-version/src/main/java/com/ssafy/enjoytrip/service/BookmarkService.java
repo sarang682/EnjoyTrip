@@ -1,8 +1,7 @@
 package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.*;
-import com.ssafy.enjoytrip.dto.bookmark.BookmarkResponse;
-import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
+import com.ssafy.enjoytrip.dto.bookmark.*;
 import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.AttractionException;
 import com.ssafy.enjoytrip.common.exception.DatabaseException;
@@ -11,8 +10,6 @@ import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionInfo;
 import com.ssafy.enjoytrip.domain.Bookmark;
 import com.ssafy.enjoytrip.domain.Member;
-import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkRequest;
-import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkResponse;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
 import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
@@ -40,7 +37,7 @@ public class BookmarkService {
         AttractionInfo attractionInfo = findAttractionById(request.getAttractionId());
 
         // 유효성 검사
-        if (existBookmark(member, attractionInfo)) {
+        if (existsByMemberAndAttractionInfo(member, attractionInfo)) {
             throw new BookmarkException(ExceptionStatus.DUPLICATE_BOOKMARK);
         }
 
@@ -70,6 +67,26 @@ public class BookmarkService {
         return new GetBookmarkResponse(member.getId(), res);
     }
 
+    @Transactional
+    public DeleteBookmarkResponse deleteBookmark(String token, int bookmarkId) {
+        // 멤버 유효성 검사
+        if (!existsMemberByToken(token)) {
+            throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
+        }
+
+        // 즐겨찾기
+        Bookmark bookmark = findBookmarkById(bookmarkId);
+
+        // 삭제
+        try {
+            bookmarkRepository.deleteById(bookmarkId);
+        } catch (Exception e) {
+            throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
+        }
+
+        return new DeleteBookmarkResponse(bookmark);
+    }
+
     private Member getMemberByToken(String token) {
         // 멤버 아이디
         String memberId = getMemberIdByToken(token);
@@ -77,6 +94,8 @@ public class BookmarkService {
     }
 
     private String getMemberIdByToken(String token) {
+        // 유효성 검사
+        jwtUtil.validateToken(token);
         return jwtUtil.getUserId(token);
     }
 
@@ -86,17 +105,30 @@ public class BookmarkService {
         return member;
     }
 
+    private boolean existsMemberByToken(String token) {
+        String memberId = getMemberIdByToken(token);
+        if (memberRepository.existsById(memberId)) {
+            return true;
+        }
+        return false;
+    }
+
     private AttractionInfo findAttractionById(int attractionId) {
         AttractionInfo attractionInfo = infoRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ExceptionStatus.ATTRACTION_NOT_FOUND));
         return attractionInfo;
     }
 
-    private boolean existBookmark(Member member, AttractionInfo attractionInfo) {
+    private boolean existsByMemberAndAttractionInfo(Member member, AttractionInfo attractionInfo) {
         if (bookmarkRepository.existsByMemberAndAttractionInfo(member, attractionInfo)) {
             return true;
         }
         return false;
     }
-    
+
+    private Bookmark findBookmarkById(int bookmarkId) {
+        return bookmarkRepository.findById(bookmarkId)
+                .orElseThrow(() -> new BookmarkException(ExceptionStatus.BOOKMARK_NOT_FOUND));
+    }
+
 }

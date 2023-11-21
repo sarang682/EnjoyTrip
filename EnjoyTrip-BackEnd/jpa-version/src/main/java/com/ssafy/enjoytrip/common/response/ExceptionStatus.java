@@ -46,7 +46,9 @@ public enum ExceptionStatus implements ResponseStatus {
     ARTICLE_NOT_FOUND(7000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 게시물입니다."),
 
     // 8000: BOOKMARK
-    DUPLICATE_BOOKMARK(8000, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 즐겨찾기입니다.");
+    DUPLICATE_BOOKMARK(8000, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 즐겨찾기입니다."),
+    BOOKMARK_NOT_FOUND(8001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 즐겨찾기입니다.");
+
 
     private final int code;
     private final int status;

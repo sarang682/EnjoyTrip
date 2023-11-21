@@ -1,34 +1,29 @@
 package com.ssafy.enjoytrip.service;
 
-import com.ssafy.enjoytrip.Util.JWTUtil;
-import com.ssafy.enjoytrip.common.exception.BadRequestException;
+import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.MemberException;
-import com.ssafy.enjoytrip.common.exception.UnAuthorizedException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
-import com.ssafy.enjoytrip.dto.member.LoginRequest;
-import com.ssafy.enjoytrip.repository.MemberRepository;
+import com.ssafy.enjoytrip.repository.member.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public void join(JoinRequest request) {
         memberRepository.findById(request.getMemberId()).ifPresent(it -> {
             throw new MemberException(ExceptionStatus.DUPLICATE_ID);
         });
-       memberRepository.save(
+        memberRepository.save(
                new Member(request.getMemberId(),
                        request.getPassword(),
                        request.getName(),
@@ -48,13 +43,14 @@ public class MemberService {
         return jwtUtil.createAccessToken(member.getId());
     }
 
-    public Member userInfo(String token, String memberId) {
-        if(jwtUtil.checkToken(token)) { // 토큰이 유효함
-            return memberRepository.findById(memberId)
-                    .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
-        }else { // 토큰이 유효X
-            throw new MemberException(ExceptionStatus.EXPIRED_TOKEN);
-        }
+    public Member userInfo(HttpServletRequest request, String memberId) {
+        // 토큰 가져오기
+        String token = jwtUtil.resolveToken(request);
+        // 유효성 검사
+        jwtUtil.validateToken(token);
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
 
     @Transactional

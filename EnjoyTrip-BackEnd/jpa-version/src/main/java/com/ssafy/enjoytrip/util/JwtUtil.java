@@ -1,10 +1,12 @@
-package com.ssafy.enjoytrip.Util;
+package com.ssafy.enjoytrip.util;
 
-import com.ssafy.enjoytrip.common.exception.UnAuthorizedException;
+import com.ssafy.enjoytrip.common.exception.JwtBadRequestException;
+import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,7 +17,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class JWTUtil {
+public class JwtUtil {
     @Value("${jwt.salt}")
     private String salt;
 
@@ -75,32 +77,53 @@ public class JWTUtil {
         return key;
     }
 
-    //	전달 받은 토큰이 제대로 생성된것인지 확인 하고 문제가 있다면 UnauthorizedException을 발생.
-    public boolean checkToken(String token) {
+    public String resolveToken(HttpServletRequest request) {
+        String token = request.getHeader("Authorization");
+        validateToken(token);
+        return token;
+    }
+
+    public void validateToken(String token) {
+        // 토큰이 없는 경우
+        if (token == null) {
+            throw new JwtBadRequestException(ExceptionStatus.TOKEN_NOT_FOUND);
+        }
+
+        /**
+         * Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
+         * setSigningKey : JWS 서명 검증을 위한  secret key 세팅
+         * parseClaimsJws : 파싱하여 원본 jws 만들기
+         */
+
+        Jws<Claims> claims;
+
         try {
-//			Json Web Signature? 서버에서 인증을 근거로 인증정보를 서버의 private key로 서명 한것을 토큰화 한것
-//			setSigningKey : JWS 서명 검증을 위한  secret key 세팅
-//			parseClaimsJws : 파싱하여 원본 jws 만들기
-            Jws<Claims> claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
-//			Claims 는 Map의 구현체 형태
-            log.debug("claims: {}", claims);
-            return true;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            return false;
+            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
+        } catch (Exception e){
+            throw new JwtBadRequestException(ExceptionStatus.INVALID_TOKEN);
+        }
+
+        // 만료된 토큰인지 확인
+        isExpiredToken(claims);
+    }
+
+    private void isExpiredToken(Jws<Claims> claims) {
+        if (!claims.getBody().getExpiration().before(new Date())) {
+            throw new JwtBadRequestException(ExceptionStatus.EXPIRED_TOKEN);
         }
     }
 
-    public String getUserId(String authorization) {
-        Jws<Claims> claims = null;
+    public String getUserId(String token) {
+        Jws<Claims> claims;
         try {
-            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(authorization);
+            claims = Jwts.parser().setSigningKey(this.generateKey()).parseClaimsJws(token);
         } catch (Exception e) {
             log.error(e.getMessage());
-            throw new UnAuthorizedException();
+            throw new JwtBadRequestException(ExceptionStatus.INVALID_TOKEN);
         }
         Map<String, Object> value = claims.getBody();
         log.info("value : {}", value);
         return (String) value.get("userId");
     }
+
 }

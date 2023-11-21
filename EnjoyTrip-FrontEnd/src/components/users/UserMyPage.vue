@@ -3,10 +3,14 @@ import { onMounted, ref } from 'vue';
 import {useMemberStore} from "@/stores/member";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+import { deleteUser } from '@/api/user';
+import { useMenuStore } from "@/stores/menu";
+
 
 const memberStore = useMemberStore();
 const {getUserInfo} = memberStore;
-const {userInfo} = storeToRefs(memberStore);
+const { userInfo } = storeToRefs(memberStore);
+const { changeMenuState } = useMenuStore();
 
 const user=ref({})
 const router = useRouter();
@@ -20,14 +24,29 @@ const getUser= async () => {
   user.value=userInfo.value;
 }
 
-const modify = function () {
-  router.push({
-    name: 'user-modify',
-    params: {
-      userid: user.value.userId
-    }
-  });
+const modify = () => {
+  router.push({name:"user-modify"});
 };
+
+const deleteMember = () => {
+  if (confirm("정말 탈퇴하시겠습니까?")) {
+    deleteUser(
+      user.value.id,
+      (response) => {
+        if (response.status == 200) {
+          changeMenuState();
+          sessionStorage.removeItem("accessToken");
+          router.push("/");
+        }
+      },
+      (error) => {
+        console.log(user.value.id);
+        console.log(error);
+      }
+    ) 
+  }
+};
+
 
 </script>
 
@@ -64,7 +83,7 @@ const modify = function () {
           <button type="button" class="btn btn-outline-secondary mt-2"
             @click="modify">수정</button>
           <button type="button" class="btn btn-outline-secondary mt-2"
-            @click="delete">탈퇴</button>
+            @click="deleteMember">탈퇴</button>
         </div>
       </div>
     </div>

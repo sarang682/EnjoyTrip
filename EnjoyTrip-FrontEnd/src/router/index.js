@@ -83,10 +83,9 @@ const router = createRouter({
           beforeEnter: requireAuth(),
         },
         {
-          path: "/modify/:userid",
+          path: "/modify",
           name: "user-modify",
           component: () => import("@/components/users/UserModify.vue"),
-          props: true
         },
       ],
     }

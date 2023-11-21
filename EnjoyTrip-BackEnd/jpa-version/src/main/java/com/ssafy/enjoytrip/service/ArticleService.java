@@ -8,6 +8,7 @@ import com.ssafy.enjoytrip.domain.Article;
 import com.ssafy.enjoytrip.domain.Comment;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.board.ArticleDto;
+import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.repository.ArticleRepository;
 import com.ssafy.enjoytrip.repository.CommentRepository;
 import com.ssafy.enjoytrip.repository.MemberRepository;
@@ -16,6 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -49,6 +53,12 @@ public class ArticleService {
         Article article = getArticleOrException(articleId);
         Member member = getMemberOrException(getMemberIdByToken(token));
         commentRepository.save(new Comment(comment,member,article));
+    }
+
+    public List<CommentDto> getComment(Integer articleId) {
+        Article article = getArticleOrException(articleId);
+        List<Comment> findComments=commentRepository.findAllByArticle(article);
+        return findComments.stream().map(CommentDto::fromEntity).collect(Collectors.toList());
     }
 
 

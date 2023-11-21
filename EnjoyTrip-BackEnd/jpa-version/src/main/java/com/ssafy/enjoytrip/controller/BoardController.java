@@ -2,7 +2,7 @@ package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
 import com.ssafy.enjoytrip.dto.board.ArticleDto;
-import com.ssafy.enjoytrip.dto.board.CommentRequest;
+import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
 import com.ssafy.enjoytrip.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -41,4 +42,10 @@ public class BoardController {
         service.comment(articleId,token,request.get("content"));
         return new BaseResponse<>(null);
     }
+
+    @GetMapping("{article-no}/comments")
+    public BaseResponse<List<CommentDto>> comment(@PathVariable("article-no") int articleId) {
+        return new BaseResponse<>(service.getComment(articleId));
+    }
+
 }

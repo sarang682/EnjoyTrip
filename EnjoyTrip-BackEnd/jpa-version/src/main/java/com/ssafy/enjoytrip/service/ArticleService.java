@@ -55,6 +55,13 @@ public class ArticleService {
         articleRepository.saveAndFlush(article);
     }
 
+    @Transactional
+    public void deleteArticle(Integer articleId) {
+        Article article = getArticleOrException(articleId);
+        commentRepository.deleteAllByArticle(article);
+        articleRepository.delete(article);
+    }
+
     // *** 댓글 ***
     @Transactional
     public void comment(Integer articleId, String token, String comment) {

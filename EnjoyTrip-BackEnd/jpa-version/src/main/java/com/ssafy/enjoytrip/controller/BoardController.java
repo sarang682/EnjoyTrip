@@ -43,6 +43,12 @@ public class BoardController {
         return new BaseResponse<>(null);
     }
 
+    @DeleteMapping("/articles/{article-no}")
+    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId) {
+        service.deleteArticle(articleId);
+        return new BaseResponse<>(null);
+    }
+
 
     // *** 댓글 ***
     @PostMapping("/{article-no}/comments")

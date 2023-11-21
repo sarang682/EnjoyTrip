@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.*;
+import com.ssafy.enjoytrip.domain.Bookmark;
 import com.ssafy.enjoytrip.dto.bookmark.*;
 import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.AttractionException;
@@ -41,7 +42,7 @@ public class BookmarkService {
         }
 
         // 즐겨찾기 생성
-        com.ssafy.enjoytrip.domain.Bookmark bookmark = request.toEntity(member, attractionInfo);
+        Bookmark bookmark = new Bookmark(member, attractionInfo);
 
         // 즐겨찾기 추가
         if (bookmarkRepository.save(bookmark) == null) {
@@ -56,10 +57,10 @@ public class BookmarkService {
         Member member = getMemberByToken(token);
 
         // 즐겨찾기
-        List<com.ssafy.enjoytrip.domain.Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
 
         List<BookmarkDto> res = new ArrayList<>();
-        for (com.ssafy.enjoytrip.domain.Bookmark bookmark: bookmarks) {
+        for (Bookmark bookmark: bookmarks) {
             res.add(new BookmarkDto(bookmark));
         }
 
@@ -74,7 +75,7 @@ public class BookmarkService {
         }
 
         // 즐겨찾기
-        com.ssafy.enjoytrip.domain.Bookmark bookmark = findBookmarkById(bookmarkId);
+        Bookmark bookmark = findBookmarkById(bookmarkId);
 
         // 삭제
         try {
@@ -125,7 +126,7 @@ public class BookmarkService {
         return false;
     }
 
-    private com.ssafy.enjoytrip.domain.Bookmark findBookmarkById(int bookmarkId) {
+    private Bookmark findBookmarkById(int bookmarkId) {
         return bookmarkRepository.findById(bookmarkId)
                 .orElseThrow(() -> new BookmarkException(ExceptionStatus.BOOKMARK_NOT_FOUND));
     }

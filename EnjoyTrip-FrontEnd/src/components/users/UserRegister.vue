@@ -1,69 +1,44 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useMemberStore } from "@/stores/member";
-import { storeToRefs } from "pinia";
 import { join } from "@/api/user";
 
 
 const router = useRouter();
 
-const memberStore = useMemberStore();
-
-const { isValidId } = storeToRefs(memberStore);
-const { id_check } = memberStore;
 const pwCheck = ref("");
+const isValidId = ref(true);
 
 const RegisterUser = ref({
-  userId : "",
-  userName : "",
-  userPassword : "",
+  memberId : "",
+  name : "",
+  password : "",
   emailId : "",
   emailDomain : ""
 })
 
 const register = async () => {
-  if (RegisterUser.value.userId == "" || RegisterUser.value.userName == "" || RegisterUser.value.userPassword == "" || RegisterUser.value.emailDomain == "") {
+  if (RegisterUser.value.memberId == "" || RegisterUser.value.name == "" || RegisterUser.value.password == "" || RegisterUser.value.emailId == "" || RegisterUser.value.emailDomain == "") {
     window.confirm("빈칸없이 입력하세요")
-  } else if (RegisterUser.value.userPassword != pwCheck.value) {
+  } else if (RegisterUser.value.password != pwCheck.value) {
     window.confirm("비밀번호를 확인해주세요")
-  } else { // 아이디 중복 체크
-    console.log(RegisterUser.value);
-    await id_check(RegisterUser.value.userId);
-
-    if (isValidId.value) {
-      console.log("회원가입 가능")
-      join(
-        RegisterUser.value,
-        (response) => {
-          if (response.status == 201) {
-            alert("회원가입이 완료되었습니다");
-          }
-        },
-        (error) => console.log(error)
-      );
-      router.push("/user/login");
-    } else {
-      window.confirm("아이디가 중복되었습니다.")
-      console.log("아이디 중복")
-    }
+  } else {
+    join(
+      RegisterUser.value,
+      (response) => {
+        if (response.status == 200) {
+          alert("회원가입이 완료되었습니다!")
+          router.push("/user/login");
+        }
+      },
+      (error) => {
+        alert("아이디 중복입니다. 다른 아이디를 입력해주세요!")
+        isValidId.value = false;
+      }
+    );
   }
 }
 
-// const id_check = function (){
-//   idCheck(
-//       RegisterUser.value.userId,
-//       (response) => {
-//         if (response.status == httpStatusCode.OK) {
-//           console.log("response값:"+response.data);
-//           return response.data;
-//         }
-//       },
-//       (error) => {
-//         console.error(error);
-//       }
-//     )
-// }
 </script>
 
 <template>
@@ -77,19 +52,19 @@ const register = async () => {
       <div class="col-lg-10 text-start">
         <form>
           <div class="mb-3">
-            <label for="username" class="form-label">이름 : </label>
-            <input type="text" class="form-control" placeholder="이름..."
-              v-model="RegisterUser.userName" />
-          </div>
-          <div class="mb-3">
             <label v-if="isValidId" for="userid" class="form-label">아이디 : </label>
             <label v-if="!isValidId" for="userid" class="form-label" id="invalidId">아이디 : 다른 아이디를 입력해주세요</label>
             <input type="text" class="form-control" placeholder="아이디..."
-              v-model="RegisterUser.userId" />
+              v-model="RegisterUser.memberId" />
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">이름 : </label>
+            <input type="text" class="form-control" placeholder="이름..."
+              v-model="RegisterUser.name" />
           </div>
           <div class="mb-3">
             <label for="userpwd" class="form-label">비밀번호 : </label>
-            <input type="text" class="form-control" placeholder="비밀번호..." v-model="RegisterUser.userPassword" />
+            <input type="text" class="form-control" placeholder="비밀번호..." v-model="RegisterUser.password" />
           </div>
           <div class="mb-3">
             <label for="pwdcheck" class="form-label">비밀번호확인 : </label>

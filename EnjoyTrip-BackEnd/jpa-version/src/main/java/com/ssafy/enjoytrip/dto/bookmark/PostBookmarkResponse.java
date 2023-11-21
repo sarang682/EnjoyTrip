@@ -1,6 +1,5 @@
 package com.ssafy.enjoytrip.dto.bookmark;
 
-import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Bookmark;
 import lombok.AccessLevel;
 import lombok.Getter;

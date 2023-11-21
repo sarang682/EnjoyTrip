@@ -4,6 +4,9 @@ import com.ssafy.enjoytrip.common.exception.*;
 import com.ssafy.enjoytrip.dto.bookmark.BookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.util.JwtUtil;
+import com.ssafy.enjoytrip.common.exception.AttractionException;
+import com.ssafy.enjoytrip.common.exception.DatabaseException;
+import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionInfo;
 import com.ssafy.enjoytrip.domain.Bookmark;
@@ -96,5 +99,4 @@ public class BookmarkService {
         }
         return false;
     }
-
 }

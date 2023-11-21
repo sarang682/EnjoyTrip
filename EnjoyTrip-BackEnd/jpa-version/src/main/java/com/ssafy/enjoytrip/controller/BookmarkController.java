@@ -5,9 +5,12 @@ import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkRequest;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkResponse;
 import com.ssafy.enjoytrip.service.BookmarkService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +30,4 @@ public class BookmarkController {
     public BaseResponse<GetBookmarkResponse> getBookmark(@RequestHeader("Authorization") String token) {
         return new BaseResponse<>(service.getBookmark(token));
     }
-
-
 }

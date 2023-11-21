@@ -7,6 +7,7 @@ import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,6 +51,16 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
         return MemberDto.fromEntity(member);
+    }
+
+    public Member userInfo(HttpServletRequest request, String memberId) {
+        // 토큰 가져오기
+        String token = jwtUtil.resolveToken(request);
+        // 유효성 검사
+        jwtUtil.validateToken(token);
+
+        return memberRepository.findById(memberId)
+                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
     }
 
     @Transactional

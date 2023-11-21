@@ -34,7 +34,7 @@ public class Article extends BaseTimeEntity {
     @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
     @Builder

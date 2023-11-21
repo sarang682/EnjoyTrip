@@ -19,13 +19,14 @@ public class BookmarkController {
     @PostMapping("")
     public BaseResponse<PostBookmarkResponse> postBookmark(
             @RequestBody PostBookmarkRequest request,
-            HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.postBookmark(httpServletRequest, request));
+            @RequestHeader("Authorization") String token) {
+        return new BaseResponse<>(service.postBookmark(token, request));
     }
 
     @GetMapping("")
-    public BaseResponse<GetBookmarkResponse> getBookmark(HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.getBookmark(httpServletRequest));
+    public BaseResponse<GetBookmarkResponse> getBookmark(@RequestHeader("Authorization") String token) {
+        return new BaseResponse<>(service.getBookmark(token));
     }
+
 
 }

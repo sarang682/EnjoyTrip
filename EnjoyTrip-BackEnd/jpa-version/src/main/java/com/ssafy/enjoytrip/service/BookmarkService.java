@@ -13,12 +13,10 @@ import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkResponse;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
 import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,9 +30,9 @@ public class BookmarkService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public PostBookmarkResponse postBookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
+    public PostBookmarkResponse postBookmark(String token, PostBookmarkRequest request) {
         // 멤버
-        Member member = getMemberByAuth(httpServletRequest);
+        Member member = getMemberByToken(token);
 
         // 관광지
         AttractionInfo attractionInfo = findAttractionById(request.getAttractionId());
@@ -55,9 +53,9 @@ public class BookmarkService {
         return new PostBookmarkResponse(bookmark);
     }
 
-    public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {
+    public GetBookmarkResponse getBookmark(String token) {
         // 멤버
-        Member member = getMemberByAuth(httpServletRequest);
+        Member member = getMemberByToken(token);
 
         // 즐겨찾기
         List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
@@ -70,21 +68,14 @@ public class BookmarkService {
         return new GetBookmarkResponse(member.getId(), res);
     }
 
-    private Member getMemberByAuth(HttpServletRequest httpServletRequest) {
-        // 토큰
-        String token = getToken(httpServletRequest);
+    private Member getMemberByToken(String token) {
         // 멤버 아이디
         String memberId = getMemberIdByToken(token);
-
         return findMemberById(memberId);
     }
 
     private String getMemberIdByToken(String token) {
         return jwtUtil.getUserId(token);
-    }
-
-    private String getToken(HttpServletRequest httpServletRequest) {
-        return jwtUtil.resolveToken(httpServletRequest);
     }
 
     private Member findMemberById(String memberId) {

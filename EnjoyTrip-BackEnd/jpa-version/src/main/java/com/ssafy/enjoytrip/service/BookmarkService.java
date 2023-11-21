@@ -19,7 +19,6 @@ import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,6 +54,7 @@ public class BookmarkService {
 
         return new PostBookmarkResponse(bookmark);
     }
+
 
     public GetBookmarkResponse getBookmark(String token) {
         // 멤버
@@ -99,4 +99,5 @@ public class BookmarkService {
         }
         return false;
     }
+    
 }

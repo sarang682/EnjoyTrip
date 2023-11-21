@@ -30,4 +30,5 @@ public class BookmarkController {
     public BaseResponse<GetBookmarkResponse> getBookmark(@RequestHeader("Authorization") String token) {
         return new BaseResponse<>(service.getBookmark(token));
     }
+
 }

@@ -20,8 +20,8 @@ const getArticle = () => {
   console.log(articleno + "번글 얻으러 가자!!!");
   detailArticle(
     articleno,
-    ({ data }) => {
-      article.value = data;
+    (response) => {
+      article.value = response.data['result'];
     },
     (error) => {
       console.log(error);
@@ -62,7 +62,7 @@ function onDeleteArticle() {
       </div>
       <div class="col-lg-10 text-start">
         <div class="row my-2">
-          <h2 class="text-secondary px-5">{{ article.articleNo }}. {{ article.subject }}</h2>
+          <h2 class="text-secondary px-5">{{ article.id }}. {{ article.title }}</h2>
         </div>
         <div class="row">
           <div class="col-md-8">
@@ -72,9 +72,9 @@ function onDeleteArticle() {
                 src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
               />
               <p>
-                <span class="fw-bold">{{ article.userId }}</span> <br />
+                <span class="fw-bold">{{article.member.name}}</span> <br />
                 <span class="text-secondary fw-light">
-                  {{ article.registerTime }}1 조회 : {{ article.hit }}
+                  {{ article.createdAt }}1 조회 : {{ article.hit }}
                 </span>
               </p>
             </div>

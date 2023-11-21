@@ -10,28 +10,29 @@ const router = useRouter();
 const memberStore = useMemberStore();
 
 const { isLogin } = storeToRefs(memberStore);
-const { userLogin, getUserInfo } = memberStore;
+const { userLogin } = memberStore;
 const { changeMenuState } = useMenuStore();
 
 const loginUser = ref({
-  userId: "",
-  userPassword: "",
+  memberId: "",
+  password: "",
 });
 
 const login = async () => {
-  console.log("login ing!!!! !!!");
-  await userLogin(loginUser.value);
-  let token = sessionStorage.getItem("accessToken");
-  console.log("111. ", token);
-  console.log("isLogin: ", isLogin);
-  if (isLogin.value) {
-    console.log("로그인 성공");
-    getUserInfo(token);
+
+  // 빈칸이 있는지 검사
+  if (loginUser.value.memberId == "" || loginUser.value.password == "") {
+    alert("아이디/비밀번호를 입력해주세요!!")
+  }
+  else {
+    await userLogin(loginUser.value);
+    if (isLogin.value) {
     changeMenuState();
     router.push("/");
-  } else {
-    console.log("로그인 실패");
+    }
+    else {
     alert("아이디 또는 비밀번호를 확인하세요")
+    } 
   }
 };
 </script>
@@ -55,7 +56,7 @@ const login = async () => {
             <input
               type="text"
               class="form-control"
-              v-model="loginUser.userId"
+              v-model="loginUser.memberId"
               placeholder="아이디..."
             />
           </div>
@@ -64,7 +65,7 @@ const login = async () => {
             <input
               type="password"
               class="form-control"
-              v-model="loginUser.userPassword"
+              v-model="loginUser.password"
               @keyup.enter="login"
               placeholder="비밀번호..."
             />

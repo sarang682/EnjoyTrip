@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { listSido, listGugun, listContentType, listAttractionInfo } from "@/api/attraction";
+import { listSido, listGugun, listAttractionType, listAttractionInfo } from "@/api/attraction";
 
 import AttractionDetail from "@/components/attraction/AttractionDetail.vue";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
@@ -9,7 +9,7 @@ import VSelect from "@/components/common/VSelect.vue";
 
 onMounted(() => {
     getSidoList();
-    getContentTypeList();
+    getAttractionTypeList();
 });
 
 const attractions = ref([]);
@@ -29,7 +29,7 @@ const guguns = ref([
     },
 ]);
 
-var contentTypes = ref([
+var attractionTypes = ref([
     {
         text: "관광지 유형",
         value: "",
@@ -39,7 +39,7 @@ var contentTypes = ref([
 const param = ref({
     sidoCode: "",
     gugunCode: "",
-    contentTypeId: "",
+    attractionTypeId: "",
 });
 
 const changeSidoCode = (val) => {
@@ -52,14 +52,14 @@ const changeGugunCode = (val) => {
     param.value.gugunCode = val;
 }
 
-const changeContentTypeId = (val) => {
-    param.value.contentTypeId = val;
+const changeAttractionTypeId = (val) => {
+    param.value.attractionTypeId = val;
 };
 
 const getSidoList = () => {
     listSido(
         ({ data }) => {
-            data.forEach((sido) => {
+            data.result.forEach((sido) => {
                 sidos.value.push({
                     text: sido.sidoName,
                     value: sido.sidoCode
@@ -78,7 +78,7 @@ const getGugunList = (sidoCode) => {
             "sido-code": sidoCode
         },
         ({ data }) => {
-            data.forEach((gugun) => {
+            data.result.forEach((gugun) => {
                 guguns.value.push({
                     text: gugun.gugunName,
                     value: gugun.gugunCode
@@ -91,13 +91,13 @@ const getGugunList = (sidoCode) => {
     );
 };
 
-const getContentTypeList = () => {
-    listContentType(
+const getAttractionTypeList = () => {
+    listAttractionType(
         ({ data }) => {
-            data.forEach((contentType) => {
-                contentTypes.value.push({
-                    text: contentType.contentTypeName,
-                    value: contentType.contentTypeId
+            data.result.forEach((attractionType) => {
+                attractionTypes.value.push({
+                    text: attractionType.attractionTypeName,
+                    value: attractionType.attractionTypeId
                 });
             })
         },
@@ -112,10 +112,10 @@ const getAttractionList = () => {
         {
             "sido-code": param.value.sidoCode,
             "gugun-code": param.value.gugunCode,
-            "content-type-id": param.value.contentTypeId
+            "attraction-type-id": param.value.attractionTypeId
         },
         ({ data }) => {
-            attractions.value = data;
+            attractions.value = data.result;
         },
         (error) => {
             console.log(error);
@@ -128,13 +128,11 @@ const getAttractionList = () => {
 // }
 
 const openModal = ref(false);
-const contentId = ref("");
+const attractionId = ref("");
 
 const showDescription = (data) => {
-    console.log(data);
     openModal.value = true;
-    contentId.value = data;
-    console.log(contentId.value);
+    attractionId.value = data;
 }
 </script>
 
@@ -144,7 +142,7 @@ const showDescription = (data) => {
         v-if="openModal" 
         @close-modal="openModal = false" 
         class="modal-body"
-        :contentId="contentId" />
+        :attractionId="attractionId" />
     <div class="container">
         <div class="row">
             <div class="col-md-9 mx-auto">
@@ -155,7 +153,7 @@ const showDescription = (data) => {
                 <form class="d-flex my-3" onsubmit="return false;" role="search">
                     <VSelect class="me-2" :selectOption="sidos" @onKeySelect="changeSidoCode" />
                     <VSelect class="me-2" :selectOption="guguns" @onKeySelect="changeGugunCode" />
-                    <VSelect class="me-2" :selectOption="contentTypes" @onKeySelect="changeContentTypeId" />
+                    <VSelect class="me-2" :selectOption="attractionTypes" @onKeySelect="changeAttractionTypeId" />
                     <v-btn id="btn-search" color="blue-grey" type="button" @click="getAttractionList">검색</v-btn>
                 </form>
                 <!-- kakao map -->
@@ -166,7 +164,7 @@ const showDescription = (data) => {
                         <AttractionListItem 
                             cols="12" md="4" sm="4"
                             v-for="attraction in attractions" 
-                            :key="attraction.contentId"
+                            :key="attraction.attractionId"
                             :attraction="attraction" 
                             @show-description="showDescription" />
                     </v-row>

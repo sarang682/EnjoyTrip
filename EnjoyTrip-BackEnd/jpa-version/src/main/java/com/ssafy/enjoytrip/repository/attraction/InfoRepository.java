@@ -23,22 +23,22 @@ public interface InfoRepository extends JpaRepository<AttractionInfo, Long> {
 
     @Query("select i " +
             "from AttractionInfo i " +
-            "where i.attractionType.id = :contentTypeId")
-    List<AttractionInfo> findAllByType(@Param("contentTypeId") int contentTypeId);
+            "where i.attractionType.id = :attractionTypeId")
+    List<AttractionInfo> findAllByType(@Param("attractionTypeId") int attractionTypeId);
 
     @Query("select i " +
             "from AttractionInfo i " +
             "where i.gugun.gugunId.sidoCode = :sidoCode " +
-            "and i.attractionType.id = :contentTypeId")
-    List<AttractionInfo> findAllBySidoAndType(@Param("sidoCode") int sidoCode, @Param("contentTypeId") int contentTypeId);
+            "and i.attractionType.id = :attractionTypeId")
+    List<AttractionInfo> findAllBySidoAndType(@Param("sidoCode") int sidoCode, @Param("attractionTypeId") int attractionTypeId);
 
     @Query("select i " +
             "from AttractionInfo i " +
             "where i.gugun.gugunId.sidoCode = :sidoCode " +
             "and i.gugun.gugunId.gugunCode = :gugunCode " +
-            "and i.attractionType.id = :contentTypeId")
+            "and i.attractionType.id = :attractionTypeId")
     List<AttractionInfo> findAllBySidoAndGugunAndType(
             @Param("sidoCode") int sidoCode,
             @Param("gugunCode") int gugunCode,
-            @Param("contentTypeId") int contentTypeId);
+            @Param("attractionTypeId") int attractionTypeId);
 }

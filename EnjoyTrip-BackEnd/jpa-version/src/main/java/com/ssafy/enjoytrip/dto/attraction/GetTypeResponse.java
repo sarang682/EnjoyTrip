@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetTypeResponse {
 
-    private int contentTypeId;
-    private String contentTypeName;
+    private int attractionTypeId;
+    private String attractionTypeName;
 
     public GetTypeResponse(AttractionType attractionType) {
-        contentTypeId = attractionType.getId();
-        contentTypeName = attractionType.getName();
+        attractionTypeId = attractionType.getId();
+        attractionTypeName = attractionType.getName();
     }
 
 }

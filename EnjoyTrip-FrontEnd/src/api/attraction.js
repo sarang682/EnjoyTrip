@@ -10,26 +10,26 @@ function listGugun(param, success, fail) {
   local.get(`/attractions/gugun`, { params: param }).then(success).catch(fail);
 }
 
-function listContentType(success, fail) {
-    local.get(`attractions/content-type`).then(success).catch(fail);
+function listAttractionType(success, fail) {
+    local.get(`attractions/attraction-type`).then(success).catch(fail);
 }
 
 function listAttractionInfo(param, success, fail) {
   local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
 }
 
-function attractionInfo(contentId, success, fail) {
-  local.get(`/attractions/info/${contentId}`).then(success).catch(fail);
+function attractionInfo(attractionId, success, fail) {
+  local.get(`/attractions/info/${attractionId}`).then(success).catch(fail);
 }
 
-function attractionDescription(contentId, success, fail) {
-  local.get(`/attractions/description/${contentId}`).then(success).catch(fail);
+function attractionDescription(attractionId, success, fail) {
+  local.get(`/attractions/description/${attractionId}`).then(success).catch(fail);
 }
 
 export {
     listSido,
     listGugun,
-    listContentType,
+    listAttractionType,
     listAttractionInfo,
     attractionInfo,
     attractionDescription,

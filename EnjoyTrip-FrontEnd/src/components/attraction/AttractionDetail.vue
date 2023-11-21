@@ -1,19 +1,19 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { attractionDescription } from "@/api/attraction";
-const props = defineProps({ contentId: String })
+const props = defineProps({ attractionId: String })
 
 onMounted(() => {
-    console.log(props.contentId);
-    getAttractionDescription(props.contentId);
+    console.log(props.attractionId);
+    getAttractionDescription(props.attractionId);
 });
 
 const description = ref({});
-const getAttractionDescription = (contentId) => {
+const getAttractionDescription = (attractionId) => {
     attractionDescription(
-        contentId,
+        attractionId,
         ({ data }) => {
-            description.value = data;
+            description.value = data.result;
         },
         (error) => {
             console.log(error);
@@ -26,9 +26,8 @@ const getAttractionDescription = (contentId) => {
 <template>
 <div class="black-bg">
     <div class="white-bg">
-        <p>{{ description.homepage }}</p>
-        <p>{{ description.overview }}</p>
-        <p>{{ description.telname }}</p>
+        <p v-if="description.overview">{{ description.overview }}</p>
+		<p v-else>상세 정보가 없습니다.</p>
         <v-btn color="blue-grey" type="button" @click="$emit('close-modal')">닫기</v-btn>
     </div>
 </div>

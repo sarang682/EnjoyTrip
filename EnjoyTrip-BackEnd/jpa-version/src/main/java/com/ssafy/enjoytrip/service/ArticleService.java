@@ -13,8 +13,6 @@ import com.ssafy.enjoytrip.repository.ArticleRepository;
 import com.ssafy.enjoytrip.repository.CommentRepository;
 import com.ssafy.enjoytrip.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +37,10 @@ public class ArticleService {
         articleRepository.save(new Article(title,content,member));
     }
 
-    public Page<ArticleDto> listArticle(Pageable pageable) {
-        return articleRepository.findAll(pageable).map(ArticleDto::fromEntity);
+    public List<ArticleDto> listArticle() {
+        return articleRepository.findAll()
+                .stream().map(ArticleDto::fromEntity)
+                .collect(Collectors.toList());
     }
 
     public ArticleDto getArticle(int id) {

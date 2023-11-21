@@ -6,8 +6,6 @@ import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
 import com.ssafy.enjoytrip.service.ArticleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,8 +26,8 @@ public class BoardController {
     }
 
     @GetMapping("articles")
-    public BaseResponse<Page<ArticleDto>> listArticle(Pageable pageable) {
-        return new BaseResponse<>(service.listArticle(pageable));
+    public BaseResponse<List<ArticleDto>> listArticle() {
+        return new BaseResponse<>(service.listArticle());
     }
 
     @GetMapping("/articles/{article-no}")

@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { detailArticle, deleteArticle, listComments } from "@/api/board";
+import { detailArticle, deleteArticle, listComments, registComment } from "@/api/board";
 import CommentListItem from "@/components/board/item/CommentListItem.vue";
 
 const route = useRoute();
@@ -61,6 +61,31 @@ function onDeleteArticle() {
     }
   );
 }
+
+// ** 댓글 쓰기 코드 **
+const com=ref("");
+
+function writeComment() {
+  if(com.value=="") {
+    alert("내용을 입력하세요.")
+  }else {
+    const param={
+      content: com.value,
+    }
+    registComment(
+      article.value.id,
+      param,
+      (response) => {
+        if(response.status == 200) {
+          router.go(0);
+        }
+      },
+      (error) => {
+        alert("허용되지 않은 접근입니다.");
+      }
+    );
+  };
+}
 </script>
 
 <template>
@@ -113,19 +138,55 @@ function onDeleteArticle() {
 
 
     <!-------------------------------- 댓글 시작 ----------------------------------------->
+    
+     <div>
+      <h3>댓글</h3>
+        <form>
+          <div class="input-group input-group-sm">
+            <input id="input1"
+              type="text"
+              placeholder="입력..."
+              v-model="com"
+            />
+            <button id="btn" type="button" @click="writeComment" >댓글 쓰기</button>
+          </div>
+        </form>
+      </div>
+    
     <table class="table table-hover">
-          <tbody>
-            <CommentListItem
-              v-for="comment in comments"
-              :key="comment.id"
-              :comment="comment"
-            ></CommentListItem>
-          </tbody>
-        </table>
-
-
+      <tbody>
+        <CommentListItem
+          v-for="comment in comments"
+            :key="comment.id"
+            :comment="comment"
+        ></CommentListItem>
+      </tbody>
+    </table>
 
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+h3 {
+  margin-left: 110px;
+  text-align: left;
+}
+#input1 {
+  margin-left: 110px;
+  height: 50px;
+  width: 950px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 3px solid black;
+}
+
+#btn {
+  width: 100px;
+  height: 50px;
+  border-top: 3px solid black;
+  border-left: 3px solid black;
+  border-right: 3px solid black;
+  border-bottom: 3px solid black;
+}
+</style>

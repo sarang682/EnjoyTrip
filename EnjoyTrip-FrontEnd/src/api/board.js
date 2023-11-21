@@ -32,6 +32,12 @@ function listComments(articleno, success, fail) {
   local.get(`/board/${articleno}/comments`).then(success).catch(fail);
 }
 
+function registComment(articleno, param, success, fail) {
+  local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+  console.log(param);
+  local.post(`/board/${articleno}/comments`,JSON.stringify(param)).then(success).catch(fail);
+}
+
 export {
   listArticle,
   detailArticle,
@@ -40,4 +46,5 @@ export {
   modifyArticle,
   deleteArticle,
   listComments,
+  registComment,
 };

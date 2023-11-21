@@ -1,19 +1,21 @@
 package com.ssafy.enjoytrip.dto.bookmark;
 
-import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Bookmark;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PostBookmarkResponse {
-    int bookmarkId;
-    BookmarkResponse bookmarkResponse;
+public class BookmarkResponse {
 
-    public PostBookmarkResponse(Bookmark bookmark) {
+    int bookmarkId;
+    int attractionId;
+
+    public BookmarkResponse(Bookmark bookmark) {
         bookmarkId = bookmark.getId();
-        bookmarkResponse = new BookmarkResponse(bookmark);
+        attractionId = bookmark.getAttractionInfo().getId();
     }
 }

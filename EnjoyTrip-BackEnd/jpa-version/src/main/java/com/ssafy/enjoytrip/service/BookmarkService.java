@@ -1,10 +1,9 @@
 package com.ssafy.enjoytrip.service;
 
+import com.ssafy.enjoytrip.common.exception.*;
+import com.ssafy.enjoytrip.dto.bookmark.BookmarkResponse;
+import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.util.JwtUtil;
-import com.ssafy.enjoytrip.common.exception.AttractionException;
-import com.ssafy.enjoytrip.common.exception.DatabaseException;
-import com.ssafy.enjoytrip.common.exception.JwtBadRequestException;
-import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionInfo;
 import com.ssafy.enjoytrip.domain.Bookmark;
@@ -18,6 +17,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.awt.print.Book;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +37,12 @@ public class BookmarkService {
         Member member = getMemberByAuth(httpServletRequest);
 
         // 관광지
-        AttractionInfo attractionInfo = findAttractonById(request.getAttractionId());
+        AttractionInfo attractionInfo = findAttractionById(request.getAttractionId());
+
+        // 유효성 검사
+        if (existBookmark(member, attractionInfo)) {
+            throw new BookmarkException(ExceptionStatus.DUPLICATE_BOOKMARK);
+        }
 
         // 즐겨찾기 생성
         Bookmark bookmark = request.toEntity(member, attractionInfo);
@@ -47,22 +55,36 @@ public class BookmarkService {
         return new PostBookmarkResponse(bookmark);
     }
 
+    public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {
+        // 멤버
+        Member member = getMemberByAuth(httpServletRequest);
+
+        // 즐겨찾기
+        List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
+
+        List<BookmarkResponse> res = new ArrayList<>();
+        for (Bookmark bookmark: bookmarks) {
+            res.add(new BookmarkResponse(bookmark));
+        }
+
+        return new GetBookmarkResponse(member.getId(), res);
+    }
+
     private Member getMemberByAuth(HttpServletRequest httpServletRequest) {
         // 토큰
         String token = getToken(httpServletRequest);
         // 멤버 아이디
-        String memberId = jwtUtil.getUserId(token);
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        String memberId = getMemberIdByToken(token);
+
+        return findMemberById(memberId);
+    }
+
+    private String getMemberIdByToken(String token) {
+        return jwtUtil.getUserId(token);
     }
 
     private String getToken(HttpServletRequest httpServletRequest) {
-        // 토큰 가져오기
-        String token = jwtUtil.resolveToken(httpServletRequest);
-        // 토큰 유효성 검사
-        jwtUtil.validateToken(token);
-
-        return token;
+        return jwtUtil.resolveToken(httpServletRequest);
     }
 
     private Member findMemberById(String memberId) {
@@ -71,10 +93,17 @@ public class BookmarkService {
         return member;
     }
 
-    private AttractionInfo findAttractonById(int attractionId) {
+    private AttractionInfo findAttractionById(int attractionId) {
         AttractionInfo attractionInfo = infoRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ExceptionStatus.ATTRACTION_NOT_FOUND));
         return attractionInfo;
+    }
+
+    private boolean existBookmark(Member member, AttractionInfo attractionInfo) {
+        if (bookmarkRepository.existsByMemberAndAttractionInfo(member, attractionInfo)) {
+            return true;
+        }
+        return false;
     }
 
 }

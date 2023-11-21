@@ -108,7 +108,7 @@ public class JwtUtil {
     }
 
     private void isExpiredToken(Jws<Claims> claims) {
-        if (!claims.getBody().getExpiration().before(new Date())) {
+        if (claims.getBody().getExpiration().before(new Date())) {
             throw new JwtBadRequestException(ExceptionStatus.EXPIRED_TOKEN);
         }
     }

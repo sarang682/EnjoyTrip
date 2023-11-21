@@ -40,9 +40,13 @@ public enum ExceptionStatus implements ResponseStatus {
     SIDO_NOT_FOUND(6001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 시도코드입니다."),
     GUGUN_NOT_FOUND(6002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 구군코드입니다."),
     ATTRACTION_TYPE_NOT_FOUND(6003, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지 유형입니다."),
-    ATTRACTION_NOT_FOUND(6004, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지입니다.");
+    ATTRACTION_NOT_FOUND(6004, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지입니다."),
 
     // 7000: BOARD
+
+    // 8000: BOOKMARK
+    DUPLICATE_BOOKMARK(8000, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 즐겨찾기입니다.");
+
 
 
 

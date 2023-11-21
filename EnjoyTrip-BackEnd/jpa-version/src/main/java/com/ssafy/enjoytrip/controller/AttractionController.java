@@ -25,7 +25,7 @@ public class AttractionController {
         return new BaseResponse<>(service.getGugunList(sidoCode));
     }
 
-    @GetMapping("/content-type")
+    @GetMapping("/attraction-type")
     public BaseResponse<List<GetTypeResponse>> getTypeList() {
         return new BaseResponse<>(service.getTypeList());
     }
@@ -34,13 +34,13 @@ public class AttractionController {
     public BaseResponse<List<GetInfoResponse>> getInfoList(
             @RequestParam(value="sido-code", required=false) Integer sidoCode,
             @RequestParam(value="gugun-code", required=false) Integer gugunCode,
-            @RequestParam(value="content-type-id", required=false) Integer contentTypeId) {
-        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, contentTypeId));
+            @RequestParam(value="attraction-type-id", required=false) Integer attractionTypeId) {
+        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, attractionTypeId));
     }
 
-    @GetMapping("/description/{content-id}")
-    public BaseResponse<GetDescriptionResponse> getDescription(@PathVariable("content-id") int contentId) {
-        return new BaseResponse<>(service.findDescriptionById(contentId));
+    @GetMapping("/description/{attraction-id}")
+    public BaseResponse<GetDescriptionResponse> getDescription(@PathVariable("attraction-id") int attractionId) {
+        return new BaseResponse<>(service.findDescriptionById(attractionId));
     }
 
 }

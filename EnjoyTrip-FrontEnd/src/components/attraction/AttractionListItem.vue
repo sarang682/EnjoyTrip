@@ -5,7 +5,7 @@ const props = defineProps({ attraction: Object });
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
-    emit("show-description", props.attraction.contentId)
+    emit("show-description", props.attraction.attractionId)
 }
 
 const telephone = computed(() => {
@@ -40,11 +40,9 @@ console.log(telephone);
                 <div v-if="!address && !attraction.tel">정보가 없습니다.</div>
             </v-card-text>
 
-            <!-- <v-card-actions>
-                    <v-btn color="blue-grey">
-                        view detail
-                    </v-btn>
-                </v-card-actions> -->
+            <v-card-actions>
+                <v-btn size="small" color="surface-variant" variant="text" icon="mdi-heart"></v-btn>
+            </v-card-actions>
 
             <v-overlay :model-value="isHovering" contained scrim="blue-grey" class="align-center justify-center">
                 <v-btn variant="flat" @click="showDescription">See more info</v-btn>

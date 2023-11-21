@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class GetInfoResponse {
 
-    private int contentId;
-    private int contentTypeId;
+    private int attractionId;
+    private int attractionTypeId;
     private String title;
     private String addr1;
     private String addr2;
@@ -26,8 +26,8 @@ public class GetInfoResponse {
     private String mlevel;
 
     public GetInfoResponse(AttractionInfo info) {
-        contentId = info.getId();
-        contentTypeId = info.getAttractionType().getId();
+        attractionId = info.getId();
+        attractionTypeId = info.getAttractionType().getId();
         title = info.getTitle();
         addr1 = info.getAddr1();
         addr2 = info.getAddr2();

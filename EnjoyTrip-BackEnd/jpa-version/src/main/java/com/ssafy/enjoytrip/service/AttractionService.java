@@ -58,7 +58,7 @@ public class AttractionService {
         return result;
     }
 
-    public List<GetInfoResponse> getInfoList(Integer sidoCode, Integer gugunCode, Integer contentTypeId) {
+    public List<GetInfoResponse> getInfoList(Integer sidoCode, Integer gugunCode, Integer attractionTypeId) {
         // 시도코드 유효성 검사
         if (sidoCode != null) {
             findSidoByCode(sidoCode);
@@ -73,34 +73,34 @@ public class AttractionService {
         }
 
         // 관광지 유형 유효성 검사
-        if (contentTypeId != null) {
-            findTypeById(contentTypeId);
+        if (attractionTypeId != null) {
+            findTypeById(attractionTypeId);
         }
 
         List<AttractionInfo> infos;
         // 전체
-        if (sidoCode == null && gugunCode == null && contentTypeId == null) {
+        if (sidoCode == null && gugunCode == null && attractionTypeId == null) {
             infos = infoRepository.findAll();
         }
         // 시도
-        else if (gugunCode == null && contentTypeId == null) {
+        else if (gugunCode == null && attractionTypeId == null) {
             infos = infoRepository.findAllBySido(sidoCode);
         }
         // 관광지 유형
         else if (sidoCode == null && gugunCode == null) {
-            infos = infoRepository.findAllByType(contentTypeId);
+            infos = infoRepository.findAllByType(attractionTypeId);
         }
         // 시도 + 구군
-        else if (contentTypeId == null) {
+        else if (attractionTypeId == null) {
             infos = infoRepository.findAllBySidoAndGugun(sidoCode, gugunCode);
         }
         // 시도 + 관광지 유형
         else if (gugunCode == null) {
-            infos = infoRepository.findAllBySidoAndType(sidoCode, contentTypeId);
+            infos = infoRepository.findAllBySidoAndType(sidoCode, attractionTypeId);
         }
         // 시도 + 구군 + 관광지 유형
         else {
-            infos = infoRepository.findAllBySidoAndGugunAndType(sidoCode, gugunCode, contentTypeId);
+            infos = infoRepository.findAllBySidoAndGugunAndType(sidoCode, gugunCode, attractionTypeId);
         }
 
         List<GetInfoResponse> result = new ArrayList<>();
@@ -110,8 +110,8 @@ public class AttractionService {
         return result;
     }
 
-    public GetDescriptionResponse findDescriptionById(int contentId) {
-        AttractionDescription description = descriptionRepository.findById(contentId)
+    public GetDescriptionResponse findDescriptionById(int attractionId) {
+        AttractionDescription description = descriptionRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ATTRACTION_NOT_FOUND));
         return new GetDescriptionResponse(description);
     }
@@ -128,6 +128,6 @@ public class AttractionService {
 
     private AttractionType findTypeById(int id) {
         return typeRepository.findById(id)
-                .orElseThrow(() -> new AttractionException(CONTENT_TYPE_NOT_FOUND));
+                .orElseThrow(() -> new AttractionException(ATTRACTION_TYPE_NOT_FOUND));
     }
 }

@@ -2,11 +2,10 @@ package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
-import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.LoginRequest;
+import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.dto.member.UpdateRequest;
 import com.ssafy.enjoytrip.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +28,7 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    public BaseResponse<Member> getMember(@RequestHeader("Authorization") String token) {
+    public BaseResponse<MemberDto> getMember(@RequestHeader("Authorization") String token) {
         return new BaseResponse<>(service.getMember(token));
     }
 

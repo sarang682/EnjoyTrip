@@ -8,6 +8,7 @@ import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.LoginRequest;
+import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -48,12 +49,13 @@ public class MemberService {
         return jwtUtil.createAccessToken(member.getId());
     }
 
-    public Member getMember(String token) {
+    public MemberDto getMember(String token) {
         if(!jwtUtil.checkToken(token)) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
         String memberId=jwtUtil.getUserId(token);
         if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
-        return memberRepository.findById(memberId)
+        Member member= memberRepository.findById(memberId)
                 .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        return MemberDto.fromEntity(member);
     }
 
     @Transactional

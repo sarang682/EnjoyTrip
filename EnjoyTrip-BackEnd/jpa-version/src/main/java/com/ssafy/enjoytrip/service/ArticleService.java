@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.service;
 
+import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.BoardException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
@@ -11,7 +12,6 @@ import com.ssafy.enjoytrip.dto.board.ArticleDto;
 import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.repository.ArticleRepository;
 import com.ssafy.enjoytrip.repository.CommentRepository;
-import com.ssafy.enjoytrip.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,7 +89,7 @@ public class ArticleService {
     }
 
     private String getMemberIdByToken(String token) {
-        if(!jwtUtil.checkToken(token)) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
+        jwtUtil.validateToken(token);
         String memberId=jwtUtil.getUserId(token);
         if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
         return memberId;

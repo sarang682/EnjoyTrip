@@ -17,11 +17,11 @@ public class Bookmark {
     private int id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attraction_id")
+    @JoinColumn(name = "attraction_id", referencedColumnName = "attraction_id")
     private AttractionInfo attractionInfo;
 
     @Builder

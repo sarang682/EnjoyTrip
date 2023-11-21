@@ -6,10 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface GugunRepository extends JpaRepository<Gugun, Long> {
     List<Gugun> findAllBySidoCode(int sidoCode);
-    Optional<Gugun> findByGugunId(GugunId id);
+    boolean existsByGugunId(GugunId id);
 }

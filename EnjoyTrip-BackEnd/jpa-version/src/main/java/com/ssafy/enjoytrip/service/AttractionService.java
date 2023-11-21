@@ -35,7 +35,7 @@ public class AttractionService {
 
     public List<GetGugunResponse> getGugunList(int sidoCode) {
         // 시도 코드 유효성 검사
-        findSidoByCode(sidoCode);
+        validateSido(sidoCode);
 
         List<Gugun> guguns = gugunRepository.findAllBySidoCode(sidoCode);
 
@@ -61,7 +61,7 @@ public class AttractionService {
     public List<GetInfoResponse> getInfoList(Integer sidoCode, Integer gugunCode, Integer attractionTypeId) {
         // 시도코드 유효성 검사
         if (sidoCode != null) {
-            findSidoByCode(sidoCode);
+            validateSido(sidoCode);
         }
 
         // 구군코드 유효성 검사
@@ -69,12 +69,12 @@ public class AttractionService {
             if (sidoCode == null) {
                 throw new AttractionException(INVALID_ATTRACTION_VALUE);
             }
-            findGugunById(sidoCode, gugunCode);
+            validateGugun(sidoCode, gugunCode);
         }
 
         // 관광지 유형 유효성 검사
         if (attractionTypeId != null) {
-            findTypeById(attractionTypeId);
+            validateType(attractionTypeId);
         }
 
         List<AttractionInfo> infos;
@@ -116,18 +116,21 @@ public class AttractionService {
         return new GetDescriptionResponse(description);
     }
 
-    private Sido findSidoByCode(int sidoCode) {
-        return sidoRepository.findByCode(sidoCode)
-                .orElseThrow(() -> new AttractionException(SIDO_NOT_FOUND));
+    private void validateSido(int sidoCode) {
+        if (!sidoRepository.existsByCode(sidoCode)) {
+            throw new AttractionException(SIDO_NOT_FOUND);
+        }
     }
 
-    private Gugun findGugunById(int sidoCode, int gugunCode) {
-        return gugunRepository.findByGugunId(new GugunId(sidoCode, gugunCode))
-                .orElseThrow(() -> new AttractionException(GUGUN_NOT_FOUND));
+    private void validateGugun(int sidoCode, int gugunCode) {
+        if (!gugunRepository.existsByGugunId(new GugunId(sidoCode, gugunCode))) {
+            throw new AttractionException(GUGUN_NOT_FOUND);
+        }
     }
 
-    private AttractionType findTypeById(int id) {
-        return typeRepository.findById(id)
-                .orElseThrow(() -> new AttractionException(ATTRACTION_TYPE_NOT_FOUND));
+    private void validateType(int id) {
+        if (!typeRepository.existsById(id)) {
+            throw new AttractionException(ATTRACTION_TYPE_NOT_FOUND);
+        }
     }
 }

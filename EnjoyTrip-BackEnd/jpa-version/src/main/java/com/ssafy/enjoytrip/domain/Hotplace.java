@@ -32,11 +32,11 @@ public class Hotplace extends BaseTimeEntity {
     private Double longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", referencedColumnName = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attraction_type_id")
+    @JoinColumn(name = "attraction_type_id", referencedColumnName = "attraction_type_id")
     private AttractionType attractionType;
 
     @Builder

@@ -53,13 +53,13 @@ public class AttractionInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
-            @JoinColumn(name = "sido_code"),
-            @JoinColumn(name = "gugun_code")
+            @JoinColumn(name = "sido_code", referencedColumnName = "sido_code"),
+            @JoinColumn(name = "gugun_code", referencedColumnName = "gugun_code")
     })
     private Gugun gugun;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "attraction_type_id")
+    @JoinColumn(name = "attraction_type_id", referencedColumnName = "attraction_type_id")
     private AttractionType attractionType;
 
     @OneToOne(mappedBy = "attractionInfo")

@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.repository;
+package com.ssafy.enjoytrip.repository.member;
 
 import com.ssafy.enjoytrip.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

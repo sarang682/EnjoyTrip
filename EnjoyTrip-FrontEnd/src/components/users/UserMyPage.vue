@@ -12,14 +12,12 @@ const user=ref({})
 const router = useRouter();
 
 onMounted(()=> {
-  const token=sessionStorage.getItem("accessToken");
-  getUser(token);
+  getUser();
 })
 
-const getUser= async (token) => {
-  await getUserInfo(token);
+const getUser= async () => {
+  await getUserInfo();
   user.value=userInfo.value;
-  // console.log("getUser : "+user.value.userId);
 }
 
 const modify = function () {
@@ -54,8 +52,8 @@ const modify = function () {
             <div class="col-md-8">
               <div class="card-body text-start">
                 <ul class="list-group list-group-flush">
-                  <li class="list-group-item">{{user.userId}}</li>
-                  <li class="list-group-item">{{user.userName}}</li>
+                  <li class="list-group-item">{{user.id}}</li>
+                  <li class="list-group-item">{{user.name}}</li>
                   <li class="list-group-item">{{user.emailId}}@{{user.emailDomain}}</li>
                 </ul>
               </div>
@@ -65,9 +63,15 @@ const modify = function () {
         <div>
           <button type="button" class="btn btn-outline-secondary mt-2"
             @click="modify">수정</button>
+          <button type="button" class="btn btn-outline-secondary mt-2"
+            @click="delete">탈퇴</button>
         </div>
       </div>
     </div>
   </div>
 </template>
-<style scoped></style>
+<style scoped>
+button {
+  margin-left: 10px;
+}
+</style>

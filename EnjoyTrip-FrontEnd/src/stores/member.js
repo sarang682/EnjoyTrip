@@ -1,9 +1,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
-import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout, idCheck } from "@/api/user";
+import { userConfirm, getMember, tokenRegeneration, logout, idCheck } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -49,29 +48,18 @@ export const useMemberStore = defineStore("memberStore", () => {
     );
   };
 
-  const getUserInfo = async (token) => {
-    let decodeToken = jwtDecode(token);
-    console.log("2. decodeToken", decodeToken);
-    await findById(
-      decodeToken.userId,
+  const getUserInfo = async () => {
+    await getMember(
       (response) => {
-        if (response.status === httpStatusCode.OK) {
-          userInfo.value = response.data.userInfo;
+        if (response.status == httpStatusCode.OK) {
+          userInfo.value = response.data['result'];
           return userInfo;
-        } else {
-          console.log("유저 정보 없음!!!!");
         }
       },
-      async (error) => {
-        console.error(
-          "getUserInfo() error code [토큰 만료되어 사용 불가능.] ::: ",
-          error.response.status
-        );
-        isValidToken.value = false;
-
-        await tokenRegenerate();
+      (error) => {
+        console.error(error);
       }
-    );
+    )
   };
 
   const tokenRegenerate = async () => {

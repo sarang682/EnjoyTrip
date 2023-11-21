@@ -6,9 +6,14 @@ async function userConfirm(user, success, fail) {
   await local.post(`/members/login`, JSON.stringify(user)).then(success).catch(fail);
 }
 
-async function findById(userid, success, fail) {
+// async function findById(userid, success, fail) {
+//   local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
+//   await local.get(`/members/info/${userid}`).then(success).catch(fail);
+// }
+
+async function getMember(success, fail) {
   local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
-  await local.get(`/members/info/${userid}`).then(success).catch(fail);
+  await local.get(`/members/info`).then(success).catch(fail);
 }
 
 async function tokenRegeneration(user, success, fail) {
@@ -31,4 +36,4 @@ function join(user, success, fail) {
 function update(user, success, fail) {
   local.put(`/members`, JSON.stringify(user)).then(success).catch(fail);
 }
-export { userConfirm, findById, tokenRegeneration, logout, idCheck, join, update};
+export { userConfirm, getMember, tokenRegeneration, logout, idCheck, join, update};

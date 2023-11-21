@@ -39,18 +39,11 @@ public enum ExceptionStatus implements ResponseStatus {
     INVALID_ATTRACTION_VALUE(6000, HttpStatus.BAD_REQUEST.value(), "관광지 정보 요청에서 잘못된 값이 존재합니다."),
     SIDO_NOT_FOUND(6001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 시도코드입니다."),
     GUGUN_NOT_FOUND(6002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 구군코드입니다."),
-<<<<<<< HEAD
-    CONTENT_TYPE_NOT_FOUND(6003, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지 유형입니다."),
-    ATTRACTION_NOT_FOUND(6004, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지입니다."),
-=======
     ATTRACTION_TYPE_NOT_FOUND(6003, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지 유형입니다."),
-    ATTRACTION_NOT_FOUND(6004, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지입니다.");
->>>>>>> 9828995 (style: 변수명 수정)
+    ATTRACTION_NOT_FOUND(6004, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 관광지입니다."),
 
     // 7000: BOARD
-    ARTICLE_NOT_FOUND(7000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 게시물입니다."),
-    ;
-
+    ARTICLE_NOT_FOUND(7000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 게시물입니다.");
 
     private final int code;
     private final int status;

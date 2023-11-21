@@ -1,4 +1,4 @@
-package com.ssafy.enjoytrip.Util;
+package com.ssafy.enjoytrip.util;
 
 import com.ssafy.enjoytrip.common.exception.UnAuthorizedException;
 import io.jsonwebtoken.Claims;
@@ -15,7 +15,7 @@ import java.util.Map;
 
 @Component
 @Slf4j
-public class JWTUtil {
+public class JwtUtil {
     @Value("${jwt.salt}")
     private String salt;
 

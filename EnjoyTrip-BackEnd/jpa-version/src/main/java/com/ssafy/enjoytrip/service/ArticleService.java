@@ -1,6 +1,6 @@
 package com.ssafy.enjoytrip.service;
 
-import com.ssafy.enjoytrip.Util.JWTUtil;
+import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.BoardException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
@@ -27,7 +27,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
 
     // *** 게시글 ***

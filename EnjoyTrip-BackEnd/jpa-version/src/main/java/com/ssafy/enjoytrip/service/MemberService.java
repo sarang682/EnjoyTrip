@@ -1,28 +1,22 @@
 package com.ssafy.enjoytrip.service;
 
-import com.ssafy.enjoytrip.Util.JWTUtil;
-import com.ssafy.enjoytrip.common.exception.BadRequestException;
+import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.MemberException;
-import com.ssafy.enjoytrip.common.exception.UnAuthorizedException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
-import com.ssafy.enjoytrip.dto.member.LoginRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.repository.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final JWTUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
     @Transactional
     public void join(JoinRequest request) {

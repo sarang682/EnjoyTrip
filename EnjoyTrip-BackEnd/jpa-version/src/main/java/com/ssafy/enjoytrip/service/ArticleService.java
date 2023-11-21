@@ -47,6 +47,14 @@ public class ArticleService {
         return ArticleDto.fromEntity(getArticleOrException(id));
     }
 
+    @Transactional
+    public void modifyArticle(Integer articleId, String title, String content) {
+        Article article = getArticleOrException(articleId);
+        article.setTitle(title);
+        article.setContent(content);
+        articleRepository.saveAndFlush(article);
+    }
+
     // *** 댓글 ***
     @Transactional
     public void comment(Integer articleId, String token, String comment) {

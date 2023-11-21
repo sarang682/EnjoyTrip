@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.controller;
 import com.ssafy.enjoytrip.common.response.BaseResponse;
 import com.ssafy.enjoytrip.dto.board.ArticleDto;
 import com.ssafy.enjoytrip.dto.board.CommentDto;
+import com.ssafy.enjoytrip.dto.board.ModifyArticleRequest;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
 import com.ssafy.enjoytrip.service.ArticleService;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class BoardController {
 
     private final ArticleService service;
 
+    // ** 게시글 ***
     @PostMapping("articles")
     public BaseResponse<?> post(@RequestBody PostRequest request) {
 
@@ -35,6 +37,14 @@ public class BoardController {
         return new BaseResponse<>(service.getArticle(articleId));
     }
 
+    @PutMapping("/articles")
+    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request) {
+        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent());
+        return new BaseResponse<>(null);
+    }
+
+
+    // *** 댓글 ***
     @PostMapping("/{article-no}/comments")
     public BaseResponse<?> comment(@PathVariable("article-no") int articleId, @RequestBody Map<String, String> request, @RequestHeader("Authorization") String token) {
         service.comment(articleId,token,request.get("content"));

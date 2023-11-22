@@ -20,32 +20,28 @@ const getAttractionDescription = (attractionId) => {
     );
 };
 
+sessionStorage.getItem("accessToken")
+
 </script>
 
 <template>
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
-            <div class="top-button">
-                <span class="bookmark-button">
+            <span class="bookmark-button">
+                <font-awesome-icon v-if="description.logined && description.bookmarked" icon="fa-solid fa-bookmark"
+                    size="xl" />
+                <font-awesome-icon v-else icon="fa-regular fa-bookmark" size="xl" />
+            </span>
 
-                    <font-awesome-icon 
-                        v-if="description.logined && description.bookmarked"
-                        icon="fa-solid fa-bookmark" size="xl" />
-                    <font-awesome-icon 
-                        v-else
-                        icon="fa-regular fa-bookmark" size="xl" />
-                </span>
-                <span class="close-button" @click="$emit('close-modal')">
-                    <font-awesome-icon icon="fa-solid fa-circle-xmark" size="xl" style="color: #607D8B;" />
-                </span>
-            </div>
-            <div class="title">
-                <h5>상세 정보</h5>
-            </div>
+            <div class="description">
+                <h5 class="title">상세 정보</h5>
 
-            <div class="content">
-                <p v-if="description.overview">{{ description.overview }}</p>
-                <p v-else>상세 정보가 없습니다.</p>
+                <div class="content">
+                    <p v-if="description.overview">{{ description.overview }}</p>
+                    <p v-else>상세 정보가 없습니다.</p>
+                </div>
+
+                <v-btn color="blue-grey" @click="$emit('close-modal')">닫기</v-btn>
             </div>
         </div>
     </div>
@@ -94,37 +90,23 @@ const getAttractionDescription = (attractionId) => {
 }
 
 #modal .title {
-    padding-left: 10px;
+    padding: 10px;
     display: inline;
-    /* text-shadow: 1px 1px 2px #808080; */
-    /* color: black; */
-
-}
-
-#modal .title h2 {
-    display: inline;
-}
-
-#modal .top-button {
-    display: inline;
-    float: right;
-    padding-right: 10px;
 }
 
 #modal .content {
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 0px 10px;
-    height: 80%;
-    overflow: auto
+    max-height: 360px;
+    overflow: auto;
+    /* display: inline; */
 }
 
 .bookmark-button {
-    margin-right: 10px;
-    cursor: pointer;
-}
-
-.close-button {
-
+    display: inline;
+    float: right;
+    padding-right: 10px;
     cursor: pointer;
 }
 </style>

@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.AttractionException;
+import com.ssafy.enjoytrip.common.exception.JwtBadRequestException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.*;
@@ -123,21 +124,21 @@ public class AttractionService {
         AttractionDescription description = descriptionRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ATTRACTION_NOT_FOUND));
 
+        Member member = findMemberByRequest(request);
+
         /**
-         * 헤더에 토큰이 없는 경우 (로그인 X)
+         * 올바르지 않은 토큰일 경우
          * isLogined = false,
          * isBookmarked = false
          */
-        if (request.getHeader("Authorization") == null) {
+        if (member == null) {
             return new GetDescriptionResponse(description, false, false);
         }
 
         /**
-         * 헤더에 토큰이 있는 경우 (로그인 O)
+         * 올바른 토큰일 경우 (로그인 O)
          * isLogined = true
          */
-        // 멤버
-        Member member = findMemberByRequest(request);
         // 관광지
         AttractionInfo info = findInfoById(attractionId);
         // 즐겨찾기 여부
@@ -163,21 +164,26 @@ public class AttractionService {
     }
 
     private Member findMemberByRequest(HttpServletRequest request) {
-        String memberId = getMemberIdByRequest(request);
+        // 토큰 얻기
+        String token = request.getHeader("Authorization");
+
+        // 토큰이 없는 경우
+        if (token == null) {
+            return null;
+        }
+
+        String memberId;
+
+        // 토큰 정보가 올바르지 않은 경우
+        try {
+            memberId = jwtUtil.getUserId(token);
+        } catch (JwtBadRequestException e) {
+            return null;
+        }
+
+        // 토큰 정보에 해당하는 멤버 찾기
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
-    }
-
-    private String getMemberIdByRequest(HttpServletRequest request) {
-        // 토큰
-        String token = getToken(request);
-        // 유효성 검사
-        jwtUtil.validateToken(token);
-        return jwtUtil.getUserId(token);
-    }
-
-    private String getToken(HttpServletRequest request) {
-        return jwtUtil.resolveToken(request);
+                .orElse(null);
     }
 
     private AttractionInfo findInfoById(int attractionId) {

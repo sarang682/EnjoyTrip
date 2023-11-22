@@ -104,13 +104,16 @@ public class JwtUtil {
         }
 
         // 만료된 토큰인지 확인
-        isExpiredToken(claims);
-    }
-
-    private void isExpiredToken(Jws<Claims> claims) {
-        if (claims.getBody().getExpiration().before(new Date())) {
+        if (isExpiredToken(claims)) {
             throw new JwtBadRequestException(ExceptionStatus.EXPIRED_TOKEN);
         }
+    }
+
+    private boolean isExpiredToken(Jws<Claims> claims) {
+        if (claims.getBody().getExpiration().before(new Date())) {
+            return true;
+        }
+        return false;
     }
 
     public String getUserId(String token) {

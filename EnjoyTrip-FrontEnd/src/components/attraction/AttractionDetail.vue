@@ -88,7 +88,7 @@ const getAttractionDescription = (attractionId) => {
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     /* width: 400px; */
-    max-height: 500px;
+    max-height: 400px;
     /* height: 500px; */
     position: relative;
     top: -100px;
@@ -104,7 +104,7 @@ const getAttractionDescription = (attractionId) => {
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 0px 10px;
-    max-height: 360px;
+    max-height: 250px;
     overflow: auto;
     /* display: inline; */
 }

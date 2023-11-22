@@ -61,7 +61,8 @@ const changeBookmarkEvent = (attractionId) => {
                 <font-awesome-icon
                     v-if="description.logined && description.bookmarked" 
                     icon="fa-solid fa-bookmark"
-                    size="xl">
+                    size="xl"
+                    style="color: #fdc93a;">
                 </font-awesome-icon>
                 <font-awesome-icon 
                     v-else 

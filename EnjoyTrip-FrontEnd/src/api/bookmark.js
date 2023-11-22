@@ -11,7 +11,7 @@ async function changeBookmark(request, success, fail) {
 async function getBookmarkList(success, fail) {
     local.defaults.headers["Authorization"] =
         sessionStorage.getItem("accessToken");
-    await local.post(`/bookmarks`).then(success).catch(fail);
+    await local.get(`/bookmarks`).then(success).catch(fail);
 }
 
 export {

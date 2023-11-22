@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TheMainView from "../views/TheMainView.vue";
 import TheAttractionView from "@/views/TheAttractionView.vue";
+import TheBookmarkView from "@/views/TheBookmarkView.vue";
 // import TheBoardView from "../views/TheBoardView.vue";
 
 const requireAuth = () => (to,from,next) => {
@@ -62,6 +63,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/bookmark",
+      name: "bookmark",
+      component: TheBookmarkView,
+    },
+    {
       path: "/user",
       name: "user",
       component: () => import("@/views/TheUserView.vue"),
@@ -88,7 +94,7 @@ const router = createRouter({
           component: () => import("@/components/users/UserModify.vue"),
         },
       ],
-    }
+    },
   ],
 });
 export default router;

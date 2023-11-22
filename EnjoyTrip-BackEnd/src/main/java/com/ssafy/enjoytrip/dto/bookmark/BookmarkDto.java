@@ -1,5 +1,6 @@
 package com.ssafy.enjoytrip.dto.bookmark;
 
+import com.ssafy.enjoytrip.domain.Bookmark;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,12 @@ public class BookmarkDto {
 
     int bookmarkId;
     int attractionId;
+    String title;
 
-    public BookmarkDto(com.ssafy.enjoytrip.domain.Bookmark bookmark) {
+
+    public BookmarkDto(Bookmark bookmark) {
         bookmarkId = bookmark.getId();
         attractionId = bookmark.getAttractionInfo().getId();
     }
+
 }

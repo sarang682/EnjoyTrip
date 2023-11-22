@@ -35,8 +35,8 @@ public class BookmarkController {
     }
 
     @GetMapping("")
-    public BaseResponse<GetBookmarkResponse> getBookmark(HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.getBookmark(httpServletRequest));
+    public BaseResponse<GetBookmarkResponse> getBookmarkList(HttpServletRequest httpServletRequest) {
+        return new BaseResponse<>(service.getBookmarkList(httpServletRequest));
     }
 
 }

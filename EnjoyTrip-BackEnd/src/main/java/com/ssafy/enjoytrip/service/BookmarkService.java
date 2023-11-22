@@ -2,6 +2,8 @@ package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.*;
 import com.ssafy.enjoytrip.domain.Bookmark;
+import com.ssafy.enjoytrip.dto.attraction.GetDescriptionResponse;
+import com.ssafy.enjoytrip.dto.attraction.GetInfoResponse;
 import com.ssafy.enjoytrip.dto.bookmark.*;
 import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.AttractionException;
@@ -86,19 +88,21 @@ public class BookmarkService {
         return new ChangeBookmarkResponse(bookmark, "delete");
     }
 
-    public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {
+    public GetBookmarkResponse getBookmarkList(HttpServletRequest httpServletRequest) {
         // 멤버
         Member member = getMemberByRequest(httpServletRequest);
 
         // 즐겨찾기
         List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
 
-        List<BookmarkDto> res = new ArrayList<>();
+        // 관광지
+        List<GetInfoResponse> attractions = new ArrayList<>();
         for (Bookmark bookmark: bookmarks) {
-            res.add(new BookmarkDto(bookmark));
+            AttractionInfo info = bookmark.getAttractionInfo();
+            attractions.add(new GetInfoResponse(info));
         }
 
-        return new GetBookmarkResponse(member.getId(), res);
+        return new GetBookmarkResponse(member.getId(), attractions);
     }
 
     private Member getMemberByRequest(HttpServletRequest request) {

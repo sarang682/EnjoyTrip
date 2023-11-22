@@ -18,44 +18,33 @@ const logout = () => {
     <div class="container-fluid">
       <router-link :to="{ name: 'main' }" class="navbar-brand">
         <img src="@/assets/choigosim.png" class="rounded mx-auto d-block" alt="..." />
-      </router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarScroll"
-        aria-controls="navbarScroll"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarScroll">
-        <ul
-          class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll"
-          style="--bs-scroll-height: 100px"
-        >
-          <li class="nav-item">
-            <!-- <a class="nav-link" href="#">관광지</a> -->
+    </router-link>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll"
+      aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+      <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
+        <li class="nav-item">
             <router-link :to="{ name: 'attraction' }" class="nav-link">관광지</router-link>
           </li>
           <li class="nav-item">
             <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
           </li>
+          <li class="nav-item">
+            <router-link :to="{ name: 'bookmark' }" class="nav-link">즐겨찾기</router-link>
+          </li>
         </ul>
         <!-- <form class="d-flex" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="검색..."
-            aria-label="Search"
-          />
-          <button class="btn btn-outline-success" type="button">search</button>
-        </form> -->
-        <ul
-          class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll"
-          style="--bs-scroll-height: 100px"
-        >
+              <input
+                class="form-control me-2"
+                type="search"
+                placeholder="검색..."
+                aria-label="Search"
+              />
+              <button class="btn btn-outline-success" type="button">search</button>
+            </form> -->
+        <ul class="navbar-nav ms-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px">
           <template v-for="menu in menuList" :key="menu.routeName">
             <template v-if="menu.show">
               <template v-if="menu.routeName === 'user-logout'">
@@ -80,5 +69,4 @@ const logout = () => {
   </nav>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

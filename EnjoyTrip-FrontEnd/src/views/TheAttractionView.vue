@@ -135,13 +135,20 @@ const showDescription = (data) => {
     openModal.value = true;
     attraction.value = data;
 }
+
+const closeModal = (isChanged) => {
+    openModal.value = false;
+    if (isChanged) {
+        getAttractionList();
+    }
+}
 </script>
 
 
 <template>
     <AttractionDetail 
         v-if="openModal" 
-        @close-modal="openModal = false" 
+        @close-modal="closeModal" 
         class="modal-body"
         :attraction="attraction" />
     <div class="container">

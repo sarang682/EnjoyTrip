@@ -36,8 +36,9 @@ public class AttractionController {
     public BaseResponse<List<GetInfoResponse>> getInfoList(
             @RequestParam(value="sido-code", required=false) Integer sidoCode,
             @RequestParam(value="gugun-code", required=false) Integer gugunCode,
-            @RequestParam(value="attraction-type-id", required=false) Integer attractionTypeId) {
-        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, attractionTypeId));
+            @RequestParam(value="attraction-type-id", required=false) Integer attractionTypeId,
+            HttpServletRequest request) {
+        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, attractionTypeId, request));
     }
 
     @GetMapping("/description/{attraction-id}")

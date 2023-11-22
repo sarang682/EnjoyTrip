@@ -24,8 +24,10 @@ public class GetInfoResponse {
     private Double latitude;
     private Double longitude;
     private String mlevel;
+    private boolean isLogined;
+    private boolean isBookmarked;
 
-    public GetInfoResponse(AttractionInfo info) {
+    public GetInfoResponse(AttractionInfo info, boolean isLogined, boolean isBookmarked) {
         attractionId = info.getId();
         attractionTypeId = info.getAttractionType().getId();
         title = info.getTitle();
@@ -41,5 +43,7 @@ public class GetInfoResponse {
         latitude = info.getLatitude();
         longitude = info.getLongitude();
         mlevel = info.getMlevel();
+        this.isLogined = isLogined;
+        this.isBookmarked = isBookmarked;
     }
 }

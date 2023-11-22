@@ -99,7 +99,7 @@ public class BookmarkService {
         List<GetInfoResponse> attractions = new ArrayList<>();
         for (Bookmark bookmark: bookmarks) {
             AttractionInfo info = bookmark.getAttractionInfo();
-            attractions.add(new GetInfoResponse(info));
+            attractions.add(new GetInfoResponse(info, true, true));
         }
 
         return new GetBookmarkResponse(member.getId(), attractions);

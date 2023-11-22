@@ -68,7 +68,8 @@ public class AttractionService {
         return result;
     }
 
-    public List<GetInfoResponse> getInfoList(Integer sidoCode, Integer gugunCode, Integer attractionTypeId) {
+    public List<GetInfoResponse> getInfoList(
+            Integer sidoCode, Integer gugunCode, Integer attractionTypeId, HttpServletRequest request) {
         // 시도코드 유효성 검사
         if (sidoCode != null) {
             validateSido(sidoCode);
@@ -86,6 +87,9 @@ public class AttractionService {
         if (attractionTypeId != null) {
             validateType(attractionTypeId);
         }
+
+        // 토큰
+        Member member = findMemberByRequest(request);
 
         List<AttractionInfo> infos;
         // 전체
@@ -114,8 +118,25 @@ public class AttractionService {
         }
 
         List<GetInfoResponse> result = new ArrayList<>();
+
+        /**
+         * 올바르지 않은 토큰일 경우
+         * isLogined = false,
+         * isBookmarked = false
+         */
+        if (member == null) {
+            for (AttractionInfo info: infos) {
+                result.add(new GetInfoResponse(info, false, false));
+            }
+            return result;
+        }
+
+        /**
+         * 올바른 토큰일 경우 (로그인 O)
+         * isLogined = true
+         */
         for (AttractionInfo info: infos) {
-            result.add(new GetInfoResponse(info));
+            result.add(new GetInfoResponse(info, true, isBookmarked(member, info)));
         }
         return result;
     }

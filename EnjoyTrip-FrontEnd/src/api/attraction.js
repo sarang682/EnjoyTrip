@@ -14,8 +14,10 @@ function listAttractionType(success, fail) {
     local.get(`attractions/attraction-type`).then(success).catch(fail);
 }
 
-function listAttractionInfo(param, success, fail) {
-  local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
+async function listAttractionInfo(param, success, fail) {
+  local.defaults.headers["Authorization"] =
+        sessionStorage.getItem("accessToken");
+  await local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
 }
 
 // function attractionInfo(attractionId, success, fail) {

@@ -65,7 +65,7 @@ watch(
 const initMap = () => {
   const container = document.getElementById("map");
   const options = {
-    center: new kakao.maps.LatLng(37.500613, 127.036431),
+    center: new kakao.maps.LatLng(36.1081844, 128.4139686),
     level: 3,
   };
   map = new kakao.maps.Map(container, options);

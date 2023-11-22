@@ -5,7 +5,7 @@ const props = defineProps({ attraction: Object });
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
-    emit("show-description", props.attraction.attractionId)
+    emit("show-description", props.attraction)
 }
 
 const telephone = computed(() => {
@@ -20,15 +20,27 @@ const address = computed(() => {
     return addr + props.attraction.addr2;
 })
 
-console.log(telephone);
-
 </script>
 
 <template>
     <v-hover v-slot="{ isHovering, props }">
-        <v-card id="card" class="mx-auto" width="220" height="340" v-bind="props">
+        <v-card id="card" class="mx-auto" width="220" height="350" v-bind="props">
             <v-img class="align-end text-white" height="200" :src="attraction.firstImage || img" cover>
             </v-img>
+
+            <span class="bookmark-icon">
+                <font-awesome-icon
+                    v-if="attraction.logined && attraction.bookmarked" 
+                    icon="fa-solid fa-bookmark"
+                    style="color: #fdc93a;"
+                    size="xl">
+                </font-awesome-icon>
+                <font-awesome-icon 
+                    v-else 
+                    icon="fa-regular fa-bookmark" 
+                    size="xl">
+                </font-awesome-icon>
+            </span>
 
             <v-card-title>
                 {{ attraction.title }}
@@ -39,16 +51,6 @@ console.log(telephone);
                 <div v-if="attraction.tel">📞 {{ telephone }}</div>
                 <div v-if="!address && !attraction.tel">정보가 없습니다.</div>
             </v-card-text>
-
-            <v-card-actions>
-                <v-btn size="small" color="surface-variant" variant="text" icon="mdi-heart"></v-btn>
-            </v-card-actions>
-
-            <!-- <v-card-actions>
-                    <v-btn color="blue-grey">
-                        view detail
-                    </v-btn>
-                </v-card-actions> -->
 
             <v-overlay :model-value="isHovering" contained scrim="blue-grey" class="align-center justify-center">
                 <v-btn variant="flat" @click="showDescription">See more info</v-btn>

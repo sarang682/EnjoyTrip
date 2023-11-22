@@ -45,6 +45,7 @@ const param = ref({
 const changeSidoCode = (val) => {
     param.value.sidoCode = val;
     guguns.value.length = 1;
+    changeGugunCode()
     getGugunList(val);
 };
 
@@ -128,11 +129,18 @@ const getAttractionList = () => {
 // }
 
 const openModal = ref(false);
-const attractionId = ref("");
+const attraction = ref("");
 
 const showDescription = (data) => {
     openModal.value = true;
-    attractionId.value = data;
+    attraction.value = data;
+}
+
+const closeModal = (isChanged) => {
+    openModal.value = false;
+    if (isChanged) {
+        getAttractionList();
+    }
 }
 </script>
 
@@ -140,9 +148,9 @@ const showDescription = (data) => {
 <template>
     <AttractionDetail 
         v-if="openModal" 
-        @close-modal="openModal = false" 
+        @close-modal="closeModal" 
         class="modal-body"
-        :attractionId="attractionId" />
+        :attraction="attraction" />
     <div class="container">
         <div class="row">
             <div class="col-md-9 mx-auto">

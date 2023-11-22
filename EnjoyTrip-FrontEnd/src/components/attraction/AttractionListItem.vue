@@ -62,4 +62,11 @@ console.log(telephone);
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.bookmark-icon {
+    display: inline;
+    float: right;
+    padding-top: 10px;
+    padding-right: 10px;
+}
 </style>

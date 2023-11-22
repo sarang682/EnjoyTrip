@@ -1,6 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TheMainView from "../views/TheMainView.vue";
 import TheAttractionView from "@/views/TheAttractionView.vue";
+<<<<<<< Updated upstream
+=======
+import TheBookmarkView from "@/views/TheBookmarkView.vue";
+import TheHotplaceView from "@/views/TheHotplaceView.vue";
+>>>>>>> Stashed changes
 // import TheBoardView from "../views/TheBoardView.vue";
 
 const requireAuth = () => (to,from,next) => {
@@ -24,6 +29,11 @@ const router = createRouter({
       path: "/attraction",
       name: "attraction",
       component: TheAttractionView,
+    },
+    {
+      path: "/hotplace",
+      name: "hotplace",
+      component: TheHotplaceView,
     },
     {
       path: "/board",

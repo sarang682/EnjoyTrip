@@ -6,6 +6,7 @@ import com.ssafy.enjoytrip.dto.hotplace.HotplaceDto;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.PostHotplaceRequest;
 import com.ssafy.enjoytrip.service.HotplaceService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +26,8 @@ public class HotplaceController {
     @PostMapping("")
     public BaseResponse<HotplaceResponse> postHotplace (
             @RequestBody PostHotplaceRequest request,
-            @RequestHeader("Authorization") String token) {
-        return new BaseResponse<>(service.postHotplace(token, request));
+            HttpServletRequest httpServletRequest) {
+        return new BaseResponse<>(service.postHotplace(httpServletRequest, request));
     }
 
     @GetMapping("")
@@ -43,8 +44,8 @@ public class HotplaceController {
     @DeleteMapping("/{hotplace-id}")
     public BaseResponse<HotplaceResponse> deleteHotplace (
             @PathVariable(value = "hotplace-id") int hotplaceId,
-            @RequestHeader("Authorization") String token) {
-        return new BaseResponse<>(service.deleteHotplace(token, hotplaceId));
+            HttpServletRequest httpServletRequest) {
+        return new BaseResponse<>(service.deleteHotplace(httpServletRequest, hotplaceId));
     }
 
 }

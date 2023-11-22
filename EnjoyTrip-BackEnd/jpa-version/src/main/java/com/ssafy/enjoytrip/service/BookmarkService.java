@@ -13,6 +13,7 @@ import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
 import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,9 +30,9 @@ public class BookmarkService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public BookmarkResponse postBookmark(String token, PostBookmarkRequest request) {
+    public BookmarkResponse postBookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
         // 멤버
-        Member member = getMemberByToken(token);
+        Member member = getMemberByRequest(httpServletRequest);
 
         // 관광지
         AttractionInfo attractionInfo = findAttractionById(request.getAttractionId());
@@ -52,9 +53,9 @@ public class BookmarkService {
         return new BookmarkResponse(bookmark);
     }
 
-    public GetBookmarkResponse getBookmark(String token) {
+    public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {
         // 멤버
-        Member member = getMemberByToken(token);
+        Member member = getMemberByRequest(httpServletRequest);
 
         // 즐겨찾기
         List<Bookmark> bookmarks = bookmarkRepository.findAllByMember(member);
@@ -68,9 +69,9 @@ public class BookmarkService {
     }
 
     @Transactional
-    public BookmarkResponse deleteBookmark(String token, int bookmarkId) {
+    public BookmarkResponse deleteBookmark(HttpServletRequest httpServletRequest, int bookmarkId) {
         // 멤버
-        String memberId = getMemberIdByToken(token);
+        String memberId = getMemberIdByRequest(httpServletRequest);
         validateMember(memberId);
 
         // 즐겨찾기
@@ -92,16 +93,22 @@ public class BookmarkService {
         return new BookmarkResponse(bookmark);
     }
 
-    private Member getMemberByToken(String token) {
+    private Member getMemberByRequest(HttpServletRequest request) {
         // 멤버 아이디
-        String memberId = getMemberIdByToken(token);
+        String memberId = getMemberIdByRequest(request);
         return findMemberById(memberId);
     }
 
-    private String getMemberIdByToken(String token) {
+    private String getMemberIdByRequest(HttpServletRequest request) {
+        // 토큰
+        String token = getToken(request);
         // 유효성 검사
         jwtUtil.validateToken(token);
         return jwtUtil.getUserId(token);
+    }
+
+    private String getToken(HttpServletRequest request) {
+        return jwtUtil.resolveToken(request);
     }
 
     private Member findMemberById(String memberId) {

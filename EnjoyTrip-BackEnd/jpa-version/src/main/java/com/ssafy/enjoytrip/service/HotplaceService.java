@@ -13,6 +13,7 @@ import com.ssafy.enjoytrip.repository.attraction.TypeRepository;
 import com.ssafy.enjoytrip.repository.hotplace.HotplaceRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import com.ssafy.enjoytrip.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,9 @@ public class HotplaceService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public HotplaceResponse postHotplace(String token, PostHotplaceRequest request) {
+    public HotplaceResponse postHotplace(HttpServletRequest httpServletRequest, PostHotplaceRequest request) {
         // 멤버
-        Member member = getMemberByToken(token);
+        Member member = getMemberByRequest(httpServletRequest);
 
         // 관광지 유형
         AttractionType attractionType = findAttractionTypeById(request.getAttractionTypeId());
@@ -71,9 +72,9 @@ public class HotplaceService {
     }
 
     @Transactional
-    public HotplaceResponse deleteHotplace(String token, int hotplaceId) {
+    public HotplaceResponse deleteHotplace(HttpServletRequest httpServletRequest, int hotplaceId) {
         // 멤버
-        String memberId = getMemberIdByToken(token);
+        String memberId = getMemberIdByRequest(httpServletRequest);
         validateMember(memberId);
 
         // 추천 여행지
@@ -105,16 +106,22 @@ public class HotplaceService {
         }
     }
 
-    private Member getMemberByToken(String token) {
+    private Member getMemberByRequest(HttpServletRequest request) {
         // 멤버 아이디
-        String memberId = getMemberIdByToken(token);
+        String memberId = getMemberIdByRequest(request);
         return findMemberById(memberId);
     }
 
-    private String getMemberIdByToken(String token) {
+    private String getMemberIdByRequest(HttpServletRequest request) {
+        // 토큰
+        String token = getToken(request);
         // 유효성 검사
         jwtUtil.validateToken(token);
         return jwtUtil.getUserId(token);
+    }
+
+    private String getToken(HttpServletRequest request) {
+        return jwtUtil.resolveToken(request);
     }
 
     private Member findMemberById(String memberId) {

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import img from '@/assets/noimage.jpg';
-const props = defineProps({ attraction: Object, isPlanList:Boolean});
+const props = defineProps({ attraction: Object, isPlanList:Boolean, index:Number});
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
@@ -28,10 +28,14 @@ const delAttraction = () => {
     emit("del-attraction", props.attraction);
 }
 
+const goAttraction = () => {
+    emit("go-attraction", props.attraction);
+}
 
 </script>
 
 <template>
+    <p v-if="isPlanList"> {{props.index + 1}} 번째 여행지  </p>
     <v-hover v-slot="{ isHovering, props }">
         <v-card id="card" class="mx-auto" width="220" height="340" v-bind="props">
             <v-img class="align-end text-white" height="200" :src="attraction.firstImage || img" cover>
@@ -61,10 +65,12 @@ const delAttraction = () => {
                 <div>
                     <v-btn variant="flat" @click="showDescription">See more info</v-btn>
                 </div>
-                <div id="btn" v-bind="props">
-                    <v-btn v-if="!isPlanList" variant="flat" @click="addAttraction">담기</v-btn>
-                    <v-btn v-if="isPlanList" variant="flat" @click="delAttraction">삭제</v-btn>
-                </div>
+                <span>
+                    <v-btn v-if="!isPlanList" id="btn" variant="flat" @click="addAttraction">담기</v-btn>
+                    <v-btn v-if="isPlanList" id="btn" variant="flat" @click="delAttraction">삭제</v-btn>
+                    <v-btn variant="flat" id="btn" @click="goAttraction">위치</v-btn>
+                </span>
+                
             </v-overlay>
         </v-card>
     </v-hover>
@@ -76,8 +82,14 @@ const delAttraction = () => {
     margin-bottom: 5px;
 }
 #btn {
-    position: absolute;
-    top: 40px;
-    left: 38px;
+    margin: 5px;
 }
+
+p {
+    font-size: large;
+    border: solid gray 3px;
+    margin-left: 15px;
+    margin-top: 20px;
+}
+
 </style>

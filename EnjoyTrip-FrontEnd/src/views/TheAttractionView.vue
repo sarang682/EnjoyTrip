@@ -152,6 +152,10 @@ const delAttraction = (data) => {
     attractionPlan.value = attractionPlan.value.filter((obj) => obj !== data);
     attractionPos.value = attractionPos.value.filter((obj) => obj.attractionId !== data.attractionId);
 }
+
+const goAttraction = (data) => {
+    selectAttraction.value = data;
+}
 </script>
 
 
@@ -187,6 +191,7 @@ const delAttraction = (data) => {
                             :isPlanList=false
                             @show-description="showDescription"
                             @add-attraction="addAttraction"
+                            @go-attraction="goAttraction"
                             />
                     </v-row>
                 </v-container>
@@ -202,12 +207,14 @@ const delAttraction = (data) => {
                     <v-row>
                         <AttractionListItem 
                             cols="12" md="4" sm="4"
-                            v-for="attraction in attractionPlan" 
+                            v-for="(attraction, index) in attractionPlan" 
                             :key="attraction.attractionId"
                             :attraction="attraction"
                             :isPlanList=true
+                            :index=index
                             @show-description="showDescription"
                             @del-attraction="delAttraction"
+                            @go-attraction="goAttraction"
                             />
                     </v-row>
                 </v-container>

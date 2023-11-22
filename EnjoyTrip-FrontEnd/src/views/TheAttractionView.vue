@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { listSido, listGugun, listAttractionType, listAttractionInfo } from "@/api/attraction";
-
+import { plan, planAttraction } from "@/api/plan";
 import AttractionDetail from "@/components/attraction/AttractionDetail.vue";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
 import KakaoMap from "@/components/attraction/KakaoMap.vue";
@@ -156,6 +156,46 @@ const delAttraction = (data) => {
 const goAttraction = (data) => {
     selectAttraction.value = data;
 }
+
+// ** 여행 계획 저장하기 ** //
+const planTitle=ref("");
+const planId=ref(0);
+
+const savePlan = async () => {
+    var param={
+        title: planTitle.value
+    }
+
+    await getPlanId(param);
+    
+    planTitle.value="";
+}
+
+const getPlanId = async (param) => {
+    await plan(
+        param,
+        (response) => {
+            if(response.status==200) {
+                planId.value=response.data['result'];
+
+                attractionPlan.value.forEach((data)=>{
+                    var param = {
+                    attractionId: data.attractionId
+                    }
+                    planAttraction(
+                        planId.value, param,
+                        (response) => {},
+                        (error) => console.error(error)
+                    )
+                });
+                alert("저장이 완료되었습니다!")
+            }
+        },
+        (error) => {
+            alert("로그인하고 이용하세요.")
+        }
+    );
+}
 </script>
 
 
@@ -202,6 +242,10 @@ const goAttraction = (data) => {
                 
                 <div class="alert mt-3 text-center fw-bold border-bottom" role="alert">
                     여행 계획 하기
+                </div>
+                <div class=" mt-3 text-center fw-bold border-bottom" role="alert">
+                    <input id="input1" type="text" placeholder="이름을 지어주세요" v-model="planTitle"/>
+                    <button id="btn" type="button" @click="savePlan" >저장</button>
                 </div>
                 <v-container id="trip-list">
                     <v-row>

@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
+import com.ssafy.enjoytrip.dto.hotplace.HotplaceDto;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.PostHotplaceRequest;
 import com.ssafy.enjoytrip.service.HotplaceService;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +26,11 @@ public class HotplaceController {
             @RequestBody PostHotplaceRequest request,
             @RequestHeader("Authorization") String token) {
         return new BaseResponse<>(service.postHotplace(token, request));
+    }
+
+    @GetMapping("")
+    public BaseResponse<List<HotplaceDto>> getHotplaceList() {
+        return new BaseResponse<>(service.getHotplaceList());
     }
 
 }

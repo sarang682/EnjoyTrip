@@ -7,6 +7,7 @@ import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Hotplace;
 import com.ssafy.enjoytrip.domain.Member;
+import com.ssafy.enjoytrip.dto.hotplace.HotplaceDto;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.PostHotplaceRequest;
 import com.ssafy.enjoytrip.repository.attraction.TypeRepository;
@@ -16,6 +17,9 @@ import com.ssafy.enjoytrip.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +47,23 @@ public class HotplaceService {
         }
 
         return new HotplaceResponse(hotplace);
+    }
+
+    public List<HotplaceDto> getHotplaceList() {
+        // 추천 여행지 가져오기
+        List<Hotplace> hotplaces;
+        try {
+            hotplaces = hotplaceRepository.findAll();
+        } catch (Exception e) {
+            throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
+        }
+
+        List<HotplaceDto> result = new ArrayList<>();
+        for (Hotplace hotplace: hotplaces) {
+            result.add(new HotplaceDto(hotplace));
+        }
+
+        return result;
     }
 
     private Member getMemberByToken(String token) {

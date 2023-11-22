@@ -10,11 +10,9 @@ import lombok.NoArgsConstructor;
 public class HotplaceResponse {
 
     int hotplaceId;
-    String memberId;
 
     public HotplaceResponse(Hotplace hotplace) {
         this.hotplaceId = hotplace.getId();
-        this.memberId = hotplace.getMember().getId();
     }
 
 }

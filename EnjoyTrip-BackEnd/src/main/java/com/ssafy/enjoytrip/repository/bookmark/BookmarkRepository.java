@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
     List<Bookmark> findAllByMember(Member member);
-    boolean existsByMemberAndAttractionInfo(Member member, AttractionInfo attractionInfo);
-    Optional<Bookmark> findById(int bookmarkId);
+    boolean existsByMemberAndAttractionInfo(Member member, AttractionInfo info);
+    Bookmark findByMemberAndAttractionInfo(Member member, AttractionInfo attractionInfo);
     void deleteById(int bookmarkId);
 }

@@ -11,11 +11,13 @@ public class BookmarkResponse {
     int bookmarkId;
     String memberId;
     int attractionId;
+    String action;
 
-    public BookmarkResponse(Bookmark bookmark) {
+    public BookmarkResponse(Bookmark bookmark, String action) {
         bookmarkId = bookmark.getId();
         memberId = bookmark.getMember().getId();
         attractionId = bookmark.getAttractionInfo().getId();
+        this.action = action;
     }
 
 }

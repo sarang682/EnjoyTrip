@@ -20,23 +20,21 @@ public class BookmarkController {
 
     private final BookmarkService service;
 
+    /**
+     * 즐겨찾기 존재 여부에 따라
+     * O -> 삭제
+     * X -> 삽입
+     */
     @PostMapping("")
-    public BaseResponse<BookmarkResponse> postBookmark(
+    public BaseResponse<BookmarkResponse> bookmark(
             @RequestBody PostBookmarkRequest request,
             HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.postBookmark(httpServletRequest, request));
+        return new BaseResponse<>(service.bookmark(httpServletRequest, request));
     }
 
     @GetMapping("")
     public BaseResponse<GetBookmarkResponse> getBookmark(HttpServletRequest httpServletRequest) {
         return new BaseResponse<>(service.getBookmark(httpServletRequest));
-    }
-
-    @DeleteMapping("/{bookmark-id}")
-    public BaseResponse<BookmarkResponse> deleteBookmark(
-            HttpServletRequest httpServletRequest,
-            @PathVariable(value = "bookmark-id") int bookmarkId) {
-        return new BaseResponse<>(service.deleteBookmark(httpServletRequest, bookmarkId));
     }
 
 }

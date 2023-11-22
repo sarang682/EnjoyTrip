@@ -30,27 +30,60 @@ public class BookmarkService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public BookmarkResponse postBookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
+    public BookmarkResponse bookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
         // 멤버
         Member member = getMemberByRequest(httpServletRequest);
 
         // 관광지
-        AttractionInfo attractionInfo = findAttractionById(request.getAttractionId());
+        AttractionInfo info = findAttractionById(request.getAttractionId());
 
-        // 유효성 검사
-        if (existsByMemberAndAttractionInfo(member, attractionInfo)) {
-            throw new BookmarkException(ExceptionStatus.DUPLICATE_BOOKMARK);
+        // 즐겨찾기
+        Bookmark bookmark = findBookmark(member, info);
+
+        /**
+         * 즐겨찾기가 존재하는 경우
+         * 데이터 삭제
+         */
+        if (findBookmark(member, info) != null) {
+            return deleteBookmark(member, bookmark);
         }
 
+        /**
+         * 즐겨찾기가 존재하지 않는 경우
+         * 데이터 삽입
+         */
+        return postBookmark(member, info);
+
+    }
+
+    public BookmarkResponse postBookmark(Member member, AttractionInfo info) {
         // 즐겨찾기 생성
-        Bookmark bookmark = new Bookmark(member, attractionInfo);
+        Bookmark bookmark = new Bookmark(member, info);
 
         // 즐겨찾기 추가
         if (bookmarkRepository.save(bookmark) == null) {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 
-        return new BookmarkResponse(bookmark);
+        return new BookmarkResponse(bookmark, "insert");
+    }
+
+    private BookmarkResponse deleteBookmark(Member member, Bookmark bookmark) {
+        // 토큰에 들어있는 멤버 정보와 즐겨찾기의 멤버 정보가 일치하는지 확인
+        String tId = member.getId();
+        String bId = bookmark.getMember().getId();
+        if (!tId.equals(bId)) {
+            throw new JwtBadRequestException(ExceptionStatus.TOKEN_MISMATCH);
+        }
+
+        // 삭제
+        try {
+            bookmarkRepository.deleteById(bookmark.getId());
+        } catch (Exception e) {
+            throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
+        }
+
+        return new BookmarkResponse(bookmark, "delete");
     }
 
     public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {
@@ -66,31 +99,6 @@ public class BookmarkService {
         }
 
         return new GetBookmarkResponse(member.getId(), res);
-    }
-
-    @Transactional
-    public BookmarkResponse deleteBookmark(HttpServletRequest httpServletRequest, int bookmarkId) {
-        // 멤버
-        String memberId = getMemberIdByRequest(httpServletRequest);
-        validateMember(memberId);
-
-        // 즐겨찾기
-        Bookmark bookmark = findBookmarkById(bookmarkId);
-
-        // 토큰에 들어있는 멤버 정보와 즐겨찾기의 멤버 정보가 일치하는지 확인
-        if (!memberId.equals(bookmark.getMember().getId())) {
-            throw new JwtBadRequestException(ExceptionStatus.TOKEN_MISMATCH);
-        }
-
-        // 삭제
-        try {
-            bookmarkRepository.deleteById(bookmarkId);
-        } catch (Exception e) {
-
-            throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
-        }
-
-        return new BookmarkResponse(bookmark);
     }
 
     private Member getMemberByRequest(HttpServletRequest request) {
@@ -117,28 +125,14 @@ public class BookmarkService {
         return member;
     }
 
-    private void validateMember(String memberId) {
-        if (!memberRepository.existsById(memberId)) {
-            throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
-        }
-    }
-
     private AttractionInfo findAttractionById(int attractionId) {
         AttractionInfo attractionInfo = infoRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ExceptionStatus.ATTRACTION_NOT_FOUND));
         return attractionInfo;
     }
 
-    private boolean existsByMemberAndAttractionInfo(Member member, AttractionInfo attractionInfo) {
-        if (bookmarkRepository.existsByMemberAndAttractionInfo(member, attractionInfo)) {
-            return true;
-        }
-        return false;
-    }
-
-    private Bookmark findBookmarkById(int bookmarkId) {
-        return bookmarkRepository.findById(bookmarkId)
-                .orElseThrow(() -> new BookmarkException(ExceptionStatus.BOOKMARK_NOT_FOUND));
+    private Bookmark findBookmark(Member member, AttractionInfo info) {
+        return bookmarkRepository.findByMemberAndAttractionInfo(member, info);
     }
 
 }

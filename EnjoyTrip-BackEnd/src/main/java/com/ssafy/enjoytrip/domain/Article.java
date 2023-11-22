@@ -34,6 +34,10 @@ public class Article extends BaseTimeEntity {
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments = new ArrayList<>();
 
+    public int increaseHit() {
+        return ++this.hit;
+    }
+
     @Builder
     public Article(String title, String content, Member member) {
         this.title = title;

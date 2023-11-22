@@ -44,8 +44,12 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public ArticleDto getArticle(int id) {
-        return ArticleDto.fromEntity(getArticleOrException(id));
+        Article article = getArticleOrException(id);
+        article.increaseHit();
+        articleRepository.saveAndFlush(article);
+        return ArticleDto.fromEntity(article);
     }
 
     @Transactional

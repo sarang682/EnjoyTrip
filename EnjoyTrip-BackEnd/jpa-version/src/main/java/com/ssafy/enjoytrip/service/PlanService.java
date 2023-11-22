@@ -8,6 +8,9 @@ import com.ssafy.enjoytrip.domain.AttractionInfo;
 import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.domain.Plan;
 import com.ssafy.enjoytrip.domain.PlanAttractionInfo;
+import com.ssafy.enjoytrip.dto.attraction.GetInfoResponse;
+import com.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
+import com.ssafy.enjoytrip.dto.plan.PlanDto;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import com.ssafy.enjoytrip.repository.plan.PlanAttractionRepository;
@@ -16,6 +19,9 @@ import com.ssafy.enjoytrip.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +47,19 @@ public class PlanService {
         return planAttractionRepository.save(new PlanAttractionInfo(plan,attractionInfo)).getId();
     }
 
+    public List<PlanDto> getPlan(String token) {
+        String memberId = jwtUtil.getUserId(token);
+        Member member=getMemberOrException(memberId);
+        List<Plan> findPlans=planRepository.findAllByMember(member);
+        return findPlans.stream().map(PlanDto::fromEntity).collect(Collectors.toList());
+    }
+
+    public List<PlanAttractionDto> getAttraction(Integer planId) {
+        Plan plan=getPlanOrException(planId);
+        List<PlanAttractionInfo> findInfo=planAttractionRepository.findAllByPlan(plan);
+        return findInfo.stream().map(PlanAttractionDto::fromEntity).collect(Collectors.toList());
+    }
+
 
     // *** 메소드 ***
     private Member getMemberOrException(String memberId) {
@@ -57,4 +76,5 @@ public class PlanService {
         return infoRepository.findById(attractionId)
                 .orElseThrow(()->new AttractionException(ExceptionStatus.ATTRACTION_NOT_FOUND));
     }
+
 }

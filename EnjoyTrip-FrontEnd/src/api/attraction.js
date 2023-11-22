@@ -18,12 +18,14 @@ function listAttractionInfo(param, success, fail) {
   local.get(`/attractions/info`, { params: param }).then(success).catch(fail);
 }
 
-function attractionInfo(attractionId, success, fail) {
-  local.get(`/attractions/info/${attractionId}`).then(success).catch(fail);
-}
+// function attractionInfo(attractionId, success, fail) {
+//   local.get(`/attractions/info/${attractionId}`).then(success).catch(fail);
+// }
 
-function attractionDescription(attractionId, success, fail) {
-  local.get(`/attractions/description/${attractionId}`).then(success).catch(fail);
+async function attractionDescription(attractionId, success, fail) {
+    local.defaults.headers["Authorization"] =
+        sessionStorage.getItem("accessToken");
+    await local.get(`/attractions/description/${attractionId}`).then(success).catch(fail);
 }
 
 export {
@@ -31,6 +33,6 @@ export {
     listGugun,
     listAttractionType,
     listAttractionInfo,
-    attractionInfo,
+    // attractionInfo,
     attractionDescription,
 };

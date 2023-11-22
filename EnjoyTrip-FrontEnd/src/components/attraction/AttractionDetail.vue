@@ -27,7 +27,13 @@ const getAttractionDescription = (attractionId) => {
         <div class="modal-window">
             <div class="top-button">
                 <span class="bookmark-button">
-                    <font-awesome-icon icon="fa-regular fa-bookmark" size="xl" />
+
+                    <font-awesome-icon 
+                        v-if="description.logined && description.bookmarked"
+                        icon="fa-solid fa-bookmark" size="xl" />
+                    <font-awesome-icon 
+                        v-else
+                        icon="fa-regular fa-bookmark" size="xl" />
                 </span>
                 <span class="close-button" @click="$emit('close-modal')">
                     <font-awesome-icon icon="fa-solid fa-circle-xmark" size="xl" style="color: #607D8B;" />

@@ -4,7 +4,6 @@ import { attractionDescription } from "@/api/attraction";
 const props = defineProps({ attractionId: String })
 
 onMounted(() => {
-    console.log(props.attractionId);
     getAttractionDescription(props.attractionId);
 });
 
@@ -19,37 +18,107 @@ const getAttractionDescription = (attractionId) => {
             console.log(error);
         }
     );
-    console.log(description);
 };
+
 </script>
 
 <template>
-<div class="black-bg">
-    <div class="white-bg">
-        <p v-if="description.overview">{{ description.overview }}</p>
-		<p v-else>상세 정보가 없습니다.</p>
-        <v-btn color="blue-grey" type="button" @click="$emit('close-modal')">닫기</v-btn>
+    <div id="modal" class="modal-overlay">
+        <div class="modal-window">
+            <div class="top-button">
+                <span class="bookmark-button">
+                    <font-awesome-icon icon="fa-regular fa-bookmark" size="xl" />
+                </span>
+                <span class="close-button" @click="$emit('close-modal')">
+                    <font-awesome-icon icon="fa-solid fa-circle-xmark" size="xl" style="color: #607D8B;" />
+                </span>
+            </div>
+            <div class="title">
+                <h5>상세 정보</h5>
+            </div>
+
+            <div class="content">
+                <p v-if="description.overview">{{ description.overview }}</p>
+                <p v-else>상세 정보가 없습니다.</p>
+            </div>
+        </div>
     </div>
-</div>
 </template>
 
 <style scoped>
-.black-bg {
-	width: 100%; 
-	height: 100%;
-	background: rgba(0, 0, 0, 0.6);
-	position: fixed;
-	z-index: 1000;
+#modal.modal-overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    z-index: 1000;
 }
 
-.white-bg {
-	width: 50%;
-	margin: 80px auto;
-	background: white;
-	border-style : solid;
-	border-color: black;
-	border-radius: 10px;
-	border-width: 2px;
-	padding: 20px;
+#modal .modal-window {
+    width: 50%;
+    margin: 80px auto;
+    background: white;
+    border-style: solid;
+    border-color: black;
+    border-radius: 10px;
+    border-width: 2px;
+    padding: 20px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(13.5px);
+    -webkit-backdrop-filter: blur(13.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    /* width: 400px; */
+    max-height: 500px;
+    /* height: 500px; */
+    position: relative;
+    top: -100px;
+    padding: 10px;
+}
+
+#modal .title {
+    padding-left: 10px;
+    display: inline;
+    /* text-shadow: 1px 1px 2px #808080; */
+    /* color: black; */
+
+}
+
+#modal .title h2 {
+    display: inline;
+}
+
+#modal .top-button {
+    display: inline;
+    float: right;
+    padding-right: 10px;
+}
+
+#modal .content {
+    margin-top: 20px;
+    padding: 0px 10px;
+    height: 80%;
+    overflow: auto
+}
+
+.bookmark-button {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.close-button {
+
+    cursor: pointer;
 }
 </style>

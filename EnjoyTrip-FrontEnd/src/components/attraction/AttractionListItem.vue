@@ -26,7 +26,7 @@ console.log(telephone);
 
 <template>
     <v-hover v-slot="{ isHovering, props }">
-        <v-card id="card" class="mx-auto" width="220" height="340" v-bind="props">
+        <v-card id="card" class="mx-auto" width="220" height="350" v-bind="props">
             <v-img class="align-end text-white" height="200" :src="attraction.firstImage || img" cover>
             </v-img>
 

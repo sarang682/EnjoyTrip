@@ -6,11 +6,12 @@ import com.ssafy.enjoytrip.dto.board.CommentDto;
 import com.ssafy.enjoytrip.dto.board.ModifyArticleRequest;
 import com.ssafy.enjoytrip.dto.board.PostRequest;
 import com.ssafy.enjoytrip.service.BoardService;
+import com.ssafy.enjoytrip.dto.board.*;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE} , maxAge = 6000)
 @RestController
@@ -22,9 +23,8 @@ public class BoardController {
 
     // ** 게시글 ***
     @PostMapping("articles")
-    public BaseResponse<?> post(@RequestBody PostRequest request) {
-
-        service.post(request.getMemberId(),request.getTitle(),request.getContent());
+    public BaseResponse<?> post(@RequestBody PostRequest request, @RequestHeader("Authorization") String token) {
+        service.post(request.getTitle(),request.getContent(), token);
         return new BaseResponse<>(null);
     }
 
@@ -39,28 +39,34 @@ public class BoardController {
     }
 
     @PutMapping("/articles")
-    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request) {
-        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent());
+    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request, @RequestHeader("Authorization") String token) {
+        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent(), token);
         return new BaseResponse<>(null);
     }
 
     @DeleteMapping("/articles/{article-no}")
-    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId) {
-        service.deleteArticle(articleId);
+    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId, @RequestHeader("Authorization") String token) {
+        service.deleteArticle(articleId, token);
         return new BaseResponse<>(null);
     }
 
 
     // *** 댓글 ***
     @PostMapping("/{article-no}/comments")
-    public BaseResponse<?> comment(@PathVariable("article-no") int articleId, @RequestBody Map<String, String> request, @RequestHeader("Authorization") String token) {
-        service.comment(articleId,token,request.get("content"));
+    public BaseResponse<?> comment(@PathVariable("article-no") int articleId, @RequestBody CommentRequest request, @RequestHeader("Authorization") String token) {
+        service.comment(articleId,token, request.getContent());
         return new BaseResponse<>(null);
     }
 
     @GetMapping("{article-no}/comments")
     public BaseResponse<List<CommentDto>> comment(@PathVariable("article-no") int articleId) {
         return new BaseResponse<>(service.getComment(articleId));
+    }
+
+    @DeleteMapping("comments/{comment-id}")
+    public BaseResponse<?> deleteComment(@PathVariable("comment-id") int commentId, @RequestHeader("Authorization") String token) {
+        service.deleteComment(commentId, token);
+        return new BaseResponse<>(null);
     }
 
 }

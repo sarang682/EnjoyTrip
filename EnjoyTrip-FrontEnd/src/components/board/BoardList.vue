@@ -40,8 +40,9 @@ const getArticleList = () => {
   // console.log("서버에서 글목록 얻어오자!!!", param.value);
   listArticle(
     // param.value,
-    ({ data }) => {
-      articles.value = data;
+    (response) => {
+      articles.value = response.data['result'];
+      console.log(articles.value);
       // currentPage.value = data.currentPage;
       // totalPage.value = data.totalPageCount;
     },
@@ -106,7 +107,7 @@ const moveWrite = () => {
           <tbody>
             <BoardListItem
               v-for="article in articles"
-              :key="article.articleNo"
+              :key="article.id"
               :article="article"
             ></BoardListItem>
           </tbody>

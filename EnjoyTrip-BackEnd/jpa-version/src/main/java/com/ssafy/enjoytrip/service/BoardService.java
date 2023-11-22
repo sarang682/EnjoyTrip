@@ -32,7 +32,8 @@ public class BoardService {
 
     // *** 게시글 ***
     @Transactional
-    public void post(String memberId, String title, String content) {
+    public void post(String title, String content, String token) {
+        String memberId = jwtUtil.getUserId(token);
         Member member=getMemberOrException(memberId);
         articleRepository.save(new Article(title,content,member));
     }
@@ -48,16 +49,22 @@ public class BoardService {
     }
 
     @Transactional
-    public void modifyArticle(Integer articleId, String title, String content) {
+    public void modifyArticle(Integer articleId, String title, String content, String token) {
+        String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
+        if(!memberId.equals(article.getMember().getId()))
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         article.setTitle(title);
         article.setContent(content);
         articleRepository.saveAndFlush(article);
     }
 
     @Transactional
-    public void deleteArticle(Integer articleId) {
+    public void deleteArticle(Integer articleId,String token) {
+        String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
+        if(!memberId.equals(article.getMember().getId()))
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         commentRepository.deleteAllByArticle(article);
         articleRepository.delete(article);
     }
@@ -74,6 +81,16 @@ public class BoardService {
         Article article = getArticleOrException(articleId);
         List<Comment> findComments=commentRepository.findAllByArticle(article);
         return findComments.stream().map(CommentDto::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteComment(Integer commentId, String token) {
+        String memberId= jwtUtil.getUserId(token);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new BoardException(ExceptionStatus.COMMENT_NOT_FOUND));
+        if(!memberId.equals(comment.getMember().getId()))
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
+        commentRepository.delete(comment);
     }
 
 
@@ -94,4 +111,5 @@ public class BoardService {
         if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
         return memberId;
     }
+
 }

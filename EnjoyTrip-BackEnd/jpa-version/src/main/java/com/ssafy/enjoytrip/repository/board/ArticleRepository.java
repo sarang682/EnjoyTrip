@@ -14,6 +14,6 @@ public interface ArticleRepository extends JpaRepository<Article, Integer> {
     List<Article> findAll();
 
     @Override
-    Optional<Article> findById(Integer integer);
+    Optional<Article> findById(Integer id);
 
 }

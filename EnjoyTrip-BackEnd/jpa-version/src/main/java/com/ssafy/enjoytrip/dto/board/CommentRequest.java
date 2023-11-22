@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostRequest {
-    private String title;
+public class CommentRequest {
     private String content;
 }

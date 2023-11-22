@@ -3,6 +3,7 @@ package com.ssafy.enjoytrip.controller;
 import com.ssafy.enjoytrip.common.response.BaseResponse;
 import com.ssafy.enjoytrip.dto.attraction.*;
 import com.ssafy.enjoytrip.service.AttractionService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,8 +41,10 @@ public class AttractionController {
     }
 
     @GetMapping("/description/{attraction-id}")
-    public BaseResponse<GetDescriptionResponse> getDescription(@PathVariable("attraction-id") int attractionId) {
-        return new BaseResponse<>(service.findDescriptionById(attractionId));
+    public BaseResponse<GetDescriptionResponse> getDescription(
+            @PathVariable("attraction-id") int attractionId,
+            HttpServletRequest request) {
+        return new BaseResponse<>(service.findDescriptionById(request, attractionId));
     }
 
 }

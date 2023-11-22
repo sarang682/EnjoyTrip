@@ -1,9 +1,15 @@
 package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.AttractionException;
+import com.ssafy.enjoytrip.common.exception.MemberException;
+import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.*;
 import com.ssafy.enjoytrip.dto.attraction.*;
 import com.ssafy.enjoytrip.repository.attraction.*;
+import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
+import com.ssafy.enjoytrip.repository.member.MemberRepository;
+import com.ssafy.enjoytrip.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +27,9 @@ public class AttractionService {
     private final TypeRepository typeRepository;
     private final InfoRepository infoRepository;
     private final DescriptionRepository descriptionRepository;
+    private final MemberRepository memberRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final JwtUtil jwtUtil;
 
     public List<GetSidoResponse> getSidoList() {
         List<Sido> sidos = sidoRepository.findAll();
@@ -110,10 +119,29 @@ public class AttractionService {
         return result;
     }
 
-    public GetDescriptionResponse findDescriptionById(int attractionId) {
+    public GetDescriptionResponse findDescriptionById(HttpServletRequest request, int attractionId) {
         AttractionDescription description = descriptionRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ATTRACTION_NOT_FOUND));
-        return new GetDescriptionResponse(description);
+
+        /**
+         * 헤더에 토큰이 없는 경우 (로그인 X)
+         * isLogined = false,
+         * isBookmarked = false
+         */
+        if (request.getHeader("Authorization") == null) {
+            return new GetDescriptionResponse(description, false, false);
+        }
+
+        /**
+         * 헤더에 토큰이 있는 경우 (로그인 O)
+         * isLogined = true
+         */
+        // 멤버
+        Member member = findMemberByRequest(request);
+        // 관광지
+        AttractionInfo info = findInfoById(attractionId);
+        // 즐겨찾기 여부
+        return new GetDescriptionResponse(description, true, isBookmarked(member, info));
     }
 
     private void validateSido(int sidoCode) {
@@ -133,4 +161,35 @@ public class AttractionService {
             throw new AttractionException(ATTRACTION_TYPE_NOT_FOUND);
         }
     }
+
+    private Member findMemberByRequest(HttpServletRequest request) {
+        String memberId = getMemberIdByRequest(request);
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+    }
+
+    private String getMemberIdByRequest(HttpServletRequest request) {
+        // 토큰
+        String token = getToken(request);
+        // 유효성 검사
+        jwtUtil.validateToken(token);
+        return jwtUtil.getUserId(token);
+    }
+
+    private String getToken(HttpServletRequest request) {
+        return jwtUtil.resolveToken(request);
+    }
+
+    private AttractionInfo findInfoById(int attractionId) {
+        return infoRepository.findById(attractionId)
+                .orElseThrow(() -> new AttractionException(ATTRACTION_NOT_FOUND));
+    }
+
+    private boolean isBookmarked(Member member, AttractionInfo info) {
+        if (bookmarkRepository.existsByMemberAndAttractionInfo(member, info)) {
+            return true;
+        }
+        return false;
+    }
+
 }

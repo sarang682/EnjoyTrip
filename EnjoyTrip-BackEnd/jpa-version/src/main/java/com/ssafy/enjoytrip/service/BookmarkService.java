@@ -69,13 +69,17 @@ public class BookmarkService {
 
     @Transactional
     public BookmarkResponse deleteBookmark(String token, int bookmarkId) {
-        // 멤버 유효성 검사
-        if (!existsMemberByToken(token)) {
-            throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
-        }
+        // 멤버
+        String memberId = getMemberIdByToken(token);
+        validateMember(memberId);
 
         // 즐겨찾기
         Bookmark bookmark = findBookmarkById(bookmarkId);
+
+        // 토큰에 들어있는 멤버 정보와 즐겨찾기의 멤버 정보가 일치하는지 확인
+        if (!memberId.equals(bookmark.getMember().getId())) {
+            throw new JwtBadRequestException(ExceptionStatus.TOKEN_MISMATCH);
+        }
 
         // 삭제
         try {
@@ -106,12 +110,10 @@ public class BookmarkService {
         return member;
     }
 
-    private boolean existsMemberByToken(String token) {
-        String memberId = getMemberIdByToken(token);
-        if (memberRepository.existsById(memberId)) {
-            return true;
+    private void validateMember(String memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
         }
-        return false;
     }
 
     private AttractionInfo findAttractionById(int attractionId) {

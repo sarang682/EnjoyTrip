@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { listSido, listGugun, listAttractionType, listAttractionInfo } from "@/api/attraction";
 
 import AttractionDetail from "@/components/attraction/AttractionDetail.vue";
@@ -12,8 +12,9 @@ onMounted(() => {
     getAttractionTypeList();
 });
 
-const attractions = ref([]);
-const selectAttraction = ref({});
+const attractions = ref([]); // 지도에 표시된 관광지
+const selectAttraction = ref({}); // 사용자가 누른 관광지
+const attractionPlan = ref([]); // 여행 계획에 넣을 관광지
 
 const sidos = ref([
     {
@@ -134,6 +135,16 @@ const showDescription = (data) => {
     openModal.value = true;
     attractionId.value = data;
 }
+
+// *** 여행 계획하기 *** //
+
+const addAttraction = (data) => {
+    attractionPlan.value.push(data);
+}
+
+const delAttraction = (data) => {
+    attractionPlan.value = attractionPlan.value.filter((obj) => obj !== data);
+}
 </script>
 
 
@@ -145,7 +156,7 @@ const showDescription = (data) => {
         :attractionId="attractionId" />
     <div class="container">
         <div class="row">
-            <div class="col-md-9 mx-auto">
+            <div class="col-9 mx-auto">
                 <div class="alert mt-3 text-center fw-bold border-bottom" role="alert">
                     전국 관광지 정보
                 </div>
@@ -166,13 +177,41 @@ const showDescription = (data) => {
                             v-for="attraction in attractions" 
                             :key="attraction.attractionId"
                             :attraction="attraction" 
-                            @show-description="showDescription" />
+                            :isPlanList=false
+                            @show-description="showDescription"
+                            @add-attraction="addAttraction"
+                            />
                     </v-row>
                 </v-container>
+            </div>
+
+            <!-- 여행 계획 코너 !-->
+            <div class="col-3" id="side">
+                
+                <div class="alert mt-3 text-center fw-bold border-bottom" role="alert">
+                    여행 계획 하기
+                </div>
+                <v-container id="trip-list">
+                    <v-row>
+                        <AttractionListItem 
+                            cols="12" md="4" sm="4"
+                            v-for="attraction in attractionPlan" 
+                            :key="attraction.attractionId"
+                            :attraction="attraction"
+                            :isPlanList=true
+                            @show-description="showDescription"
+                            @del-attraction="delAttraction"
+                            />
+                    </v-row>
+                </v-container>
+
             </div>
         </div>
     </div>
 </template>
 
 <style scoped>
+/* #side {
+    background-color: aqua;
+} */
 </style>

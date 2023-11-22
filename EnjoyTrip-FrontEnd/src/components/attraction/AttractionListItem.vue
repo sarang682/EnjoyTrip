@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import img from '@/assets/noimage.jpg';
-const props = defineProps({ attraction: Object });
+const props = defineProps({ attraction: Object, isPlanList:Boolean});
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
@@ -20,7 +20,14 @@ const address = computed(() => {
     return addr + props.attraction.addr2;
 })
 
-console.log(telephone);
+const addAttraction = () => {
+    emit("add-attraction", props.attraction);
+}
+
+const delAttraction = () => {
+    emit("del-attraction", props.attraction);
+}
+
 
 </script>
 
@@ -51,7 +58,13 @@ console.log(telephone);
                 </v-card-actions> -->
 
             <v-overlay :model-value="isHovering" contained scrim="blue-grey" class="align-center justify-center">
-                <v-btn variant="flat" @click="showDescription">See more info</v-btn>
+                <div>
+                    <v-btn variant="flat" @click="showDescription">See more info</v-btn>
+                </div>
+                <div id="btn" v-bind="props">
+                    <v-btn v-if="!isPlanList" variant="flat" @click="addAttraction">담기</v-btn>
+                    <v-btn v-if="isPlanList" variant="flat" @click="delAttraction">삭제</v-btn>
+                </div>
             </v-overlay>
         </v-card>
     </v-hover>
@@ -61,5 +74,10 @@ console.log(telephone);
 #card {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+#btn {
+    position: absolute;
+    top: 40px;
+    left: 38px;
 }
 </style>

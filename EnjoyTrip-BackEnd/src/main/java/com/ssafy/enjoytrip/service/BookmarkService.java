@@ -30,7 +30,7 @@ public class BookmarkService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public BookmarkResponse bookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
+    public ChangeBookmarkResponse changeBookmark(HttpServletRequest httpServletRequest, PostBookmarkRequest request) {
         // 멤버
         Member member = getMemberByRequest(httpServletRequest);
 
@@ -56,7 +56,7 @@ public class BookmarkService {
 
     }
 
-    public BookmarkResponse postBookmark(Member member, AttractionInfo info) {
+    public ChangeBookmarkResponse postBookmark(Member member, AttractionInfo info) {
         // 즐겨찾기 생성
         Bookmark bookmark = new Bookmark(member, info);
 
@@ -65,10 +65,10 @@ public class BookmarkService {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 
-        return new BookmarkResponse(bookmark, "insert");
+        return new ChangeBookmarkResponse(bookmark, "insert");
     }
 
-    private BookmarkResponse deleteBookmark(Member member, Bookmark bookmark) {
+    private ChangeBookmarkResponse deleteBookmark(Member member, Bookmark bookmark) {
         // 토큰에 들어있는 멤버 정보와 즐겨찾기의 멤버 정보가 일치하는지 확인
         String tId = member.getId();
         String bId = bookmark.getMember().getId();
@@ -83,7 +83,7 @@ public class BookmarkService {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 
-        return new BookmarkResponse(bookmark, "delete");
+        return new ChangeBookmarkResponse(bookmark, "delete");
     }
 
     public GetBookmarkResponse getBookmark(HttpServletRequest httpServletRequest) {

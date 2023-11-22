@@ -1,7 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
-import com.ssafy.enjoytrip.dto.bookmark.BookmarkResponse;
+import com.ssafy.enjoytrip.dto.bookmark.ChangeBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.GetBookmarkResponse;
 import com.ssafy.enjoytrip.dto.bookmark.PostBookmarkRequest;
 import com.ssafy.enjoytrip.service.BookmarkService;
@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+@CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE} , maxAge = 6000)
 
 @RestController
 @RequiredArgsConstructor
@@ -26,10 +28,10 @@ public class BookmarkController {
      * X -> 삽입
      */
     @PostMapping("")
-    public BaseResponse<BookmarkResponse> bookmark(
+    public BaseResponse<ChangeBookmarkResponse> changeBookmark(
             @RequestBody PostBookmarkRequest request,
             HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.bookmark(httpServletRequest, request));
+        return new BaseResponse<>(service.changeBookmark(httpServletRequest, request));
     }
 
     @GetMapping("")

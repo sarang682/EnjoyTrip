@@ -1,6 +1,10 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { attractionDescription } from "@/api/attraction";
+import { changeBookmark } from "@/api/bookmark";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 const props = defineProps({ attraction: Object})
 const attraction = props.attraction;
 
@@ -21,13 +25,38 @@ const getAttractionDescription = (attractionId) => {
     );
 };
 
+const changeBookmarkClickEvent = () => {
+	if (description.value.logined) {
+		changeBookmarkEvent(attraction.attractionId);
+	} else {
+		alert('로그인을 해주세요!!!');
+		router.push("/user/login");
+	}
+}
+
+const changeBookmarkEvent = (attractionId) => {
+    changeBookmark(
+        {
+			"attractionId": attractionId
+		},
+        ({ data }) => {
+			const action = data.result.action;
+			if (action === 'insert') description.value.bookmarked = true;
+			if (action === 'delete') description.value.bookmarked = false;
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+}
+
 </script>
 
 <template>
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
-            <span class="bookmark-button">
-                <font-awesome-icon 
+            <span class="bookmark-button" @click="changeBookmarkClickEvent">
+                <font-awesome-icon
                     v-if="description.logined && description.bookmarked" 
                     icon="fa-solid fa-bookmark"
                     size="xl">
@@ -59,8 +88,7 @@ const getAttractionDescription = (attractionId) => {
     height: 100%;
     position: fixed;
     left: 0;
-    top: 1;
-    display: flex;
+    top:1;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -71,6 +99,7 @@ const getAttractionDescription = (attractionId) => {
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
     z-index: 1000;
+	/* overflow: auto; */
 }
 
 #modal .modal-window {
@@ -89,10 +118,11 @@ const getAttractionDescription = (attractionId) => {
     border: 1px solid rgba(255, 255, 255, 0.18);
     /* width: 400px; */
     max-height: 400px;
-    /* height: 500px; */
     position: relative;
-    top: -100px;
+    /* top: -100px; */
     padding: 10px;
+	/* display:flexbox; */
+	/* overflow:auto; */
 }
 
 #modal .title {

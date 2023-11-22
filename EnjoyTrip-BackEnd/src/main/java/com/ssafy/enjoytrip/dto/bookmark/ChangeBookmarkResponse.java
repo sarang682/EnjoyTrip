@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BookmarkResponse {
+public class ChangeBookmarkResponse {
     int bookmarkId;
     String memberId;
     int attractionId;
     String action;
 
-    public BookmarkResponse(Bookmark bookmark, String action) {
+    public ChangeBookmarkResponse(Bookmark bookmark, String action) {
         bookmarkId = bookmark.getId();
         memberId = bookmark.getMember().getId();
         attractionId = bookmark.getAttractionInfo().getId();

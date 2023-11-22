@@ -1,10 +1,11 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { attractionDescription } from "@/api/attraction";
-const props = defineProps({ attractionId: String })
+const props = defineProps({ attraction: Object})
+const attraction = props.attraction;
 
 onMounted(() => {
-    getAttractionDescription(props.attractionId);
+    getAttractionDescription(attraction.attractionId);
 });
 
 const description = ref({});
@@ -20,21 +21,26 @@ const getAttractionDescription = (attractionId) => {
     );
 };
 
-sessionStorage.getItem("accessToken")
-
 </script>
 
 <template>
     <div id="modal" class="modal-overlay">
         <div class="modal-window">
             <span class="bookmark-button">
-                <font-awesome-icon v-if="description.logined && description.bookmarked" icon="fa-solid fa-bookmark"
-                    size="xl" />
-                <font-awesome-icon v-else icon="fa-regular fa-bookmark" size="xl" />
+                <font-awesome-icon 
+                    v-if="description.logined && description.bookmarked" 
+                    icon="fa-solid fa-bookmark"
+                    size="xl">
+                </font-awesome-icon>
+                <font-awesome-icon 
+                    v-else 
+                    icon="fa-regular fa-bookmark" 
+                    size="xl">
+                </font-awesome-icon>
             </span>
 
             <div class="description">
-                <h5 class="title">상세 정보</h5>
+                <h5 class="title">{{attraction.title}}</h5>
 
                 <div class="content">
                     <p v-if="description.overview">{{ description.overview }}</p>

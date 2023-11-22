@@ -128,11 +128,11 @@ const getAttractionList = () => {
 // }
 
 const openModal = ref(false);
-const attractionId = ref("");
+const attraction = ref("");
 
 const showDescription = (data) => {
     openModal.value = true;
-    attractionId.value = data;
+    attraction.value = data;
 }
 </script>
 
@@ -142,7 +142,7 @@ const showDescription = (data) => {
         v-if="openModal" 
         @close-modal="openModal = false" 
         class="modal-body"
-        :attractionId="attractionId" />
+        :attraction="attraction" />
     <div class="container">
         <div class="row">
             <div class="col-md-9 mx-auto">

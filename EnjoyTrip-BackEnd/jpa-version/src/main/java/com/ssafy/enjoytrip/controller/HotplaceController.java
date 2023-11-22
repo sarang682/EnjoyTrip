@@ -1,6 +1,7 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
+import com.ssafy.enjoytrip.dto.hotplace.GetHotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceDto;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.PostHotplaceRequest;
@@ -31,6 +32,12 @@ public class HotplaceController {
     @GetMapping("")
     public BaseResponse<List<HotplaceDto>> getHotplaceList() {
         return new BaseResponse<>(service.getHotplaceList());
+    }
+
+    @GetMapping("{hotplace-id}")
+    public BaseResponse<GetHotplaceResponse> getHotplace(
+            @PathVariable(value = "hotplace-id") int hotplaceId){
+        return new BaseResponse<>(service.getHotplace(hotplaceId));
     }
 
 }

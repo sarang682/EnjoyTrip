@@ -2,11 +2,13 @@ package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.AttractionException;
 import com.ssafy.enjoytrip.common.exception.DatabaseException;
+import com.ssafy.enjoytrip.common.exception.HotplaceException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Hotplace;
 import com.ssafy.enjoytrip.domain.Member;
+import com.ssafy.enjoytrip.dto.hotplace.GetHotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceDto;
 import com.ssafy.enjoytrip.dto.hotplace.HotplaceResponse;
 import com.ssafy.enjoytrip.dto.hotplace.PostHotplaceRequest;
@@ -64,6 +66,12 @@ public class HotplaceService {
         }
 
         return result;
+    }
+
+    public GetHotplaceResponse getHotplace(int hotplaceId) {
+        Hotplace hotplace = hotplaceRepository.findById(hotplaceId)
+                .orElseThrow(() -> new HotplaceException(ExceptionStatus.HOTPLACE_NOT_FOUND));
+        return new GetHotplaceResponse(hotplace);
     }
 
     private Member getMemberByToken(String token) {

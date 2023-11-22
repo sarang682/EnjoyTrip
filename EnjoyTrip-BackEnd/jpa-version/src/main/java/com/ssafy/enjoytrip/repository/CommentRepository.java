@@ -9,12 +9,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
+    @Override
+    Optional<Comment> findById(Integer id);
     List<Comment> findAllByArticle(Article article);
-
 
     void deleteAllByArticle(Article article);
 

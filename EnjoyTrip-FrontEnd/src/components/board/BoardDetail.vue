@@ -2,29 +2,42 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle, deleteArticle, listComments, registComment } from "@/api/board";
+import { getMember } from "@/api/user";
 import CommentListItem from "@/components/board/item/CommentListItem.vue";
 
 const route = useRoute();
 const router = useRouter();
 
-// const articleno = ref(route.params.articleno);
 const { articleno } = route.params;
 
 const comments = ref([]);
 const article = ref({});
-const member = ref({});
+const writer = ref({}); // 글쓴 사람 정보
+const member = ref({}); // 지금 로그인한 사람 정보
 
 onMounted(() => {
+  getMemberInfo();
   getArticle();
   getComments();
 });
+
+const getMemberInfo = () => {
+  getMember(
+    (response) => {
+      member.value=response.data['result'];
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+}
 
 const getArticle = () => {
   detailArticle(
     articleno,
     (response) => {
       article.value = response.data['result'];
-      member.value = response.data['result'].member;
+      writer.value = response.data['result'].member;
     },
     (error) => {
       console.log(error);
@@ -108,7 +121,7 @@ function writeComment() {
                 src="https://raw.githubusercontent.com/twbs/icons/main/icons/person-fill.svg"
               />
               <p>
-                <span class="fw-bold">{{ member.name }}</span> <br />
+                <span class="fw-bold">{{ writer.name }}</span> <br />
                 <span class="text-secondary fw-light">
                   {{ article.createdAt }}1 조회 : {{ article.hit }}
                 </span>
@@ -125,10 +138,14 @@ function writeComment() {
             <button type="button" class="btn btn-outline-primary mb-3" @click="moveList">
               글목록
             </button>
-            <button type="button" class="btn btn-outline-success mb-3 ms-1" @click="moveModify">
+            <button type="button" class="btn btn-outline-success mb-3 ms-1" 
+              v-if="writer.id==member.id"
+              @click="moveModify">
               글수정
             </button>
-            <button type="button" class="btn btn-outline-danger mb-3 ms-1" @click="onDeleteArticle">
+            <button type="button" class="btn btn-outline-danger mb-3 ms-1" 
+              v-if="writer.id==member.id"
+              @click="onDeleteArticle">
               글삭제
             </button>
           </div>
@@ -159,6 +176,7 @@ function writeComment() {
           v-for="comment in comments"
             :key="comment.id"
             :comment="comment"
+            :info="member"
         ></CommentListItem>
       </tbody>
     </table>

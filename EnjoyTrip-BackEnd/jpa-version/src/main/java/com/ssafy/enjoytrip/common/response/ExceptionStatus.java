@@ -45,6 +45,7 @@ public enum ExceptionStatus implements ResponseStatus {
     // 7000: BOARD
     ARTICLE_NOT_FOUND(7000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 게시물입니다."),
     UNAUTHORIZED(7001, HttpStatus.UNAUTHORIZED.value(), "허용되지 않은 접근입니다."),
+    COMMENT_NOT_FOUND(7002, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 댓글입니다."),
 
     // 8000: BOOKMARK
     DUPLICATE_BOOKMARK(8000, HttpStatus.BAD_REQUEST.value(), "이미 존재하는 즐겨찾기입니다.");

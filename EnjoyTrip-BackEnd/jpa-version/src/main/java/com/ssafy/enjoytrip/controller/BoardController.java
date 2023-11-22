@@ -58,4 +58,10 @@ public class BoardController {
         return new BaseResponse<>(service.getComment(articleId));
     }
 
+    @DeleteMapping("comments/{comment-id}")
+    public BaseResponse<?> deleteComment(@PathVariable("comment-id") int commentId, @RequestHeader("Authorization") String token) {
+        service.deleteComment(commentId, token);
+        return new BaseResponse<>(null);
+    }
+
 }

@@ -52,7 +52,7 @@ public class ArticleService {
     public void modifyArticle(Integer articleId, String title, String content, String token) {
         String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
-        if(memberId != article.getMember().getId())
+        if(!memberId.equals(article.getMember().getId()))
             throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         article.setTitle(title);
         article.setContent(content);
@@ -63,7 +63,7 @@ public class ArticleService {
     public void deleteArticle(Integer articleId,String token) {
         String memberId= jwtUtil.getUserId(token);
         Article article = getArticleOrException(articleId);
-        if(memberId!=article.getMember().getId())
+        if(!memberId.equals(article.getMember().getId()))
             throw new BoardException(ExceptionStatus.UNAUTHORIZED);
         commentRepository.deleteAllByArticle(article);
         articleRepository.delete(article);
@@ -81,6 +81,16 @@ public class ArticleService {
         Article article = getArticleOrException(articleId);
         List<Comment> findComments=commentRepository.findAllByArticle(article);
         return findComments.stream().map(CommentDto::fromEntity).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteComment(Integer commentId, String token) {
+        String memberId= jwtUtil.getUserId(token);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(()-> new BoardException(ExceptionStatus.COMMENT_NOT_FOUND));
+        if(!memberId.equals(comment.getMember().getId()))
+            throw new BoardException(ExceptionStatus.UNAUTHORIZED);
+        commentRepository.delete(comment);
     }
 
 
@@ -101,4 +111,5 @@ public class ArticleService {
         if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
         return memberId;
     }
+
 }

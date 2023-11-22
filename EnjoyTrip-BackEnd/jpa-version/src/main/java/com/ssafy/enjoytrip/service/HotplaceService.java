@@ -1,9 +1,6 @@
 package com.ssafy.enjoytrip.service;
 
-import com.ssafy.enjoytrip.common.exception.AttractionException;
-import com.ssafy.enjoytrip.common.exception.DatabaseException;
-import com.ssafy.enjoytrip.common.exception.HotplaceException;
-import com.ssafy.enjoytrip.common.exception.MemberException;
+import com.ssafy.enjoytrip.common.exception.*;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
 import com.ssafy.enjoytrip.domain.AttractionType;
 import com.ssafy.enjoytrip.domain.Hotplace;
@@ -69,9 +66,43 @@ public class HotplaceService {
     }
 
     public GetHotplaceResponse getHotplace(int hotplaceId) {
-        Hotplace hotplace = hotplaceRepository.findById(hotplaceId)
-                .orElseThrow(() -> new HotplaceException(ExceptionStatus.HOTPLACE_NOT_FOUND));
+        Hotplace hotplace = findHotplaceById(hotplaceId);
         return new GetHotplaceResponse(hotplace);
+    }
+
+    @Transactional
+    public HotplaceResponse deleteHotplace(String token, int hotplaceId) {
+        // 멤버
+        String memberId = getMemberIdByToken(token);
+        validateMember(memberId);
+
+        // 추천 여행지
+        Hotplace hotplace = findHotplaceById(hotplaceId);
+
+        // 토큰에 들어있는 멤버 정보와 추천 여행지의 작성자가 일치하는지 확인
+        if (!memberId.equals(hotplace.getMember().getId())) {
+            throw new JwtBadRequestException(ExceptionStatus.TOKEN_MISMATCH);
+        }
+
+        // 삭제
+        try {
+            hotplaceRepository.deleteById(hotplaceId);
+        } catch (Exception e) {
+            throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
+        }
+
+        return new HotplaceResponse(hotplace);
+    }
+
+    private Hotplace findHotplaceById(int hotplaceId) {
+        return hotplaceRepository.findById(hotplaceId)
+                .orElseThrow(() -> new HotplaceException(ExceptionStatus.HOTPLACE_NOT_FOUND));
+    }
+
+    private void validateMember(String memberId) {
+        if (!memberRepository.existsById(memberId)) {
+            throw new MemberException(ExceptionStatus.MEMBER_NOT_FOUND);
+        }
     }
 
     private Member getMemberByToken(String token) {
@@ -87,9 +118,8 @@ public class HotplaceService {
     }
 
     private Member findMemberById(String memberId) {
-        Member member = memberRepository.findById(memberId)
+        return memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
-        return member;
     }
 
     private AttractionType findAttractionTypeById(int attractionTypeId) {

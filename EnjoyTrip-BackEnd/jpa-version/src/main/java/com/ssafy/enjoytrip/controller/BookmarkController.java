@@ -31,7 +31,7 @@ public class BookmarkController {
         return new BaseResponse<>(service.getBookmark(token));
     }
 
-    @DeleteMapping("{bookmark-id}")
+    @DeleteMapping("/{bookmark-id}")
     public BaseResponse<BookmarkResponse> deleteBookmark(
             @RequestHeader("Authorization") String token,
             @PathVariable(value = "bookmark-id") int bookmarkId) {

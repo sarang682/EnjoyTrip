@@ -26,7 +26,7 @@ public enum ExceptionStatus implements ResponseStatus {
     INVALID_TOKEN(4003, HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 토큰입니다."),
     MALFORMED_TOKEN(4004, HttpStatus.UNAUTHORIZED.value(), "토큰이 올바르게 구성되지 않았습니다."),
     EXPIRED_TOKEN(4005, HttpStatus.UNAUTHORIZED.value(), "만료된 토큰입니다."),
-    TOKEN_MISMATCH(4006, HttpStatus.UNAUTHORIZED.value(), "로그인 정보가 토큰 정보와 일치하지 않습니다."),
+    TOKEN_MISMATCH(4006, HttpStatus.UNAUTHORIZED.value(), "요청 정보가 토큰 정보와 일치하지 않습니다."),
 
     // 5000: MEMBER
     INVALID_MEMBER_VALUE(5000, HttpStatus.BAD_REQUEST.value(), "회원가입 요청에서 잘못된 값이 존재합니다."),

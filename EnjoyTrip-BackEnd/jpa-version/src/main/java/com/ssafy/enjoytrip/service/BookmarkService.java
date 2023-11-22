@@ -81,6 +81,7 @@ public class BookmarkService {
         try {
             bookmarkRepository.deleteById(bookmarkId);
         } catch (Exception e) {
+
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }
 

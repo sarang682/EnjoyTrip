@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface HotplaceRepository extends JpaRepository<Hotplace, Long> {
     List<Hotplace> findAll();
     Optional<Hotplace> findById(int id);
+    void deleteById(int id);
 }

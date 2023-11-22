@@ -34,10 +34,17 @@ public class HotplaceController {
         return new BaseResponse<>(service.getHotplaceList());
     }
 
-    @GetMapping("{hotplace-id}")
-    public BaseResponse<GetHotplaceResponse> getHotplace(
-            @PathVariable(value = "hotplace-id") int hotplaceId){
+    @GetMapping("/{hotplace-id}")
+    public BaseResponse<GetHotplaceResponse> getHotplace (
+            @PathVariable(value = "hotplace-id") int hotplaceId) {
         return new BaseResponse<>(service.getHotplace(hotplaceId));
+    }
+
+    @DeleteMapping("/{hotplace-id}")
+    public BaseResponse<HotplaceResponse> deleteHotplace (
+            @PathVariable(value = "hotplace-id") int hotplaceId,
+            @RequestHeader("Authorization") String token) {
+        return new BaseResponse<>(service.deleteHotplace(token, hotplaceId));
     }
 
 }

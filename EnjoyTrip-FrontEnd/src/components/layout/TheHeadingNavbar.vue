@@ -29,6 +29,9 @@ const logout = () => {
             <router-link :to="{ name: 'attraction' }" class="nav-link">관광지</router-link>
           </li>
           <li class="nav-item">
+            <router-link :to="{ name: 'hotplace' }" class="nav-link">여행지 추천</router-link>
+          </li>
+          <li class="nav-item">
             <router-link :to="{ name: 'board' }" class="nav-link">게시판</router-link>
           </li>
           <li class="nav-item">

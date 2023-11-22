@@ -15,6 +15,7 @@ onMounted(() => {
 const attractions = ref([]); // 지도에 표시된 관광지
 const selectAttraction = ref({}); // 사용자가 누른 관광지
 const attractionPlan = ref([]); // 여행 계획에 넣을 관광지
+const attractionPos = ref([]); // 여행 
 
 const sidos = ref([
     {
@@ -140,10 +141,16 @@ const showDescription = (data) => {
 
 const addAttraction = (data) => {
     attractionPlan.value.push(data);
+    attractionPos.value.push({
+        attractionId: data.attractionId,
+        latitude: data.latitude,
+        longitude: data.longitude
+    });
 }
 
 const delAttraction = (data) => {
     attractionPlan.value = attractionPlan.value.filter((obj) => obj !== data);
+    attractionPos.value = attractionPos.value.filter((obj) => obj.attractionId !== data.attractionId);
 }
 </script>
 
@@ -168,7 +175,7 @@ const delAttraction = (data) => {
                     <v-btn id="btn-search" color="blue-grey" type="button" @click="getAttractionList">검색</v-btn>
                 </form>
                 <!-- kakao map -->
-                <KakaoMap :attractions="attractions" :selectAttraction="selectAttraction" />
+                <KakaoMap :attractions="attractions" :selectAttraction="selectAttraction" :attractionPos="attractionPos" />
                 <!-- 관광지 리스트 -->
                 <v-container id="trip-list">
                     <v-row>

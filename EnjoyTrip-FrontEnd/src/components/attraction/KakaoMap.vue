@@ -4,8 +4,67 @@ import { ref, watch, onMounted } from "vue";
 var map;
 const positions = ref([]);
 const markers = ref([]);
+var polyline=ref();
 
-const props = defineProps({ attractions: Array, selectAttraction: Object });
+const props = defineProps({
+  attractions: Array,
+  selectAttraction: Object,
+  attractionPos: Object,
+});
+
+const togoLine = () => {
+  togoDeleteLine(); // 이전 polyline 제거
+
+  const linePath = [];
+  for (let pos of props.attractionPos) {
+    linePath.push(new kakao.maps.LatLng(pos.latitude, pos.longitude));
+  }
+
+  // 새로운 polyline 생성
+  const newPolyline = new kakao.maps.Polyline({
+    path: linePath,
+    strokeWeight: 5,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeStyle: 'solid'
+  });
+
+// 지도에 새로운 polyline 표시
+  newPolyline.setMap(map);
+
+// ref 값 업데이트
+  polyline.value = newPolyline;
+};
+
+// togoDeleteLine 함수 수정
+const togoDeleteLine = () => {
+  if (polyline.value instanceof kakao.maps.Polyline) {
+    polyline.value.setMap(null); // 이전 polyline 제거
+    polyline.value = null; // 레퍼런스 제거
+  }
+};
+
+watch(
+  () => props.attractionPos,
+  () => {
+    // 선 긋기!!!!!!!!!!
+    // const linePath = [];
+    // for (let pos of props.attractionPos) {
+    //   linePath.push(new kakao.maps.LatLng(pos.latitude, pos.longitude));
+    // }
+    // // 지도에 표시할 선을 생성합니다
+    // polyline = new kakao.maps.Polyline({
+    // path: linePath, // 선을 구성하는 좌표배열 입니다
+    // strokeWeight: 5, // 선의 두께 입니다
+    // strokeColor: '#FF0000', // 선의 색깔입니다
+    // strokeOpacity: 1.0, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
+    // strokeStyle: 'solid' // 선의 스타일입니다
+    // });
+    // polyline.setMap(map);
+    togoLine();
+  },
+  { deep: true }
+)
 
 // watch(
 //   () => props.selectAttraction.value,

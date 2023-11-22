@@ -45,6 +45,7 @@ const param = ref({
 const changeSidoCode = (val) => {
     param.value.sidoCode = val;
     guguns.value.length = 1;
+    changeGugunCode()
     getGugunList(val);
 };
 

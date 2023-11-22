@@ -14,7 +14,15 @@ onMounted(() => {
         router.push('/user/login');
     }
     else {
-        getBookmarkList(
+        getBookmarks();
+    }
+});
+
+const openModal = ref(false);
+const attraction = ref("");
+
+const getBookmarks = () => {
+    getBookmarkList(
             ({ data }) => {
                 attractions.value = data.result.attractions;
             },
@@ -22,22 +30,25 @@ onMounted(() => {
                 console.log(error);
             }
         );
-    }
-});
-
-const openModal = ref(false);
-const attraction = ref("");
+}
 
 const showDescription = (data) => {
     openModal.value = true;
     attraction.value = data;
+}
+
+const closeModal = (isChanged) => {
+    openModal.value = false;
+    if (isChanged) {
+        getBookmarks();
+    }
 }
 </script>
 
 <template>
     <AttractionDetail 
         v-if="openModal" 
-        @close-modal="openModal = false" 
+        @close-modal="closeModal" 
         class="modal-body"
         :attraction="attraction" />
     <div class="container">

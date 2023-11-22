@@ -7,6 +7,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const props = defineProps({ attraction: Object})
 const attraction = props.attraction;
+const isChanged = ref(false);
 
 onMounted(() => {
     getAttractionDescription(attraction.attractionId);
@@ -43,6 +44,7 @@ const changeBookmarkEvent = (attractionId) => {
 			const action = data.result.action;
 			if (action === 'insert') description.value.bookmarked = true;
 			if (action === 'delete') description.value.bookmarked = false;
+            isChanged.value = !isChanged.value;
         },
         (error) => {
             console.log(error);
@@ -76,7 +78,7 @@ const changeBookmarkEvent = (attractionId) => {
                     <p v-else>상세 정보가 없습니다.</p>
                 </div>
 
-                <v-btn color="blue-grey" @click="$emit('close-modal')">닫기</v-btn>
+                <v-btn color="blue-grey" @click="$emit('closeModal', isChanged)">닫기</v-btn>
             </div>
         </div>
     </div>

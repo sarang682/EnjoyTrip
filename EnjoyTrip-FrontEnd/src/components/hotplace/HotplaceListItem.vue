@@ -1,14 +1,15 @@
 <script setup>
-
+const props = defineProps({ hotplace: Object})
+console.log(props.hotplace);
 </script>
 
 <template>
     <v-card
         class="mx-auto"
-        max-width="200"
+        width="200"
         height="200"
-        image="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
-        title="Card title"
+        :image="props.hotplace.image"
+        :title="props.hotplace.title"
         theme="dark">
     </v-card>
 </template>

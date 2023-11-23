@@ -91,7 +91,6 @@ const goAttraction = () => {
     float: right;
     padding-top: 10px;
     padding-right: 10px;
-    cursor: pointer;
 }
 
 #btn {
@@ -104,6 +103,4 @@ p {
     margin-left: 15px;
     margin-top: 20px;
 }
-
-
 </style>

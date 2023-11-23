@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from "vue-router";
 import TheMainView from "../views/TheMainView.vue";
 import TheAttractionView from "@/views/TheAttractionView.vue";
 import TheBookmarkView from "@/views/TheBookmarkView.vue";
+import TheHotplaceView from "@/views/TheHotplaceView.vue";
+
 // import TheBoardView from "../views/TheBoardView.vue";
 
 const requireAuth = () => (to,from,next) => {
@@ -31,6 +33,11 @@ const router = createRouter({
       name: "plan-view",
       component: () => import("@/components/attraction/PlanDetail.vue"),
       props: true
+    },
+    {
+      path: "/hotplace",
+      name: "hotplace",
+      component: TheHotplaceView,
     },
     {
       path: "/board",

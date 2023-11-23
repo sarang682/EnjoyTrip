@@ -123,7 +123,7 @@ function writeComment() {
               <p>
                 <span class="fw-bold">{{ writer.name }}</span> <br />
                 <span class="text-secondary fw-light">
-                  {{ article.createdAt }}1 조회 : {{ article.hit }}
+                  {{ article.createdAt }} | 조회 : {{ article.hit }}
                 </span>
               </p>
             </div>

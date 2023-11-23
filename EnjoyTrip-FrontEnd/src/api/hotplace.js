@@ -13,7 +13,7 @@ function getHotplaces(success, fail) {
 }
 
 function getHotplace(hotplaceId, success, fail) {
-    local.get(`/hotplaces/${hotplaceId}}`).then(success).catch(fail);
+    local.get(`/hotplaces/${hotplaceId}`).then(success).catch(fail);
 }
 
 async function deleteHotplace(hotplaceId, success, fail) {

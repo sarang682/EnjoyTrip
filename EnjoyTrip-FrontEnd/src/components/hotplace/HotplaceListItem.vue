@@ -1,19 +1,31 @@
 <script setup>
-const props = defineProps({ hotplace: Object})
-console.log(props.hotplace);
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const props = defineProps({ hotplace: Object });
+
+const goDetail = () => {
+    router.push({ name: "hotplace-view", params: { hotplaceId: props.hotplace.hotplaceId } });
+}
 </script>
 
 <template>
-    <v-card
-        class="mx-auto"
-        width="200"
-        height="200"
-        :image="props.hotplace.image"
-        :title="props.hotplace.title"
-        theme="dark">
+    <v-card 
+        id="card" 
+        class="mx-auto" 
+        width="200" 
+        height="200" 
+        :image="hotplace.image" 
+        :title="hotplace.title" 
+        theme="dark"
+        @click="goDetail">
     </v-card>
 </template>
 
 <style scoped>
-
+#card {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-shadow: 4px 4px 8px black;
+}
 </style>

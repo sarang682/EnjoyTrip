@@ -87,6 +87,12 @@ const router = createRouter({
           name: "user-modify",
           component: () => import("@/components/users/UserModify.vue"),
         },
+        {
+          path: "/plan",
+          name: "user-plan",
+          component: () => import("@/components/users/UserPlan.vue"),
+          beforeEnter: requireAuth(),
+        },
       ],
     }
   ],

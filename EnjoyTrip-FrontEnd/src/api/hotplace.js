@@ -5,7 +5,8 @@ const local = localAxios();
 async function postHotplace(request, success, fail) {
     local.defaults.headers["Authorization"] =
         sessionStorage.getItem("accessToken");
-    await local.post(`/hotplaces`, JSON.stringify(request)).then(success).catch(fail);
+    local.defaults.headers["Content-Type"] = "multipart/form-data";
+    await local.post(`/hotplaces`, request).then(success).catch(fail);
 }
 
 function getHotplaces(success, fail) {

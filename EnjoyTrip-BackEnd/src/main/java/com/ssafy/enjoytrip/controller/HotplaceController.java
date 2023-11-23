@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE} , maxAge = 6000)
@@ -24,11 +26,12 @@ public class HotplaceController {
 
     private final HotplaceService service;
 
-    @PostMapping("")
+    @PostMapping(value="")
     public BaseResponse<HotplaceResponse> postHotplace (
-            @RequestBody PostHotplaceRequest request,
-            HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.postHotplace(httpServletRequest, request));
+            @RequestPart PostHotplaceRequest postHotplaceRequest,
+            @RequestPart(required = false) MultipartFile image,
+            HttpServletRequest httpServletRequest) throws IOException {
+        return new BaseResponse<>(service.postHotplace(httpServletRequest, postHotplaceRequest, image));
     }
 
     @GetMapping("")

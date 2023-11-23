@@ -10,18 +10,17 @@ public class PostHotplaceRequest {
 
     private String title;
     private String content;
-    private String image;
     private Double latitude;
     private Double longitude;
     private int attractionTypeId;
 
-    public Hotplace toEntity(Member member, AttractionType attractionType) {
+    public Hotplace toEntity(Member member, AttractionType attractionType, String saveFileName) {
         return Hotplace.builder()
                 .title(title)
                 .content(content)
-                .image(image)
                 .latitude(latitude)
                 .longitude(longitude)
+                .image(saveFileName)
                 .member(member)
                 .attractionType(attractionType)
                 .build();

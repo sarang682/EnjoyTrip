@@ -1,5 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
+import img from '@/assets/no-image.jpeg';
 
 const router = useRouter();
 const props = defineProps({ hotplace: Object });
@@ -15,7 +16,7 @@ const moveDetail = () => {
         class="mx-auto" 
         width="200" 
         height="200" 
-        :image="hotplace.image" 
+        :image="hotplace.image || img" 
         :title="hotplace.title" 
         theme="dark"
         @click="moveDetail">

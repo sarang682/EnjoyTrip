@@ -37,7 +37,7 @@ const clickPlan = (planId,title) => {
 </script>
 
 <template>
-    <div class="container">
+    <div class="container col-12">
     <div class="row justify-content-center">
       <div class="col-lg-10">
         <h2 class="my-3 py-3 shadow-sm bg-light text-center">
@@ -45,7 +45,7 @@ const clickPlan = (planId,title) => {
         </h2>
       </div>
       <v-row>
-        <PlanListItem 
+        <PlanListItem
             v-for="(plan, index) in plans"
             :key="plan.id"
             :plan="plan"

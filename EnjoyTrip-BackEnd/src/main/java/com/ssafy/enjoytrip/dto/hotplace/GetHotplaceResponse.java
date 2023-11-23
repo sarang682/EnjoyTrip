@@ -18,6 +18,7 @@ public class GetHotplaceResponse {
     String memberId;
     String memberName;
     String attractionTypeName;
+    String createdAt;
 
     public GetHotplaceResponse(Hotplace hotplace) {
         hotplaceId = hotplace.getId();
@@ -29,6 +30,7 @@ public class GetHotplaceResponse {
         memberId = hotplace.getMember().getId();
         memberName = hotplace.getMember().getName();
         attractionTypeName = hotplace.getAttractionType().getName();
+        createdAt = hotplace.getCreatedAt();
     }
 
 }

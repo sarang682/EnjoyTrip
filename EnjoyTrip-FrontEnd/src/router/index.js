@@ -45,6 +45,11 @@ const router = createRouter({
           name: "hotplace-list",
           component: () => import("@/components/hotplace/HotplaceList.vue"),
         },
+        {
+          path: "view",
+          name: "hotplace-view",
+          component: () => import("@/components/hotplace/HotplaceDetail.vue"),
+        },
       ]
     },
     {

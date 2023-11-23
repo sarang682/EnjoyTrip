@@ -44,7 +44,4 @@ const getHotplaceList = () => {
 </template>
 
 <style scoped>
-.write-btn {
- border-radius: 50%;
-}
 </style>

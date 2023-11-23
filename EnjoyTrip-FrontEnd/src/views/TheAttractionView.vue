@@ -170,7 +170,6 @@ const closeModal = (isChanged) => {
                 <v-container id="trip-list">
                     <v-row>
                         <AttractionListItem 
-                            cols="12" md="4" sm="4"
                             v-for="attraction in attractions" 
                             :key="attraction.attractionId"
                             :attraction="attraction" 

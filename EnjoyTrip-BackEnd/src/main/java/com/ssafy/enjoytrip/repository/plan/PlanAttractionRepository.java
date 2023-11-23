@@ -2,7 +2,6 @@ package com.ssafy.enjoytrip.repository.plan;
 
 import com.ssafy.enjoytrip.domain.Plan;
 import com.ssafy.enjoytrip.domain.PlanAttractionInfo;
-import com.ssafy.enjoytrip.dto.attraction.GetInfoResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

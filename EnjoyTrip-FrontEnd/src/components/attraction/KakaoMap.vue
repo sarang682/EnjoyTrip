@@ -126,13 +126,8 @@ watch(
 const initMap = () => {
   const container = document.getElementById("map");
   const options = {
-<<<<<<< HEAD
-    center: new kakao.maps.LatLng(36.1081844, 128.4139686),
-    level: 3,
-=======
     center: new kakao.maps.LatLng(36.5, 127.5),
     level: 13,
->>>>>>> plan
   };
   map = new kakao.maps.Map(container, options);
   if(props.isPlan) {

@@ -20,8 +20,6 @@ const address = computed(() => {
     return addr + props.attraction.addr2;
 })
 
-<<<<<<< HEAD
-=======
 const addAttraction = () => {
     emit("add-attraction", props.attraction);
 }
@@ -34,7 +32,6 @@ const goAttraction = () => {
     emit("go-attraction", props.attraction);
 }
 
->>>>>>> plan
 </script>
 
 <template>
@@ -88,7 +85,6 @@ const goAttraction = () => {
     margin-top: 5px;
     margin-bottom: 5px;
 }
-<<<<<<< HEAD
 
 .bookmark-icon {
     display: inline;
@@ -97,7 +93,7 @@ const goAttraction = () => {
     padding-right: 10px;
     cursor: pointer;
 }
-=======
+
 #btn {
     margin: 5px;
 }
@@ -109,5 +105,5 @@ p {
     margin-top: 20px;
 }
 
->>>>>>> plan
+
 </style>

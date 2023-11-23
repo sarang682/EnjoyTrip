@@ -4,14 +4,12 @@ import com.ssafy.enjoytrip.common.exception.AttractionException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.exception.PlanException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
-import com.ssafy.enjoytrip.domain.AttractionInfo;
-import com.ssafy.enjoytrip.domain.Member;
-import com.ssafy.enjoytrip.domain.Plan;
-import com.ssafy.enjoytrip.domain.PlanAttractionInfo;
+import com.ssafy.enjoytrip.domain.*;
 import com.ssafy.enjoytrip.dto.attraction.GetInfoResponse;
 import com.ssafy.enjoytrip.dto.plan.PlanAttractionDto;
 import com.ssafy.enjoytrip.dto.plan.PlanDto;
 import com.ssafy.enjoytrip.repository.attraction.InfoRepository;
+import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import com.ssafy.enjoytrip.repository.plan.PlanAttractionRepository;
 import com.ssafy.enjoytrip.repository.plan.PlanRepository;
@@ -20,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +29,7 @@ public class PlanService {
     private final PlanRepository planRepository;
     private final MemberRepository memberRepository;
     private final PlanAttractionRepository planAttractionRepository;
+    private final BookmarkRepository bookmarkRepository;
     private final InfoRepository infoRepository;
     private final JwtUtil jwtUtil;
 
@@ -56,8 +56,17 @@ public class PlanService {
 
     public List<PlanAttractionDto> getAttraction(Integer planId) {
         Plan plan=getPlanOrException(planId);
+        Member member=plan.getMember();
         List<PlanAttractionInfo> findInfo=planAttractionRepository.findAllByPlan(plan);
-        return findInfo.stream().map(PlanAttractionDto::fromEntity).collect(Collectors.toList());
+        List<PlanAttractionDto> result=new ArrayList<>();
+        for(PlanAttractionInfo i:findInfo) {
+            if(findBookmark(member,i.getAttractionInfo())==null) { // 관광지를 북마크 안함
+                result.add(new PlanAttractionDto(i,true,false));
+            }else{ // 관광지를 북마크함
+                result.add(new PlanAttractionDto(i,true,true));
+            }
+        }
+        return result;
     }
 
 
@@ -77,4 +86,7 @@ public class PlanService {
                 .orElseThrow(()->new AttractionException(ExceptionStatus.ATTRACTION_NOT_FOUND));
     }
 
+    private Bookmark findBookmark(Member member, AttractionInfo info) {
+        return bookmarkRepository.findByMemberAndAttractionInfo(member, info);
+    }
 }

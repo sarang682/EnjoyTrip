@@ -16,10 +16,8 @@ public class PlanAttractionDto {
     private PlanDto plan;
     private GetInfoResponse attraction;
 
-    public static PlanAttractionDto fromEntity (PlanAttractionInfo entity) {
-        return new PlanAttractionDto(
-                PlanDto.fromEntity(entity.getPlan()),
-                new GetInfoResponse(entity.getAttractionInfo())
-        );
+    public PlanAttractionDto (PlanAttractionInfo entity, boolean isLogined, boolean isBookmarked) {
+        this.plan=PlanDto.fromEntity(entity.getPlan());
+        this.attraction= new GetInfoResponse(entity.getAttractionInfo(),isLogined,isBookmarked);
     }
 }

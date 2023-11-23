@@ -19,7 +19,7 @@ function getHotplace(hotplaceId, success, fail) {
 async function deleteHotplace(hotplaceId, success, fail) {
     local.defaults.headers["Authorization"] =
         sessionStorage.getItem("accessToken");
-    await local.get(`/bookmarks/${hotplaceId}`).then(success).catch(fail);
+    await local.delete(`/hotplaces/${hotplaceId}`).then(success).catch(fail);
 }
 
 export {

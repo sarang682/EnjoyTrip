@@ -50,6 +50,12 @@ const router = createRouter({
           name: "hotplace-view",
           component: () => import("@/components/hotplace/HotplaceDetail.vue"),
         },
+        {
+          path: "write",
+          name: "hotplace-write",
+          component: () => import("@/components/hotplace/HotplaceWrite.vue"),
+          beforeEnter: requireAuth()
+        },
       ]
     },
     {
@@ -126,6 +132,12 @@ const router = createRouter({
           beforeEnter: requireAuth(),
         },
       ],
+    },
+    {
+      path: "/bookmark",
+      name: "bookmark",
+      component: TheBookmarkView,
+      beforeEnter: requireAuth()
     },
   ],
 });

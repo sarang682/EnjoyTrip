@@ -1,21 +1,13 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getBookmarkList } from "@/api/bookmark";
-import { useRouter } from 'vue-router';
 import AttractionDetail from "@/components/attraction/AttractionDetail.vue";
 import AttractionListItem from "@/components/attraction/AttractionListItem.vue";
 
 const attractions = ref([]);
-const router = useRouter();
 
 onMounted(() => {
-    if (sessionStorage.getItem("accessToken") == null) {
-        alert('로그인을 해주세요!!!!');
-        router.push('/user/login');
-    }
-    else {
-        getBookmarks();
-    }
+    getBookmarks();
 });
 
 const openModal = ref(false);

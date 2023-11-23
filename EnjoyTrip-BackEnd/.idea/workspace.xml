@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="9fce2076-ff0a-4d49-a011-fc2ba41b52ff" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/ssafy/enjoytrip/dto/hotplace/GetHotplaceResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/enjoytrip/dto/hotplace/GetHotplaceResponse.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/components/hotplace/HotplaceListItem.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/components/hotplace/HotplaceListItem.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/components/hotplace/KakaoMap.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/components/hotplace/KakaoMap.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../EnjoyTrip-FrontEnd/src/router/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -63,7 +63,7 @@
       <option name="presentableId" value="Default" />
       <updated>1700649981726</updated>
       <workItem from="1700649982961" duration="29000" />
-      <workItem from="1700650874209" duration="15237000" />
+      <workItem from="1700650874209" duration="19250000" />
     </task>
     <servers />
   </component>

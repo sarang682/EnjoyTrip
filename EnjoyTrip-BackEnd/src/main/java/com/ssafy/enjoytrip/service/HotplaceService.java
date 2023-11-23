@@ -17,9 +17,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -31,17 +37,41 @@ public class HotplaceService {
     private final JwtUtil jwtUtil;
 
     @Transactional
-    public HotplaceResponse postHotplace(HttpServletRequest httpServletRequest, PostHotplaceRequest request) {
+    public HotplaceResponse postHotplace(
+            HttpServletRequest httpServletRequest,
+            PostHotplaceRequest request,
+            MultipartFile file) throws IOException {
+
         // 멤버
         Member member = getMemberByRequest(httpServletRequest);
 
         // 관광지 유형
         AttractionType attractionType = findAttractionTypeById(request.getAttractionTypeId());
 
-        // 추천 여행지 생성
-        Hotplace hotplace = request.toEntity(member, attractionType);
+        String saveFileName = null;
 
-        // 즐겨찾기 추가
+        // 이미지
+        if (file != null && !file.isEmpty()) {
+            //파일이름 변경과정
+            String today = new SimpleDateFormat("yyMMdd").format(new Date());
+            String saveFolder = System.getProperty("user.dir") + "/../imgServer" + File.separator + today;
+
+            File folder = new File(saveFolder);
+            if (!folder.exists())
+                folder.mkdirs();
+
+            String originalFileName = file.getOriginalFilename();
+            if (!originalFileName.isEmpty()) {
+                saveFileName = UUID.randomUUID().toString()
+                        + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                file.transferTo(new File(folder, saveFileName));
+            }
+        }
+
+        // 추천 여행지 생성
+        Hotplace hotplace = request.toEntity(member, attractionType, saveFileName);
+
+        // 추천 여행지 추가
         if (hotplaceRepository.save(hotplace) == null) {
             throw new DatabaseException(ExceptionStatus.DATABASE_ERROR);
         }

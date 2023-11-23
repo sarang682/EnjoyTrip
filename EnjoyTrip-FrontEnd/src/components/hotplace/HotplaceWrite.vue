@@ -9,6 +9,7 @@ import $ from 'jquery';
 const router = useRouter();
 
 const hotplace = ref({})
+const image = ref();
 const hotplaceId = ref();
 const writer = ref();
 
@@ -28,34 +29,45 @@ const getMemberInfo = () => {
 }
 
 function onSubmit() {
-    if (hotplace.value.title == "" || hotplace.value.content == "") {
-        alert("내용을 확인해주세요");
-    } else {
-        writeHotplace();
+    for (let key in hotplace.value) {
+        if (hotplace.value[key] == '') {
+            alert(key + " 내용을 확인해주세요");
+            return;
+        }
     }
-}
+    
+    const formData = new FormData();
 
-function writeHotplace() {
     const param = {
         title: hotplace.value.title,
         content: hotplace.value.content,
-        image: hotplace.value.image,
         latitude: hotplace.value.latitude,
         longitude: hotplace.value.longitude,
         attractionTypeId: hotplace.value.attractionTypeId
     }
-    postHotplace(
-        param,
-        (response) => {
-            hotplaceId.value = response.result.hotplaceId;
-            moveDetail();
-        },
-        (error) => alert("허용되지 않은 접근입니다.")
+
+    formData.append(
+        "postHotplaceRequest",
+        new Blob([JSON.stringify(param)], {
+            type: "application/json",
+        })
     );
+    formData.append("image", image.value);
+
+    writeHotplace(formData);
 }
 
-function moveDetail() {
-    router.push({ name: "hotplace-view", params: { "hotplaceId": hotplaceId.value } })
+function writeHotplace(formData) {
+    postHotplace(
+        formData,
+        (response) => {
+            moveList();
+        },
+        (error) => {
+            console.log(error);
+            alert("허용되지 않은 접근입니다.");
+        }
+    );
 }
 
 function moveList() {
@@ -65,9 +77,9 @@ function moveList() {
 function handleFileChange(event) {
     $("#imagePreview").empty();
     // 파일 선택 시 호출되는 함수
-    hotplace.value.image = event.target.files[0];
+    image.value = event.target.files[0];
 
-    if (!hotplace.value.image.type.match("image/.*")) {
+    if (!image.value.type.match("image/.*")) {
         alert("이미지 확장자만 업로드 가능합니다.");
         return;
     }
@@ -77,16 +89,28 @@ function handleFileChange(event) {
         var html = `<img src=${e.target.result} style="width: 100px; height: 100px"/>`;
         $("#imagePreview").append(html);
     };
-    reader.readAsDataURL(hotplace.value.image);
+    reader.readAsDataURL(image.value);
 
-    console.log("file - ", hotplace.value.image);
+    console.log("file - ", image.value);
+}
+
+const changeAttraction = (param) => {
+    hotplace.value.latitude = param.position.lat;
+    hotplace.value.longitude = param.position.lon;
+}
+
+const changeAttractionTypeId = (param) => {
+    hotplace.value.attractionTypeId = param.attractionTypeId;
 }
 </script>
 
 <template>
     <div class="row">
         <div class="col-6 mx-auto">
-            <SearchMap />
+            <SearchMap 
+                @change-attraction="changeAttraction"
+                @change-attraction-type-id="changeAttractionTypeId"
+            />
         </div>
         <div class="col-6" id="side">
             <input type="file" @change="handleFileChange" />
@@ -104,7 +128,7 @@ function handleFileChange(event) {
         </div>
         <div>
             <label for="content" class="form-label">내용</label>
-            <textarea class="form-control" v-model="hotplace.content" rows="10"></textarea>
+            <textarea class="form-control" v-model="hotplace.content" rows="16"></textarea>
         </div>
         <div class="divider mt-3 mb-3"></div>
         <div class="d-flex justify-content-end">

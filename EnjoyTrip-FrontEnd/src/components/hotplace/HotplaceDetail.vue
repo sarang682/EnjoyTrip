@@ -4,6 +4,7 @@ import { getHotplace, deleteHotplace } from "@/api/hotplace";
 import { useRoute, useRouter } from "vue-router";
 import { getMember } from "@/api/user";
 import KakaoMap from "@/components/hotplace/KakaoMap.vue";
+import img from '@/assets/no-image.jpeg';
 
 const route = useRoute();
 const router = useRouter();
@@ -80,7 +81,7 @@ function moveList() {
         </div>
 
         <div class="col-6" id="side">
-            <img class="image" :src="hotplace.image">
+            <img class="image" :src="hotplace.image || img">
             <div class="row">
                 <div class="col-md-8">
                     <div class="divider mb-3"></div>

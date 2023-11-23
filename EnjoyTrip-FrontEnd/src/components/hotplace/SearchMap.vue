@@ -1,10 +1,48 @@
 <script setup>
 import { ref, onMounted } from "vue";
+import { listAttractionType } from "@/api/attraction";
+import VSelect from "@/components/common/VSelect.vue";
+
+const emit = defineEmits(['changeParam']);
 
 var map;
 var infowindow;
-var keyword = ref();
+
+const keyword = ref();
 const markers = ref([]);
+const selectOption = ref([]);
+const attractionTypes = ref([]);
+
+const param = ref({
+    position: "",
+    attractionTypeId: ""
+});
+
+const changeAttraction = (val) => {
+    param.value.position = val;
+    emit('changeAttraction', param.value);
+}
+
+const changeAttractionTypeId = (val) => {
+    param.value.attractionTypeId = val;
+    emit('changeAttractionTypeId', param.value);
+};
+
+const getAttractionTypeList = () => {
+    listAttractionType(
+        ({ data }) => {
+            data.result.forEach((attractionType) => {
+                attractionTypes.value.push({
+                    text: attractionType.attractionTypeName,
+                    value: attractionType.attractionTypeId
+                });
+            })
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
 
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
@@ -19,7 +57,7 @@ onMounted(() => {
       searchPlaces()
     });
     document.head.appendChild(script);
-
+    getAttractionTypeList();
 
   }
 });
@@ -76,8 +114,13 @@ function displayPlaces(places) {
 
   // 검색 결과 목록에 추가된 항목들을 제거합니다
   removeAllChildNods(listEl);
+  selectOption.value.length = 0;
 
   for (var i = 0; i < places.length; i++) {
+    selectOption.value.push({
+        text: places[i].place_name,
+        value: {lat: places[i].y, lon: places[i].x}
+    });
 
     // 마커를 생성하고 지도에 표시합니다
     var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),
@@ -91,10 +134,10 @@ function displayPlaces(places) {
     // 마커와 검색결과 항목에 mouseover 했을때
     // 해당 장소에 인포윈도우에 장소명을 표시합니다
     // mouseout 했을 때는 인포윈도우를 닫습니다
-    (function (marker, title) {
+    (function (marker, place) {
       var infowindow;
       kakao.maps.event.addListener(marker, 'mouseover', function () {
-        infowindow = displayInfowindow(marker, title);
+        infowindow = displayInfowindow(marker, place);
       });
 
       kakao.maps.event.addListener(marker, 'mouseout', function () {
@@ -102,13 +145,14 @@ function displayPlaces(places) {
       });
 
       itemEl.onmouseover = function () {
-        displayInfowindow(marker, title);
+        displayInfowindow(marker, place);
       };
 
       itemEl.onmouseout = function () {
         infowindow.close();
       };
-    })(marker, places[i].place_name);
+
+    })(marker, places[i]);
 
     fragment.appendChild(itemEl);
   }
@@ -169,8 +213,8 @@ function addMarker(position, idx, title) {
 
 // 검색결과 목록 또는 마커를 클릭했을 때 호출되는 함수입니다
 // 인포윈도우에 장소명을 표시합니다
-function displayInfowindow(marker, title) {
-  var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+function displayInfowindow(marker, place) {
+  var content = '<div style="padding:5px;z-index:1;">' + place.place_name + '</div>';
 
   infowindow.setContent(content);
   infowindow.open(map, marker);
@@ -202,6 +246,15 @@ function removeAllChildNods(el) {
       <div id="pagination"></div>
     </div>
   </div>
+  <div>
+    <span>여행지 선택: </span>
+    <VSelect :selectOption="selectOption" @onKeySelect="changeAttraction" />
+  </div>
+  <div>
+    <span>여행지 유형 선택: </span>
+    <VSelect :selectOption="attractionTypes" @onKeySelect="changeAttractionTypeId" />
+  </div>
+  <br>
 </template>
 
 <style>

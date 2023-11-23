@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-import img from '@/assets/noimage.jpg';
+import img from '@/assets/attraction-no-image.jpg';
+
 const props = defineProps({ attraction: Object, isPlanList:Boolean, index:Number});
 
 const emit = defineEmits(["show-description"]);

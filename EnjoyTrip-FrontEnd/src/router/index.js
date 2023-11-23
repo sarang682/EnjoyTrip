@@ -38,6 +38,14 @@ const router = createRouter({
       path: "/hotplace",
       name: "hotplace",
       component: TheHotplaceView,
+      redirect: { name: "hotplace-list" },
+      children: [
+        {
+          path: "list",
+          name: "hotplace-list",
+          component: () => import("@/components/hotplace/HotplaceList.vue"),
+        },
+      ]
     },
     {
       path: "/board",

@@ -13,6 +13,7 @@ const { hotplaceId } = route.params;
 const hotplace = ref({});
 const position = ref({});
 const member = ref({}); // 지금 로그인한 사람 정보
+const isDeleted = ref(false);
 
 onMounted(() => {
     getMemberInfo();
@@ -47,20 +48,28 @@ const getHotplaceInfo = () => {
 };
 
 function onDeleteHotplace() {
-    deleteHotplace(
-        hotplaceId,
-        (response) => {
-            if (response.status == 200) moveList();
-        },
-        (error) => {
-            alert("허용되지 않은 접근입니다.");
-        }
-    );
+    if (confirm("정말 삭제하시겠습니까?")) {
+        deleteHotplace(
+            hotplaceId,
+            (response) => {
+                isDeleted.value = true;
+                alert("삭제되었습니다.");
+                moveList();
+            },
+            (error) => {
+                alert("허용되지 않은 접근입니다.");
+            }
+        );
+    } else {
+        alert("취소되었습니다.");
+    }
+    
 }
 
 function moveList() {
-    router.push({ name: "hotplace-list" });
+    router.push({ name: "hotplace-list", params: {"isDeleted" : isDeleted.value} });
 }
+
 </script>
 
 <template>

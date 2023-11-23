@@ -1,14 +1,20 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { getHotplaces } from "@/api/hotplace";
-
 import HotplaceListItem from "@/components/hotplace/HotplaceListItem.vue";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const hotplaces = ref([]);
+const isDeleted = router.params;
 
 onMounted(() => {
     getHotplaceList();
 });
+
+if (isDeleted) {
+    getHotplaceList();
+}
 
 const getHotplaceList = () => {
     getHotplaces(

@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const props = defineProps({ hotplace: Object });
 
-const goDetail = () => {
+const moveDetail = () => {
     router.push({ name: "hotplace-view", params: { hotplaceId: props.hotplace.hotplaceId } });
 }
 </script>
@@ -18,7 +18,7 @@ const goDetail = () => {
         :image="hotplace.image" 
         :title="hotplace.title" 
         theme="dark"
-        @click="goDetail">
+        @click="moveDetail">
     </v-card>
 </template>
 

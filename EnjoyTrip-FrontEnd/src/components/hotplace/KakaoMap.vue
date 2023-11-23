@@ -43,16 +43,45 @@ const initMap = () => {
         infowindow.close();
     });
 };
-
 </script>
 
 <template>
-    <div id="map"></div>
+    <div class="map_wrap">
+        <div id="map"></div>
+        <div class="hAddr">
+            <span id="centerAddr"></span>
+        </div>
+    </div>
 </template>
 
 <style>
+.map_wrap {
+    width:100%;
+    height:500px;
+}
+
 #map {
     width: 100%;
-    height: 500px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
+
+#centerAddr {
+    display:block;
+    margin-top:2px;
+    font-weight: normal;
+}
+
+.hAddr {
+    position:absolute;
+    left:10px;
+    top:10px;
+    border-radius: 2px;
+    background:#fff;
+    background:rgba(255,255,255,0.8);
+    z-index:1;
+    padding:5px;
+}
+
 </style>

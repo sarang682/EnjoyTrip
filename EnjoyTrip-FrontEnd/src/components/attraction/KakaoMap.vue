@@ -4,42 +4,101 @@ import { ref, watch, onMounted } from "vue";
 var map;
 const positions = ref([]);
 const markers = ref([]);
+const orderedMarkers = ref([]);
+var polyline = ref();
 
-const props = defineProps({ attractions: Array, selectAttraction: Object });
+const props = defineProps({
+  attractions: Array,
+  selectAttraction: Object,
+  attractionPos: Object,
+  isPlan: Boolean,
+});
 
-// watch(
-//   () => props.selectAttraction.value,
-//   () => {
-//     // 이동할 위도 경도 위치를 생성합니다
-//     var moveLatLon = new kakao.maps.LatLng(props.selectAttraction.latitude, props.selectAttraction.longitude);
+// 순서있는 마커 만들기 !!
+const togoLine = (point) => {
 
-//     // 지도 중심을 부드럽게 이동시킵니다
-//     // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
-//     deleteMarkers();
-//     map.panTo(moveLatLon);
+  if (orderedMarkers.value.length > 0) {
+    orderedMarkers.value.forEach((marker) => marker.setMap(null));
+  }
+  togoDeleteLine(); // 이전 polyline 제거
 
-//     // 선택한 관광지의 마커를 생성
-//     markers.value = [];
-//     const marker = new kakao.maps.Marker({
-//       map: map, // 마커를 표시할 지도
-//       position: moveLatLon, // 마커를 표시할 위치
-//       title: props.selectAttraction.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
-//       clickable: true, // // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-//     });
-//     markers.value.push(marker);
-    
-//   },
-//   { deep: true }
-// );
+  const linePath = [];
+  for (let pos of point) {
+    linePath.push(new kakao.maps.LatLng(pos.latitude, pos.longitude));
+  }
+
+  orderedMarkers.value = [];
+  for (var i = 0; i < linePath.length; i++) {
+    var imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
+    var imageSize = new kakao.maps.Size(36, 37);
+    var imgOptions = {
+      spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+      spriteOrigin: new kakao.maps.Point(0, (i * 46) + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+      offset: new kakao.maps.Point(13, 37) // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+    }
+
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
+    var markerPosition = linePath[i];
+    var m = new kakao.maps.Marker({
+      map: map, // 마커를 표시할 지도
+      position: markerPosition,
+      image: markerImage // 마커이미지 설정 
+    });
+    orderedMarkers.value.push(m);
+  }
+
+
+  // 새로운 polyline 생성
+  const newPolyline = new kakao.maps.Polyline({
+    path: linePath,
+    strokeWeight: 5,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeStyle: 'solid'
+  });
+
+  // 지도에 새로운 polyline 표시
+  newPolyline.setMap(map);
+
+  // ref 값 업데이트
+  polyline.value = newPolyline;
+};
+
+// togoDeleteLine 함수 수정
+const togoDeleteLine = () => {
+  if (polyline.value instanceof kakao.maps.Polyline) {
+    polyline.value.setMap(null); // 이전 polyline 제거
+    polyline.value = null; // 레퍼런스 제거
+  }
+};
+
+watch(
+  () => props.attractionPos,
+  () => {
+    // 선 긋기
+    togoLine(props.attractionPos);
+  },
+  { deep: true }
+)
+
+watch(
+  () => props.selectAttraction.value,
+  () => {
+    // 이동할 위도 경도 위치를 생성합니다
+    var moveLatLon = new kakao.maps.LatLng(props.selectAttraction.latitude, props.selectAttraction.longitude);
+    map.setLevel(2);
+    map.panTo(moveLatLon);
+  },
+  { deep: true }
+);
 
 onMounted(() => {
   if (window.kakao && window.kakao.maps) {
     initMap();
   } else {
     const script = document.createElement("script");
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${
-      import.meta.env.VITE_KAKAO_KEY
-    }&libraries=services,clusterer`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=${import.meta.env.VITE_KAKAO_KEY
+      }&libraries=services,clusterer`;
     /* global kakao */
     script.onload = () => kakao.maps.load(() => initMap());
     document.head.appendChild(script);
@@ -53,51 +112,66 @@ watch(
     props.attractions.forEach((attraction) => {
       let obj = {};
       obj.latlng = new kakao.maps.LatLng(attraction.latitude, attraction.longitude);
+      obj.latitude=attraction.latitude,
+      obj.longitude=attraction.longitude,
       obj.title = attraction.title;
 
       positions.value.push(obj);
     });
     loadMarkers();
   },
-  { deep: true } 
+  { deep: true }
 );
 
 const initMap = () => {
   const container = document.getElementById("map");
   const options = {
+<<<<<<< HEAD
     center: new kakao.maps.LatLng(36.1081844, 128.4139686),
     level: 3,
+=======
+    center: new kakao.maps.LatLng(36.5, 127.5),
+    level: 13,
+>>>>>>> plan
   };
   map = new kakao.maps.Map(container, options);
+  if(props.isPlan) {
+    console.log("계획 맵 실행..@@@@")
 
-  // loadMarkers();
+    positions.value = [];
+    props.attractions.forEach((attraction) => {
+      let obj = {};
+      obj.latlng = new kakao.maps.LatLng(attraction.latitude, attraction.longitude);
+      obj.latitude=attraction.latitude,
+      obj.longitude=attraction.longitude,
+      obj.title = attraction.title;
+
+      positions.value.push(obj);
+    });
+    togoLine(positions.value);
+    const bounds = positions.value.reduce(
+    (bounds, position) => bounds.extend(position.latlng),
+    new kakao.maps.LatLngBounds()
+    );
+    map.setBounds(bounds);
+  }
+
 };
 
 const loadMarkers = () => {
-  // 현재 표시되어있는 marker들이 있다면 map에 등록된 marker를 제거한다.
   deleteMarkers();
 
-  // 마커 이미지를 생성합니다
-  //   const imgSrc = require("@/assets/map/markerStar.png");
-  // 마커 이미지의 이미지 크기 입니다
-  //   const imgSize = new kakao.maps.Size(24, 35);
-  //   const markerImage = new kakao.maps.MarkerImage(imgSrc, imgSize);
-
-  // 마커를 생성합니다
   markers.value = [];
   positions.value.forEach((position) => {
     const marker = new kakao.maps.Marker({
-      map: map, // 마커를 표시할 지도
-      position: position.latlng, // 마커를 표시할 위치
-      title: position.title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됨.
-      clickable: true, // // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-      // image: markerImage, // 마커의 이미지
+      map: map,
+      position: position.latlng,
+      title: position.title,
+      clickable: true,
     });
     markers.value.push(marker);
   });
 
-  // 4. 지도를 이동시켜주기
-  // 배열.reduce( (누적값, 현재값, 인덱스, 요소)=>{ return 결과값}, 초기값);
   const bounds = positions.value.reduce(
     (bounds, position) => bounds.extend(position.latlng),
     new kakao.maps.LatLngBounds()

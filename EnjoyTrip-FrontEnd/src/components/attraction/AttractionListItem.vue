@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import img from '@/assets/noimage.jpg';
-const props = defineProps({ attraction: Object });
+const props = defineProps({ attraction: Object, isPlanList:Boolean, index:Number});
 
 const emit = defineEmits(["show-description"]);
 const showDescription = () => {
@@ -20,9 +20,25 @@ const address = computed(() => {
     return addr + props.attraction.addr2;
 })
 
+<<<<<<< HEAD
+=======
+const addAttraction = () => {
+    emit("add-attraction", props.attraction);
+}
+
+const delAttraction = () => {
+    emit("del-attraction", props.attraction);
+}
+
+const goAttraction = () => {
+    emit("go-attraction", props.attraction);
+}
+
+>>>>>>> plan
 </script>
 
 <template>
+    <p v-if="isPlanList"> {{props.index + 1}} 번째 여행지  </p>
     <v-hover v-slot="{ isHovering, props }">
         <v-card id="card" class="mx-auto" width="220" height="350" v-bind="props">
             <v-img class="align-end text-white" height="200" :src="attraction.firstImage || img" cover>
@@ -53,7 +69,15 @@ const address = computed(() => {
             </v-card-text>
 
             <v-overlay :model-value="isHovering" contained scrim="blue-grey" class="align-center justify-center">
-                <v-btn variant="flat" @click="showDescription">See more info</v-btn>
+                <div>
+                    <v-btn variant="flat" @click="showDescription">See more info</v-btn>
+                </div>
+                <span>
+                    <v-btn v-if="!isPlanList" id="btn" variant="flat" @click="addAttraction">담기</v-btn>
+                    <v-btn v-if="isPlanList" id="btn" variant="flat" @click="delAttraction">삭제</v-btn>
+                    <v-btn variant="flat" id="btn" @click="goAttraction">위치</v-btn>
+                </span>
+                
             </v-overlay>
         </v-card>
     </v-hover>
@@ -64,6 +88,7 @@ const address = computed(() => {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+<<<<<<< HEAD
 
 .bookmark-icon {
     display: inline;
@@ -72,4 +97,17 @@ const address = computed(() => {
     padding-right: 10px;
     cursor: pointer;
 }
+=======
+#btn {
+    margin: 5px;
+}
+
+p {
+    font-size: large;
+    border: solid gray 3px;
+    margin-left: 15px;
+    margin-top: 20px;
+}
+
+>>>>>>> plan
 </style>

@@ -27,6 +27,12 @@ const router = createRouter({
       component: TheAttractionView,
     },
     {
+      path: "/plan/:planid",
+      name: "plan-view",
+      component: () => import("@/components/attraction/PlanDetail.vue"),
+      props: true
+    },
+    {
       path: "/board",
       name: "board",
       // component: TheBoardView,
@@ -92,6 +98,12 @@ const router = createRouter({
           path: "/modify",
           name: "user-modify",
           component: () => import("@/components/users/UserModify.vue"),
+        },
+        {
+          path: "/plan",
+          name: "user-plan",
+          component: () => import("@/components/users/UserPlan.vue"),
+          beforeEnter: requireAuth(),
         },
       ],
     },

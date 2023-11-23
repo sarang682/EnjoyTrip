@@ -52,8 +52,12 @@ public enum ExceptionStatus implements ResponseStatus {
     BOOKMARK_NOT_FOUND(8001, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 즐겨찾기입니다."),
 
     // 9000: HOTPLACE
-    HOTPLACE_NOT_FOUND(9000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 추천 여행지입니다.");
+    HOTPLACE_NOT_FOUND(9000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 추천 여행지입니다."),
 
+    // 10000: PLAN
+    PLAN_NOT_FOUND(10000, HttpStatus.BAD_REQUEST.value(), "존재하지 않는 여행 계획입니다.")
+
+    ;
     private final int code;
     private final int status;
     private final String message;

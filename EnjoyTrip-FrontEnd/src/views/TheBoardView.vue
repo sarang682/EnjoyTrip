@@ -1,10 +1,16 @@
 <script setup></script>
 
 <template>
-  <div class="container text-center mt-3">
-    <!-- <div class="alert alert-info" role="alert">자유롭게 글쓰는 공간</div> -->
-    <router-view></router-view>
-  </div>
+   <div class="container">
+        <div class="row">
+            <div class="col-md-9 mx-auto">
+                <div class="alert mt-3 text-center fw-bold border-bottom" role="alert">
+                    게시판
+                </div>
+                <router-view></router-view>   
+            </div>
+        </div>
+    </div>
 </template>
 
 <style>

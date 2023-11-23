@@ -23,7 +23,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="wrapper">
+	<div class="wrapper">
 		<Carousel :autoplay="3000" :wrap-around="true">
 			<Slide v-for="slide in slides" :key="slide">
 				<div class="carousel__item">
@@ -57,10 +57,12 @@ export default defineComponent({
 	box-sizing: content-box;
 	border: 5px solid white;
 }
+
 .slideImg {
 	max-height: 740px;
 	max-width: 100%;
 }
+
 .wrapper {
 	margin-top: 3vh;
 }

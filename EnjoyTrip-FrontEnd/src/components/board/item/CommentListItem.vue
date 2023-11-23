@@ -41,8 +41,6 @@ function deleteEvent(id) {
 
 <style scoped>
 #comments-list {
-  margin-left: 100px;
-  margin-right: 100px;
   text-align: left;
 }
 

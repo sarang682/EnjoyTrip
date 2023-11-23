@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
 import { listSido, listGugun, listAttractionType, listAttractionInfo } from "@/api/attraction";
 import { plan, planAttraction } from "@/api/plan";
 import AttractionDetail from "@/components/attraction/AttractionDetail.vue";

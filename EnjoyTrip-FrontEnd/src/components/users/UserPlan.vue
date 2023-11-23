@@ -23,10 +23,13 @@ const getPlanList = () => { // 계획 목록 가져오기
     );
 }
 
-const clickPlan = (planId) => {
+const clickPlan = (planId,title) => {
     router.push({
         name:"plan-view", 
-        params: {planid:planId}
+        params: {
+          planid: planId,
+          title: title,
+        }
     });
 }
 
@@ -47,7 +50,7 @@ const clickPlan = (planId) => {
             :key="plan.id"
             :plan="plan"
             :index=index
-            @click="clickPlan(plan.id)"
+            @click="clickPlan(plan.id,plan.title)"
         />
       </v-row>
     </div>

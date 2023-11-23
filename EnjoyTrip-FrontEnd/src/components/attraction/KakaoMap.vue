@@ -143,9 +143,14 @@ const initMap = () => {
 
       positions.value.push(obj);
     });
-
     togoLine(positions.value);
+    const bounds = positions.value.reduce(
+    (bounds, position) => bounds.extend(position.latlng),
+    new kakao.maps.LatLngBounds()
+    );
+    map.setBounds(bounds);
   }
+
 };
 
 const loadMarkers = () => {

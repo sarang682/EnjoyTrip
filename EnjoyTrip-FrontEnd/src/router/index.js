@@ -26,6 +26,12 @@ const router = createRouter({
       component: TheAttractionView,
     },
     {
+      path: "/plan/:planid",
+      name: "plan-view",
+      component: () => import("@/components/attraction/PlanDetail.vue"),
+      props: true
+    },
+    {
       path: "/board",
       name: "board",
       // component: TheBoardView,

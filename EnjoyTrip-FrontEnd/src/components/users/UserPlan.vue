@@ -2,12 +2,14 @@
 import { onMounted, ref } from 'vue';
 import PlanListItem from '@/components/attraction/PlanListItem.vue';
 import { planList } from '@/api/plan';
+import { useRouter } from "vue-router";
 
 onMounted(() => {
     getPlanList();
 });
 
 const plans = ref([]);
+const router = useRouter();
 
 const getPlanList = () => { // 계획 목록 가져오기
     planList(
@@ -22,7 +24,10 @@ const getPlanList = () => { // 계획 목록 가져오기
 }
 
 const clickPlan = (planId) => {
-    console.log(planId);
+    router.push({
+        name:"plan-view", 
+        params: {planid:planId}
+    });
 }
 
 

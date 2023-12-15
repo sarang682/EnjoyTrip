@@ -1,7 +1,7 @@
 package com.ssafy.enjoytrip.service;
 
+import com.ssafy.enjoytrip.config.jwt.JwtUtil;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
-import com.ssafy.enjoytrip.util.JwtUtil;
 import com.ssafy.enjoytrip.common.exception.BoardException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
@@ -27,13 +27,11 @@ public class BoardService {
     private final ArticleRepository articleRepository;
     private final MemberRepository memberRepository;
     private final CommentRepository commentRepository;
-    private final JwtUtil jwtUtil;
 
 
     // *** 게시글 ***
     @Transactional
-    public void post(String title, String content, String token) {
-        String memberId = jwtUtil.getUserId(token);
+    public void post(String title, String content, String memberId) {
         Member member=getMemberOrException(memberId);
         articleRepository.save(new Article(title,content,member));
     }
@@ -53,8 +51,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void modifyArticle(Integer articleId, String title, String content, String token) {
-        String memberId= jwtUtil.getUserId(token);
+    public void modifyArticle(Integer articleId, String title, String content, String memberId) {
         Article article = getArticleOrException(articleId);
         if(!memberId.equals(article.getMember().getId()))
             throw new BoardException(ExceptionStatus.UNAUTHORIZED);
@@ -64,8 +61,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteArticle(Integer articleId,String token) {
-        String memberId= jwtUtil.getUserId(token);
+    public void deleteArticle(Integer articleId, String memberId) {
         Article article = getArticleOrException(articleId);
         if(!memberId.equals(article.getMember().getId()))
             throw new BoardException(ExceptionStatus.UNAUTHORIZED);
@@ -75,9 +71,9 @@ public class BoardService {
 
     // *** 댓글 ***
     @Transactional
-    public void comment(Integer articleId, String token, String comment) {
+    public void comment(Integer articleId, String memberId, String comment) {
         Article article = getArticleOrException(articleId);
-        Member member = getMemberOrException(getMemberIdByToken(token));
+        Member member = getMemberOrException(memberId);
         commentRepository.save(new Comment(comment,member,article));
     }
 
@@ -88,8 +84,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteComment(Integer commentId, String token) {
-        String memberId= jwtUtil.getUserId(token);
+    public void deleteComment(Integer commentId, String memberId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(()-> new BoardException(ExceptionStatus.COMMENT_NOT_FOUND));
         if(!memberId.equals(comment.getMember().getId()))
@@ -109,11 +104,5 @@ public class BoardService {
                 .orElseThrow(()->new BoardException(ExceptionStatus.ARTICLE_NOT_FOUND));
     }
 
-    private String getMemberIdByToken(String token) {
-        jwtUtil.validateToken(token);
-        String memberId=jwtUtil.getUserId(token);
-        if(memberId==null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
-        return memberId;
-    }
 
 }

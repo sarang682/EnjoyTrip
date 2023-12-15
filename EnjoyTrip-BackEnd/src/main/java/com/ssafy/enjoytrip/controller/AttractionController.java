@@ -5,6 +5,7 @@ import com.ssafy.enjoytrip.dto.attraction.*;
 import com.ssafy.enjoytrip.service.AttractionService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,15 +38,15 @@ public class AttractionController {
             @RequestParam(value="sido-code", required=false) Integer sidoCode,
             @RequestParam(value="gugun-code", required=false) Integer gugunCode,
             @RequestParam(value="attraction-type-id", required=false) Integer attractionTypeId,
-            HttpServletRequest request) {
-        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, attractionTypeId, request));
+            Authentication authentication) {
+        return new BaseResponse<>(service.getInfoList(sidoCode, gugunCode, attractionTypeId, authentication.getName()));
     }
 
     @GetMapping("/description/{attraction-id}")
     public BaseResponse<GetDescriptionResponse> getDescription(
             @PathVariable("attraction-id") int attractionId,
-            HttpServletRequest request) {
-        return new BaseResponse<>(service.findDescriptionById(request, attractionId));
+            Authentication authentication) {
+        return new BaseResponse<>(service.findDescriptionById(authentication.getName(), attractionId));
     }
 
 }

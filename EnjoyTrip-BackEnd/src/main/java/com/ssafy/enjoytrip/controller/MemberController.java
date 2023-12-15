@@ -9,6 +9,7 @@ import com.ssafy.enjoytrip.dto.member.UpdateRequest;
 import com.ssafy.enjoytrip.service.MemberService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE} , maxAge = 6000)
@@ -31,13 +32,13 @@ public class MemberController {
     }
 
     @GetMapping("/info")
-    public BaseResponse<MemberDto> getMember(@RequestHeader("Authorization") String token) {
-        return new BaseResponse<>(service.getMember(token));
+    public BaseResponse<MemberDto> getMember(Authentication authentication) {
+        return new BaseResponse<>(service.getMember(authentication.getName()));
     }
 
     @GetMapping("/info/{memberId}")
-    public BaseResponse<Member> userInfo(@PathVariable String memberId, HttpServletRequest request) {
-        return new BaseResponse<>(service.userInfo(request, memberId));
+    public BaseResponse<Member> userInfo(@PathVariable String memberId) {
+        return new BaseResponse<>(service.userInfo(memberId));
     }
 
     @PutMapping("/{memberId}")

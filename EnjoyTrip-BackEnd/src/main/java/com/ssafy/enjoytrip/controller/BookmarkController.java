@@ -20,23 +20,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/bookmarks")
 public class BookmarkController {
 
-    private final BookmarkService service;
-
-    /**
-     * 즐겨찾기 존재 여부에 따라
-     * O -> 삭제
-     * X -> 삽입
-     */
-    @PostMapping("")
-    public BaseResponse<ChangeBookmarkResponse> changeBookmark(
-            @RequestBody PostBookmarkRequest request,
-            HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.changeBookmark(httpServletRequest, request));
-    }
-
-    @GetMapping("")
-    public BaseResponse<GetBookmarkResponse> getBookmarkList(HttpServletRequest httpServletRequest) {
-        return new BaseResponse<>(service.getBookmarkList(httpServletRequest));
-    }
+//    private final BookmarkService service;
+//
+//    /**
+//     * 즐겨찾기 존재 여부에 따라
+//     * O -> 삭제
+//     * X -> 삽입
+//     */
+//    @PostMapping("")
+//    public BaseResponse<ChangeBookmarkResponse> changeBookmark(
+//            @RequestBody PostBookmarkRequest request,
+//            HttpServletRequest httpServletRequest) {
+//        return new BaseResponse<>(service.changeBookmark(httpServletRequest, request));
+//    }
+//
+//    @GetMapping("")
+//    public BaseResponse<GetBookmarkResponse> getBookmarkList(HttpServletRequest httpServletRequest) {
+//        return new BaseResponse<>(service.getBookmarkList(httpServletRequest));
+//    }
 
 }

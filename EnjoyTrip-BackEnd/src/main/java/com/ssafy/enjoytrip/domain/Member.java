@@ -30,6 +30,10 @@ public class Member extends BaseTimeEntity {
     @Column(name = "email_domain")
     private String emailDomain;
 
+    @Column(name = "role")
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.USER;
+
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private List<Article> articles = new ArrayList<>();
 
@@ -43,12 +47,13 @@ public class Member extends BaseTimeEntity {
     private List<Hotplace> hotplaces = new ArrayList<>();
 
     @Builder
-    public Member(String id, String password, String name, String emailId, String emailDomain) {
+    public Member(String id, String password, String name, String emailId, String emailDomain, Role role) {
         this.id = id;
         this.password = password;
         this.name = name;
         this.emailId = emailId;
         this.emailDomain = emailDomain;
+        this.role = role;
     }
 
 }

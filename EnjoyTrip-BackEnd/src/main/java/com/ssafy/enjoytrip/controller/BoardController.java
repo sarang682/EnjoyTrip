@@ -9,6 +9,7 @@ import com.ssafy.enjoytrip.service.BoardService;
 import com.ssafy.enjoytrip.dto.board.*;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class BoardController {
 
     // ** 게시글 ***
     @PostMapping("articles")
-    public BaseResponse<?> post(@RequestBody PostRequest request, @RequestHeader("Authorization") String token) {
-        service.post(request.getTitle(),request.getContent(), token);
+    public BaseResponse<?> post(@RequestBody PostRequest request, Authentication authentication) {
+        service.post(request.getTitle(),request.getContent(), authentication.getName());
         return new BaseResponse<>(null);
     }
 
@@ -39,22 +40,22 @@ public class BoardController {
     }
 
     @PutMapping("/articles")
-    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request, @RequestHeader("Authorization") String token) {
-        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent(), token);
+    public BaseResponse<?> modifyArticle(@RequestBody ModifyArticleRequest request, Authentication authentication) {
+        service.modifyArticle(request.getArticleId(), request.getTitle(), request.getContent(), authentication.getName());
         return new BaseResponse<>(null);
     }
 
     @DeleteMapping("/articles/{article-no}")
-    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId, @RequestHeader("Authorization") String token) {
-        service.deleteArticle(articleId, token);
+    public BaseResponse<?> deleteArticle(@PathVariable("article-no") int articleId, Authentication authentication) {
+        service.deleteArticle(articleId, authentication.getName());
         return new BaseResponse<>(null);
     }
 
 
     // *** 댓글 ***
     @PostMapping("/{article-no}/comments")
-    public BaseResponse<?> comment(@PathVariable("article-no") int articleId, @RequestBody CommentRequest request, @RequestHeader("Authorization") String token) {
-        service.comment(articleId,token, request.getContent());
+    public BaseResponse<?> comment(@PathVariable("article-no") int articleId, @RequestBody CommentRequest request, Authentication authentication) {
+        service.comment(articleId, authentication.getName(), request.getContent());
         return new BaseResponse<>(null);
     }
 
@@ -64,8 +65,8 @@ public class BoardController {
     }
 
     @DeleteMapping("comments/{comment-id}")
-    public BaseResponse<?> deleteComment(@PathVariable("comment-id") int commentId, @RequestHeader("Authorization") String token) {
-        service.deleteComment(commentId, token);
+    public BaseResponse<?> deleteComment(@PathVariable("comment-id") int commentId, Authentication authentication) {
+        service.deleteComment(commentId, authentication.getName());
         return new BaseResponse<>(null);
     }
 

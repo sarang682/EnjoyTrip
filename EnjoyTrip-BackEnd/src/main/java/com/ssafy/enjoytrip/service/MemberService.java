@@ -1,15 +1,20 @@
 package com.ssafy.enjoytrip.service;
 
-import com.ssafy.enjoytrip.util.JwtUtil;
+import com.ssafy.enjoytrip.common.exception.JwtUnauthorizedException;
 import com.ssafy.enjoytrip.common.exception.MemberException;
 import com.ssafy.enjoytrip.common.response.ExceptionStatus;
+import com.ssafy.enjoytrip.config.auth.PrincipalDetails;
+import com.ssafy.enjoytrip.config.jwt.JwtUtil;
 import com.ssafy.enjoytrip.domain.Member;
+import com.ssafy.enjoytrip.domain.Role;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +22,18 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
-    private final JwtUtil jwtUtil;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Value("${jwt.secret}")
+    private String secret;
+
+    @Value("${jwt.access-token.expiretime}")
+    private Long expiredTimeMs;
+
+    public PrincipalDetails loadUserByUserName(String username) {
+        return memberRepository.findById(username).map(PrincipalDetails::fromEntity)
+                .orElseThrow(()->new JwtUnauthorizedException(ExceptionStatus.UNAUTHORIZED));
+    }
 
     @Transactional
     public void join(JoinRequest request) {
@@ -26,10 +42,11 @@ public class MemberService {
         });
         memberRepository.save(
                new Member(request.getMemberId(),
-                       request.getPassword(),
+                       bCryptPasswordEncoder.encode(request.getPassword()),
                        request.getName(),
                        request.getEmailId(),
-                       request.getEmailDomain()));
+                       request.getEmailDomain(),
+                       Role.USER));
     }
 
     public String login(String memberId, String password) {
@@ -37,28 +54,20 @@ public class MemberService {
         Member member=memberRepository.findById(memberId).orElseThrow(()-> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
 
         // 비밀번호 체크
-        if(!member.getPassword().equals(password)){
+        if(!bCryptPasswordEncoder.matches(password, member.getPassword())){
             throw new MemberException(ExceptionStatus.PASSWORD_NO_MATCH);
         }
         // 토큰생성
-        return jwtUtil.createAccessToken(member.getId());
+        return JwtUtil.generateToken(memberId, secret, expiredTimeMs);
     }
 
-    public MemberDto getMember(String token) {
-        jwtUtil.validateToken(token);
-        String memberId = jwtUtil.getUserId(token);
-        if (memberId == null) throw new MemberException(ExceptionStatus.INVALID_TOKEN);
+    public MemberDto getMember(String memberId) {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
         return MemberDto.fromEntity(member);
     }
 
-    public Member userInfo(HttpServletRequest request, String memberId) {
-        // 토큰 가져오기
-        String token = jwtUtil.resolveToken(request);
-        // 유효성 검사
-        jwtUtil.validateToken(token);
-
+    public Member userInfo(String memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
     }

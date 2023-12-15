@@ -2,14 +2,12 @@ package com.ssafy.enjoytrip.service;
 
 import com.ssafy.enjoytrip.common.exception.AttractionException;
 import com.ssafy.enjoytrip.common.exception.JwtBadRequestException;
-import com.ssafy.enjoytrip.common.exception.MemberException;
-import com.ssafy.enjoytrip.common.response.ExceptionStatus;
+import com.ssafy.enjoytrip.config.jwt.JwtUtil;
 import com.ssafy.enjoytrip.domain.*;
 import com.ssafy.enjoytrip.dto.attraction.*;
 import com.ssafy.enjoytrip.repository.attraction.*;
 import com.ssafy.enjoytrip.repository.bookmark.BookmarkRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
-import com.ssafy.enjoytrip.util.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +28,6 @@ public class AttractionService {
     private final DescriptionRepository descriptionRepository;
     private final MemberRepository memberRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final JwtUtil jwtUtil;
 
     public List<GetSidoResponse> getSidoList() {
         List<Sido> sidos = sidoRepository.findAll();
@@ -69,7 +66,7 @@ public class AttractionService {
     }
 
     public List<GetInfoResponse> getInfoList(
-            Integer sidoCode, Integer gugunCode, Integer attractionTypeId, HttpServletRequest request) {
+            Integer sidoCode, Integer gugunCode, Integer attractionTypeId, String memberId) {
         // 시도코드 유효성 검사
         if (sidoCode != null) {
             validateSido(sidoCode);
@@ -88,8 +85,7 @@ public class AttractionService {
             validateType(attractionTypeId);
         }
 
-        // 토큰
-        Member member = findMemberByRequest(request);
+        Member member = memberRepository.findById(memberId).orElse(null);
 
         List<AttractionInfo> infos;
         // 전체
@@ -141,11 +137,11 @@ public class AttractionService {
         return result;
     }
 
-    public GetDescriptionResponse findDescriptionById(HttpServletRequest request, int attractionId) {
+    public GetDescriptionResponse findDescriptionById(String memberId, int attractionId) {
         AttractionDescription description = descriptionRepository.findById(attractionId)
                 .orElseThrow(() -> new AttractionException(ATTRACTION_NOT_FOUND));
 
-        Member member = findMemberByRequest(request);
+        Member member = memberRepository.findById(memberId).orElse(null);
 
         /**
          * 올바르지 않은 토큰일 경우
@@ -184,28 +180,6 @@ public class AttractionService {
         }
     }
 
-    private Member findMemberByRequest(HttpServletRequest request) {
-        // 토큰 얻기
-        String token = request.getHeader("Authorization");
-
-        // 토큰이 없는 경우
-        if (token == null) {
-            return null;
-        }
-
-        String memberId;
-
-        // 토큰 정보가 올바르지 않은 경우
-        try {
-            memberId = jwtUtil.getUserId(token);
-        } catch (JwtBadRequestException e) {
-            return null;
-        }
-
-        // 토큰 정보에 해당하는 멤버 찾기
-        return memberRepository.findById(memberId)
-                .orElse(null);
-    }
 
     private AttractionInfo findInfoById(int attractionId) {
         return infoRepository.findById(attractionId)

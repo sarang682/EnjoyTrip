@@ -9,6 +9,7 @@ import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.domain.Role;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
+import com.ssafy.enjoytrip.repository.member.MemberCacheRepository;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final MemberCacheRepository memberCacheRepository;
 
     @Value("${jwt.secret}")
     private String secret;
@@ -30,8 +32,9 @@ public class MemberService {
     private Long expiredTimeMs;
 
     public PrincipalDetails loadUserByUserName(String username) {
-        return memberRepository.findById(username).map(PrincipalDetails::fromEntity)
-                .orElseThrow(()->new JwtUnauthorizedException(ExceptionStatus.UNAUTHORIZED));
+        return memberCacheRepository.getMember(username).orElseGet(()->
+                memberRepository.findById(username).map(PrincipalDetails::fromEntity).orElseThrow(()->
+                        new JwtUnauthorizedException(ExceptionStatus.UNAUTHORIZED)));
     }
 
     @Transactional

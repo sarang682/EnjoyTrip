@@ -10,7 +10,6 @@ import com.ssafy.enjoytrip.domain.Role;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.repository.member.MemberRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -46,7 +45,8 @@ public class MemberService {
                        request.getName(),
                        request.getEmailId(),
                        request.getEmailDomain(),
-                       Role.USER));
+                       Role.USER
+                       ));
     }
 
     public String login(String memberId, String password) {
@@ -67,9 +67,10 @@ public class MemberService {
         return MemberDto.fromEntity(member);
     }
 
-    public Member userInfo(String memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+    public MemberDto userInfo(String memberId) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
+        return MemberDto.fromEntity(member);
     }
 
     @Transactional
@@ -77,7 +78,7 @@ public class MemberService {
         // 수정할 회원이 존재하는지 검사
         Member member= memberRepository.findById(memberId)
                 .orElseThrow(()->new MemberException(ExceptionStatus.MEMBER_NOT_FOUND));
-        return memberRepository.updateMember(memberId,name,password,emailId,emailDomain);
+        return memberRepository.updateMember(memberId,name,bCryptPasswordEncoder.encode(password),emailId,emailDomain);
     }
 
     @Transactional

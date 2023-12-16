@@ -1,17 +1,17 @@
 package com.ssafy.enjoytrip.controller;
 
 import com.ssafy.enjoytrip.common.response.BaseResponse;
-import com.ssafy.enjoytrip.domain.Member;
 import com.ssafy.enjoytrip.dto.member.JoinRequest;
 import com.ssafy.enjoytrip.dto.member.LoginRequest;
 import com.ssafy.enjoytrip.dto.member.MemberDto;
 import com.ssafy.enjoytrip.dto.member.UpdateRequest;
 import com.ssafy.enjoytrip.service.MemberService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @CrossOrigin(origins = { "*" }, methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.POST, RequestMethod.DELETE} , maxAge = 6000)
 @RestController
 @RequiredArgsConstructor
@@ -33,11 +33,12 @@ public class MemberController {
 
     @GetMapping("/info")
     public BaseResponse<MemberDto> getMember(Authentication authentication) {
+        log.info("controller: getMember(): authentication.getName() ? " + authentication.getName());
         return new BaseResponse<>(service.getMember(authentication.getName()));
     }
 
     @GetMapping("/info/{memberId}")
-    public BaseResponse<Member> userInfo(@PathVariable String memberId) {
+    public BaseResponse<MemberDto> userInfo(@PathVariable String memberId) {
         return new BaseResponse<>(service.userInfo(memberId));
     }
 

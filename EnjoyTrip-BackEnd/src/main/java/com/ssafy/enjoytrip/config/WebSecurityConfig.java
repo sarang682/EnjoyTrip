@@ -30,6 +30,7 @@ public class WebSecurityConfig {
         return web -> web.ignoring()
                 .requestMatchers("/members/login")
                 .requestMatchers("/members")
+                .requestMatchers("/health")
                 ;
     }
 
@@ -48,6 +49,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/board/articles").permitAll()
                         .requestMatchers("/members/login").permitAll()
                         .requestMatchers("/members").permitAll()
+                        .requestMatchers("/health").permitAll()
                         .anyRequest().authenticated()
                 );
         http

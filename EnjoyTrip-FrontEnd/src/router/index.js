@@ -3,6 +3,7 @@ import TheMainView from "../views/TheMainView.vue";
 import TheAttractionView from "@/views/TheAttractionView.vue";
 import TheBookmarkView from "@/views/TheBookmarkView.vue";
 import TheHotplaceView from "@/views/TheHotplaceView.vue";
+import HealthCheck from "@/HealthCheck.vue";
 
 // import TheBoardView from "../views/TheBoardView.vue";
 
@@ -22,6 +23,11 @@ const router = createRouter({
       path: "/",
       name: "main",
       component: TheMainView,
+    },
+    {
+      path: "/health",
+      name: "health",
+      component: HealthCheck,
     },
     {
       path: "/attraction",

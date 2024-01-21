@@ -16,7 +16,7 @@ export default {
         // 여기에 실제 health check 로직을 구현
         // 예를 들면 API 호출, 서버 연결 등을 확인할 수 있습니다.
 
-        const response = await axios.get('http://localhost:8080/enjoytrip/health'); //
+        const response = await axios.get('http://54.180.93.136:8080/enjoytrip/health'); //
 
         // 성공했을 때
         if (response.status === 200) {
